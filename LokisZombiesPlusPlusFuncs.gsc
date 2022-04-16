@@ -947,8 +947,9 @@ zombie_remaining_hud()
     self.zombie_counter_hud = maps/mp/gametypes_zm/_hud_util::createFontString( "hudsmall" , 1.5 );
     self.zombie_counter_hud maps/mp/gametypes_zm/_hud_util::setPoint( "CENTER", "CENTER", -100, 180 );
     self.zombie_counter_hud.alpha = 0;
-	for(;;) {
+	while( 1 ) {
     	self.zombie_counter_hud.label = &"Zombies: ^1";
+		wait 0.05;
 	}
 	self thread zombie_remaining_hud_watcher(1);
 
@@ -998,8 +999,9 @@ health_remaining_hud()
     self.health_counter_hud = maps/mp/gametypes_zm/_hud_util::createFontString( "hudsmall" , 1.5 );
     self.health_counter_hud maps/mp/gametypes_zm/_hud_util::setPoint( "CENTER", "CENTER", 100, 180 );
     self.health_counter_hud.alpha = 0;
-	for(;;) {
+	while( 1 ) {
     	self.health_counter_hud.label = &"Health: ^2";
+		wait 0.05;
 	}
 	self thread health_remaining_hud_watcher(1);
 

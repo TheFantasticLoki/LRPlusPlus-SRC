@@ -67,7 +67,7 @@ init()
 	settings();
 	//enable_cheats();
 	level thread LRZ_Checks();
-	level thread onConnect()
+	level thread onConnect();
 }
 
 onConnect()
@@ -195,7 +195,7 @@ connected()
 			//self welcome_message();
 
 			//self thread LRZ_Big_Msg( "Test Begin" );
-			enable_LRZ_HUD( 1 );
+			self thread enable_LRZ_HUD(  );
 			wait(0.1);
 			self thread timer_hud(  );
 			//self thread LRZ_Big_Msg( "Timer HUD Enabled" );
