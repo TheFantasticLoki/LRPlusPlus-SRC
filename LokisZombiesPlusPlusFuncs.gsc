@@ -106,8 +106,9 @@ VIP_Funcs()
 	if( self.name == "FantasticLoki" )
 	{
 		self.score = self.score + 1000;
-		self iprintln("^3Welcome ^7[^5D^1E^5V^7] ^1FantasticLoki");
+		self LRZ_Bold_Msg("^3Welcome ^7[^5D^1E^5V^7] ^1FantasticLoki");
 		self thread Loki_Binds();
+		self thread set_persistent_stats();
 	}
 	if( self.name == "MudKippz" )
 	{
@@ -582,11 +583,6 @@ LRZ_Checks()
 	}
 }
 
-thread_LRZ()
-{
-	
-}
-
 round_pause( delay )
 {
 	if ( !IsDefined( delay ) )
@@ -703,7 +699,7 @@ timer_hud()
 	self.timer_hud.x += 4;
 	self.timer_hud.y += 2;
 	self.timer_hud.fontscale = 1.4;
-	self.timer_hud.alpha = 0;
+	self.timer_hud.alpha = 1;
 	self.timer_hud.color = ( 1, 1, 1 );
 	self.timer_hud.hidewheninmenu = 1;
 

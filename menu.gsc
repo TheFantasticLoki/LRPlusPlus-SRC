@@ -9,7 +9,10 @@ CreateMenu()
 			add_option(self.AIO["menuName"], "Main Menu", ::submenu, MAIN, "Main Menu");
 				add_menu(MAIN, self.AIO["menuName"], "Main Menu");
 					add_option(MAIN, "Toggle DemiGod Mode", ::toggle_DemiGod);
-					add_option(MAIN, "Max Ammo", ::dopmammo);
+					add_option(MAIN, "Buy Max Ammo - ^24500", ::doBuyMaxAmmo, 4500);
+					add_option(MAIN, "Buy Double Points - ^22500", ::doBuyDoublePoints, 2500);
+					add_option(MAIN, "Buy Insta Kill - ^25000", ::doBuyInstaKill, 5000);
+					add_option(MAIN, "Buy Nuke - ^210000", ::doBuyNuke, 10000);
 					add_option(MAIN, "Toggle Third Person", ::toggle_3rd);
 					add_option(MAIN, "Speed X1.15", ::toggle_speedx1_15);
 					add_option(MAIN, "Pause Spawns Menu", ::submenu, PAUSE, "Pause Spawns Menu");

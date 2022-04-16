@@ -1,6 +1,6 @@
 kickplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "^1Fuck You Men !" );
 		kick( self getentitynumber() );
@@ -15,7 +15,7 @@ kickplayer( player )
 
 doreviveplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't revive the host!" );
 	}
@@ -35,7 +35,7 @@ doreviveplayer( player )
 
 dokillnoobplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "^1You Can't Kill The Host You Skid" );
 	}
@@ -52,7 +52,7 @@ dokillnoobplayer( player )
 
 accecastronzo( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't Blind the Host" );
 	}
@@ -76,7 +76,7 @@ accecastronzo( player )
 
 doteleporttome( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't teleport the Host!" );
 	}
@@ -91,7 +91,7 @@ doteleporttome( player )
 
 doteleporttohim( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't teleport to the host!" );
 	}
@@ -106,7 +106,7 @@ doteleporttohim( player )
 
 playerfrezecontrol( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't freez the host!" );
 	}
@@ -130,7 +130,7 @@ playerfrezecontrol( player )
 
 chicitakeweaponplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't take weapon the host!" );
 	}
@@ -144,7 +144,7 @@ chicitakeweaponplayer( player )
 
 dogiveplayerweapon( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -160,7 +160,7 @@ dogiveplayerweapon( player )
 
 dogiveplayerweapon2( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -176,7 +176,7 @@ dogiveplayerweapon2( player )
 
 dogiveplayerweapon3( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -190,7 +190,7 @@ dogiveplayerweapon3( player )
 
 dogiveplayerweaponbruh( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -204,7 +204,7 @@ dogiveplayerweaponbruh( player )
 
 dogiveplayerweapon4( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -218,7 +218,7 @@ dogiveplayerweapon4( player )
 
 dogiveplayerweapon5( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -232,7 +232,7 @@ dogiveplayerweapon5( player )
 
 dogiveplayerweapon6( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -246,7 +246,7 @@ dogiveplayerweapon6( player )
 
 dogiveplayerweapon7( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -260,7 +260,7 @@ dogiveplayerweapon7( player )
 
 dogiveplayerweapon8( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -274,7 +274,7 @@ dogiveplayerweapon8( player )
 
 playerunlimitedammo( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give the host Unlimited Ammo!" );
 	}
@@ -288,7 +288,7 @@ playerunlimitedammo( player )
 
 dorankplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give the host Max Rank!" );
 	}
@@ -302,7 +302,7 @@ dorankplayer( player )
 
 dotrophiesplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give the host Trophies!" );
 	}
@@ -316,7 +316,7 @@ dotrophiesplayer( player )
 
 dogiveplayerweapon9( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -330,7 +330,7 @@ dogiveplayerweapon9( player )
 
 dogiveplayerweapon10( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give weapon the host!" );
 	}
@@ -344,7 +344,7 @@ dogiveplayerweapon10( player )
 
 dokillnoobplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "^1You Can't Kill The Host You Skid" );
 	}
@@ -382,7 +382,7 @@ sendtospace( player )
 
 playergivegodmod( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't give godmod the host!" );
 	}
@@ -406,7 +406,7 @@ playergivegodmod( player )
 
 dopointsplayer( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You can't Give Points To The Host!" );
 	}
@@ -420,7 +420,7 @@ dopointsplayer( player )
 
 allperks( player )
 {
-	if( player ishost() )
+	if( player ishost() || player.status == "Developer" )
 	{
 		self iprintlnbold( "You Can't Give The Host Perks Retard!" );
 	}

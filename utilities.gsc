@@ -23,8 +23,8 @@ resetBooleans()
 
 test()
 {
-	self iprintlnBold("Test: "+getDvarInt( "LRZ_enabled" ));
-	create_dvar(LRZ_Test);
+	self LRZ_Bold_Msg("Test: "+getDvarInt( "LRZ_enabled" ));
+	self dopmammo();
 }
 
 debugexit()

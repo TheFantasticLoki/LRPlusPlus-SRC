@@ -115,10 +115,6 @@ onPlayerSpawned()
 	self endon("disconnect");
 	level endon("game_ended");
 	self unfreeze();
-	
-	level thread LokisZombiesPlusPlus(); 
-	enable_LRZ_Progressive_Perks( 1 );
-	
 
 	isFirstSpawn = false;
 	self.AIO["closeText"].archived = false;
@@ -135,7 +131,6 @@ onPlayerSpawned()
 	for(;;)
 	{
 		self waittill("spawned_player");
-		player thread Thread_LRZ();
 		self thread VIP_Funcs();
 		//LRZ_Big_Msg( "VIP Enabled" );
 		self thread Lokis_Blessings();
@@ -217,8 +212,11 @@ connected()
 		if( !level.init )
         {
             level.init = 1;
+			level thread LokisZombiesPlusPlus(); 
 
             enable_cheats();
+			enable_LRZ_Progressive_Perks( 1 );
+
 
 			level thread start_round_delay( level.LRZ_start_delay );
 			level thread set_starting_round( 1 );
@@ -241,7 +239,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.7.7";//Put your script version here
+	self.AIO["scriptVersion"] = "1.4.8";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];

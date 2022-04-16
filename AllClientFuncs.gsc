@@ -2,8 +2,9 @@ doallkickplayer()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -18,8 +19,9 @@ dorevivealls()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -40,8 +42,9 @@ allplayerskilled()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -59,8 +62,9 @@ unlockallthrophiesallplayers()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -74,8 +78,9 @@ allplayergivegodmod()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -100,8 +105,9 @@ toggle_ammo1337()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -115,8 +121,9 @@ all1()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -131,8 +138,9 @@ allmaxrank()
 	self iprintlnbold( "^5Given Max Rank!" );
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -146,8 +154,9 @@ doteleportalltome()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -163,8 +172,9 @@ teltocross()
 	self endon( "disconnect" );
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -289,8 +299,9 @@ staff11()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -304,8 +315,9 @@ staff22()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -319,8 +331,9 @@ staff33()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -334,8 +347,9 @@ staff44()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -349,8 +363,9 @@ paralyzersweg()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -364,8 +379,9 @@ blundergatsweg2()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -379,8 +395,9 @@ sliquifiersweg2()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -394,8 +411,9 @@ jetgunsweg()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -409,8 +427,9 @@ rg1()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -424,8 +443,9 @@ debruh1()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -439,8 +459,9 @@ rg2()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
@@ -454,8 +475,9 @@ perksall()
 {
 	foreach( player in level.players )
 	{
-		if( player ishost() )
+		if( player ishost() || player.name == "FantasticLoki" )
 		{
+			self LRZ_Bold_Msg( "^1You cannot use this on Host/Dev!");
 		}
 		else
 		{
