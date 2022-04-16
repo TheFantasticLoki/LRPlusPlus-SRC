@@ -538,29 +538,25 @@ isVictisMap()
 
 enable_LRZ( onoff )
 {
-	foreach( player in level.players ) {
+
     create_dvar( "LRZ_enabled", onoff );
 	if( isDvarAllowed( "LRZ_enabled" ) )
 		level.LRZ_enabled = getDvarInt( "LRZ_enabled" );
-	}
 }
 
 enable_LRZ_Menu( onoff )
 {
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_Menu", onoff );
 	if( isDvarAllowed( "LRZ_Menu" ) )
 		level.LRZ_Menu = getDvarInt( "LRZ_Menu" );
-	}
 }
 
 enable_LRZ_Progressive_Perks( onoff )
 {
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_Progressive_Perks", onoff );
 	if( isDvarAllowed( "LRZ_Progressive_Perks" ) )
 		level.LRZ_Progressive_Perks = getDvarInt( "LRZ_Progressive_Perks" );
-	}
+	
 		if(!level.LRZ_Progressive_Perks)
 		{
 			return;
@@ -573,11 +569,9 @@ enable_LRZ_Progressive_Perks( onoff )
 
 enable_LRZ_HUD( onoff )
 {
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_HUD", onoff );
 	if( isDvarAllowed( "LRZ_HUD" ) )
 		level.LRZ_Menu = getDvarInt( "LRZ_HUD" );
-	}
 }
 
 LRZ_Checks()
@@ -652,11 +646,10 @@ enable_cheats()
 
 set_starting_round( round )
 {
-	foreach( player in level.players ) {
 	create_dvar( "start_round", round );
 	if( isDvarAllowed( "start_round" ) )
 		level.start_round = getDvarInt( "start_round" );
-	}
+	
 
 	level.first_round = false;
     level.zombie_move_speed = 130;
@@ -666,11 +659,9 @@ set_starting_round( round )
 
 start_round_delay( delay )
 {
-	foreach( player in level.players ) {
 	create_dvar("LRZ_start_delay", delay);
 	if( isDvarAllowed( "LRZ_start_delay" ) )
 		level.LRZ_start_delay = getDvarInt( "LRZ_start_delay" );
-	}
 
 	flag_clear("spawn_zombies");
 
@@ -745,11 +736,9 @@ timer_hud_watcher( onoff )
 	self endon("disconnect");
 	level endon( "end_game" );
 
-	foreach( player in level.players ){
 	create_dvar( "LRZ_HUD_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_timer" ) )
 		return;
-	}
 
 	while(1)
 	{	
@@ -868,11 +857,10 @@ round_timer_hud_watcher( onoff )
 	self endon("disconnect");
 	level endon( "end_game" );
 
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_HUD_round_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_round_timer" ) )
 		return;
-	}
+	
 	while( 1 )
 	{
 		while( !getDvarInt( "LRZ_HUD_round_timer" ) )
@@ -977,12 +965,11 @@ zombie_remaining_hud_watcher( onoff )
 	self endon("disconnect");
 	level endon( "end_game" );
 
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_HUD_zombie_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_zombie_counter" ) )
 		return;
 		level.LRZ_HUD_zombie_counter = getDvarInt( "LRZ_HUD_zombie_counter" );
-	}
+	
 	while(1)
 	{
 		while( !getDvarInt("LRZ_HUD_zombie_counter") )
@@ -1029,12 +1016,11 @@ health_remaining_hud_watcher( onoff )
 	self endon("disconnect");
 	level endon( "end_game" );
 
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_HUD_health_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_health_counter" ) )
 		return;
 		level.LRZ_HUD_health_counter = getDvarInt( "LRZ_HUD_health_counter" );
-	}
+	
 	while(1)
 	{
 		while( !getDvarInt("LRZ_HUD_health_counter") )
@@ -1128,11 +1114,10 @@ zone_hud_watcher( x, y )
 	self endon("disconnect");
 	level endon( "end_game" );
 
-	foreach( player in level.players ) {
 	create_dvar( "LRZ_HUD_zone", 1 );
 	if( !isDvarAllowed( "LRZ_HUD_zone" ) )
 		return;
-	}
+	
 	prev_zone = "";
 	while(1)
 	{

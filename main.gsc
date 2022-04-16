@@ -67,6 +67,16 @@ init()
 	settings();
 	//enable_cheats();
 	level thread LRZ_Checks();
+	level thread onConnect()
+}
+
+onConnect()
+{
+    for (;;)
+    {
+        level waittill( "connected" , player);
+        player thread connected();
+    }
 }
 
 onPlayerConnect()
@@ -97,9 +107,6 @@ onPlayerConnect()
 		{
 			level.player_out_of_playable_area_monitor = 0;
 		}
-
-		level waittill( "connected" , player);
-        player thread connected();
 	}
 }
 
@@ -187,19 +194,23 @@ connected()
             //self.score = 5000;
 			//self welcome_message();
 
-			self thread LRZ_Big_Msg( "Test Begin" );
+			//self thread LRZ_Big_Msg( "Test Begin" );
 			enable_LRZ_HUD( 1 );
 			wait(0.1);
 			self thread timer_hud(  );
-			self thread LRZ_Big_Msg( "Timer HUD Enabled" );
+			//self thread LRZ_Big_Msg( "Timer HUD Enabled" );
+			//wait(1);
 			self thread round_timer_hud(  );
-			self thread LRZ_Big_Msg( "Round Timer HUD Enabled" );
+			// thread LRZ_Big_Msg( "Round Timer HUD Enabled" );
+			//wait(1);
 			self thread health_remaining_hud(  );
-			self thread LRZ_Big_Msg( "Health HUD Enabled" );
+			//self thread LRZ_Big_Msg( "Health HUD Enabled" );
+			//wait(1);
 			self thread zombie_remaining_hud(  );
-			self thread LRZ_Big_Msg( "Zombie HUD Enabled" );
+			//self thread LRZ_Big_Msg( "Zombie HUD Enabled" );
+			//wait(1);
 			self thread zone_hud(  );
-			self thread LRZ_Big_Msg( "Zone HUD Enabled" );
+			//self thread LRZ_Big_Msg( "Zone HUD Enabled" );
 			//self thread LRZ_Big_Msg( "HUD Enabled" );
 		}
 
