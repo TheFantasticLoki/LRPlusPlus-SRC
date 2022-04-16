@@ -65,7 +65,7 @@ init()
 	level thread upload_stats_on_player_connect();
 	level.init = 0;
 	settings();
-	enable_cheats();
+	//enable_cheats();
 	level thread LRZ_Checks();
 }
 
@@ -93,32 +93,25 @@ onPlayerConnect()
 				player giveMenu();
 			}
 		}
-		
-		
-		start_round_delay( level.LRZ_start_delay );
 		if( IsDefined( level.player_out_of_playable_area_monitor ) )
 		{
 			level.player_out_of_playable_area_monitor = 0;
 		}
+
+		level waittill( "connected" , player);
+        player thread connected();
 	}
 }
 
 onPlayerSpawned()
 {
 	self endon("disconnect");
-	self.init = 0;
 	level endon("game_ended");
 	self unfreeze();
 	
 	level thread LokisZombiesPlusPlus(); 
 	enable_LRZ_Progressive_Perks( 1 );
-	enable_LRZ( 1 );
-	set_starting_round( 1 );
-	if( !level.LRZ_enabled )
-	{
-		self iprintlnBold("LRZ disabled");
-		return;//continue;
-	}
+	
 
 	isFirstSpawn = false;
 	self.AIO["closeText"].archived = false;
@@ -168,6 +161,58 @@ onPlayerSpawned()
 		{
 
 			isFirstSpawn = true;
+		}
+	}
+}
+
+connected()
+{
+	self endon( "disconnect" );
+    self.init = 0;
+
+	enable_LRZ( 1 );
+	if( !level.LRZ_enabled )
+	{
+		self LRZ_Big_Msg("LRZ disabled");
+		return;//continue;
+	}
+	for(;;)
+    {
+		self waittill( "spawned_player" );
+
+		if( !self.init )
+        {
+            self.init = 1;
+
+            //self.score = 5000;
+			//self welcome_message();
+
+			self thread LRZ_Big_Msg( "Test Begin" );
+			enable_LRZ_HUD( 1 );
+			wait(0.1);
+			self thread timer_hud(  );
+			self thread LRZ_Big_Msg( "Timer HUD Enabled" );
+			self thread round_timer_hud(  );
+			self thread LRZ_Big_Msg( "Round Timer HUD Enabled" );
+			self thread health_remaining_hud(  );
+			self thread LRZ_Big_Msg( "Health HUD Enabled" );
+			self thread zombie_remaining_hud(  );
+			self thread LRZ_Big_Msg( "Zombie HUD Enabled" );
+			self thread zone_hud(  );
+			self thread LRZ_Big_Msg( "Zone HUD Enabled" );
+			//self thread LRZ_Big_Msg( "HUD Enabled" );
+		}
+
+		if( !level.init )
+        {
+            level.init = 1;
+
+            enable_cheats();
+
+			level thread start_round_delay( level.LRZ_start_delay );
+			level thread set_starting_round( 1 );
+
+			wait(0.05);
 		}
 	}
 }

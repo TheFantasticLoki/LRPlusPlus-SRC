@@ -590,20 +590,7 @@ LRZ_Checks()
 
 thread_LRZ()
 {
-	//self thread LRZ_Big_Msg( "Test Begin" );
-	enable_LRZ_HUD( 1 );
-	wait(0.1);
-	self thread timer_hud(  );
-	//LRZ_Big_Msg( "Timer HUD Enabled" );
-	self thread round_timer_hud(  );
-	//LRZ_Big_Msg( "Round Timer HUD Enabled" );
-	self thread health_remaining_hud(  );
-	//LRZ_Big_Msg( "Health HUD Enabled" );
-	self thread zombie_remaining_hud(  );
-	//LRZ_Big_Msg( "Zombie HUD Enabled" );
-	self thread zone_hud(  );
-	//LRZ_Big_Msg( "Zone HUD Enabled" );
-	//self thread LRZ_Big_Msg( "HUD Enabled" );
+	
 }
 
 round_pause( delay )
