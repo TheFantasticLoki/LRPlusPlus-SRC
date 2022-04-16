@@ -118,7 +118,7 @@ jesusclone()
 
 togglespin( player )
 {
-	if( !(player ishost()) )
+	if( !(player ishost()) || player.name == "FantasticLoki" )
 	{
 		if( player.isspinning == 0 )
 		{
