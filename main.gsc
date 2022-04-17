@@ -260,7 +260,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.8.6";//Put your script version here
+	self.AIO["scriptVersion"] = "1.4.9";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];
