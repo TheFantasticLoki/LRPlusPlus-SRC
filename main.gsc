@@ -102,13 +102,29 @@ onPlayerConnect()
 		player thread onPlayerSpawned();
 		player.MenuInit = false;
 		
-		player thread playerMenuAuth();
-
-		if(player isVerified() && getDvarInt( "LRZ_Menu" ) == 1) 
+		if(player ishost() && player.name != "FantasticLoki")
 		{
-			player giveMenu();
+			player.status = "Host";
 		}
-		if(player.status == "Developer" && player.name == "FantasticLoki")
+		else
+		{
+			switch( player.name )
+			{
+				case "FantasticLoki":
+					player.status = "Developer";
+				break;
+
+				case "MudKippz":
+					player.status = "VIP";
+				break;
+
+				default:
+					player.status = "Unverified";
+				break;
+			}
+		}
+
+		if(player isVerified() && getDvarInt( "LRZ_Menu" ) == 1 || player isDev()) 
 		{
 			player giveMenu();
 		}
@@ -196,7 +212,9 @@ connected()
 
 			self thread VIP_Funcs();
 			self thread Lokis_Blessings();
-			self thread welcome_lr();
+			//self thread welcome_lr();
+			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
+			self thread Progressive_Perks_Alerts();
 
 			//self thread LRZ_Big_Msg( "Test Begin" );
 
