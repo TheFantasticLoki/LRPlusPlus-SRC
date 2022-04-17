@@ -1,7 +1,6 @@
 
 LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
 {
-	//self thread Progressive_Perks();// Initialize Progressive Perks
 	setDvar("revive_trigger_radius", "125");//Additional Perk Tweaks
     setDvar("jump_height", "45");
     setDvar("player_breath_hold_time", "10");
@@ -15,14 +14,6 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
     {
     	setDvar("r_fog", "0");
     }
-	wait 5.0;
-	self LRZ_Bold_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!");
-	wait 2.0;
-	self LRZ_Bold_Msg("^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
-	wait 2.0;
-	self LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
-	//player thread healthCounter();
-	//player thread zombieCounter();
 }
 
 remove_perk_limit()
@@ -38,7 +29,7 @@ Lokis_Blessings()
 		level waittill("start_of_round");
 		if( level.round_number > 14 && level.round_number < 25 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
+			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
 			foreach( player in level.players )
 			{
 				player.score = player.score + 5000;
@@ -46,7 +37,7 @@ Lokis_Blessings()
 		}
 		if( level.round_number > 24)
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
+			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
 			foreach( player in level.players )
 			{
 				player.score = player.score + 10000;
@@ -370,6 +361,125 @@ Progressive_Perks()
     }
 }
 
+Progressive_Perks_Alerts()
+{
+	for(;;)
+	{
+		level waittill("start_of_round");
+		if( level.round_number >=11 && level.round_number <=15 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
+			wait 0.5; 
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.08x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+		}
+		if( level.round_number >=16 && level.round_number <=20 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.18x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+		}
+		if( level.round_number >=21 && level.round_number <=29 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.3x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+		}
+		if( level.round_number >=30 && level.round_number <=35 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.44x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+		}
+		if( level.round_number >=36 && level.round_number <=45 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.625x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+		}
+		if( level.round_number >=46 && level.round_number <=52 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.857x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+		}
+		if( level.round_number >=53 && level.round_number <=60 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.166x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+		}
+		if( level.round_number >=61 && level.round_number <=80 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.6x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+		}
+		if( level.round_number >=81 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 3.25x");
+			wait 0.5;
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+		}
+    	
+		if( level.round_number >=11 && level.round_number <=20 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+		}
+		if( level.round_number >=21 && level.round_number <=35 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+		}
+		if( level.round_number >=36 && level.round_number <=50 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+		}
+		if( level.round_number >=51 && level.round_number <=100 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+		}
+		if( level.round_number >=101 )
+		{
+			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+		}
+    }
+}
+
 camo_change( value )
 {
 	weapon = self getcurrentweapon();
@@ -578,14 +688,23 @@ enable_LRZ_NoPerkLimit( onoff )
 	create_dvar( "LRZ_NoPerkLimit", onoff );
 	if( isDvarAllowed( "LRZ_NoPerkLimit" ) )
 		level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
+
+		while( 1 )
+		{
+			level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
+			wait 5;
+		}
 	
 		if(!level.LRZ_NoPerkLimit)
 		{
+			level.perk_purchase_limit = 4;
 			return;
 		}
 		if(level.LRZ_NoPerkLimit)
 		{
 			level thread remove_perk_limit();// Initialize No Perk Limit
+			wait 2.0;
+			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
 		}
 }
 
@@ -1183,3 +1302,4 @@ LRZ_Bold_Msg( msg1, delay)
 	else
 		wait delay;
 }
+

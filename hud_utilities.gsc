@@ -134,5 +134,5 @@ welcome_lr()
 	text1 destroy();
 	text2 destroy();
 	iconm8 destroy();
-
+	flag_set( "welcome_lr_finished" );
 }
