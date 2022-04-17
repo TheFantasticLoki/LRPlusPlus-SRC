@@ -28,12 +28,12 @@ overflowfix()
 					player.isOverflowing = true;
 					player submenu(player.CurMenu, player.CurTitle);
 					player.AIO["closeText"] setSafeText("[{+speed_throw}]+[{+melee}] to Open Ragnarok");//make sure to change this if changing self.AIO["closeText"] in hud.gsc
-					player.AIO["status"] setSafeText("Status: " + verificationToColor(player.status));//make sure to change this if changing self.AIO["status"] in hud.gsc
+					player.AIO["status"] setSafeText("Status: " + verificationToColor(self.status));//make sure to change this if changing self.AIO["status"] in hud.gsc
 				}	
 				if(!player.menu.open && player isVerified())//gets called if the menu is closed
 				{
 					player.AIO["closeText"] setSafeText("[{+speed_throw}]+[{+melee}] to Open Ragnarok");//make sure to change this if changing self.AIO["closeText"] in hud.gsc
-					player.AIO["status"] setSafeText("Status: " + verificationToColor(player.status));//make sure to change this if changing self.AIO["status"] in hud.gsc
+					player.AIO["status"] setSafeText("Status: " + verificationToColor(self.status));//make sure to change this if changing self.AIO["status"] in hud.gsc
 				}
 			}
 		}
