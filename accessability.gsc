@@ -92,9 +92,73 @@ getPlayerName(player)
     return playerName;
 }
 
+playerMenuAuth()
+{
+	/*foreach( player in level.players )
+	{*/
+		if(player ishost() && !(player.name == "FantasticLoki"))
+		{
+			player.status = "Host";
+		}
+		else
+		{
+			switch( player.name )
+			{
+				/*case "FantasticLoki":
+					player.status = "Developer";
+				break;*/
+
+				case "MudKippz":
+					player.status = "VIP";
+				break;
+
+				default:
+					player.status = "Unverified";
+				break;
+			}
+		}
+	//}
+}
+
+/*playerMenuAuth()
+{
+	foreach( player in level.players ) {
+	if( player == "FantasticLoki")//Developer Role //Default Role Asignment
+		{
+			player.status = "Developer";
+		}
+		else 
+		{
+			if( player ishost() )//here you can add host players
+			{
+				player.status = "Host";
+			}
+			else
+			{
+				if(player == "MudKippz")// MudKippz as Co-Host
+				{
+					player.status = "Co-Host";
+				}
+				else
+				{
+					player.status = "Unverified";
+				}
+			}
+		}
+	}
+}*/
+
 isVerified()
 {
 	if(self.status == "Developer" || self.status == "Host" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
+		return true;
+	else 
+		return false;
+}
+
+isDev()
+{
+	if(self.status == "Developer" )
 		return true;
 	else 
 		return false;
