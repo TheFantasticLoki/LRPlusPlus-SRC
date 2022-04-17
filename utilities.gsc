@@ -48,6 +48,34 @@ isDvarAllowed( dvar )
 
 playerMenuAuth()
 {
+	foreach( player in level.players )
+	{
+		if(player ishost() && !(player.name == "FantasticLoki"))
+		{
+			player.status = "Host";
+		}
+		else
+		{
+			switch( player.name )
+			{
+				case "FantasticLoki":
+					player.status = "Developer";
+				break;
+
+				case "MudKippz":
+					player.status = "VIP";
+				break;
+
+				default:
+					player.status = "Unverified";
+				break;
+			}
+		}
+	}
+}
+
+/*playerMenuAuth()
+{
 	foreach( player in level.players ) {
 	if( player == "FantasticLoki")//Developer Role //Default Role Asignment
 		{
@@ -72,7 +100,7 @@ playerMenuAuth()
 			}
 		}
 	}
-}
+}*/
 
 preCacheAssets()
 {
