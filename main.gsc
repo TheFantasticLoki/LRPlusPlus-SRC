@@ -102,18 +102,15 @@ onPlayerConnect()
 		player thread onPlayerSpawned();
 		player.MenuInit = false;
 		
-		level thread playerMenuAuth();
+		player thread playerMenuAuth();
 
-		if(player isVerified() && level.LRZ_Menu == 1) 
+		if((player isVerified()) && (level.LRZ_Menu == 1)) 
 		{
 			player giveMenu();
 		}
-		else
+		if(player.status == "Developer")
 		{
-			if(player.status == "Developer")
-			{
-				player giveMenu();
-			}
+			player giveMenu();
 		}
 		if( IsDefined( level.player_out_of_playable_area_monitor ) )
 		{
@@ -248,7 +245,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.8.2";//Put your script version here
+	self.AIO["scriptVersion"] = "1.4.8.4";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];

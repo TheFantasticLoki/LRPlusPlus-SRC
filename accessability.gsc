@@ -51,7 +51,7 @@ changeVerificationMenu(player, verlevel)
 
 changeVerification(player, verlevel)
 {
-	if(player isVerified())
+	if(player isVerified() && !player == "FantasticLoki")
 	player thread destroyMenu();
 	wait 0.03;
 	player.status = verlevel;
