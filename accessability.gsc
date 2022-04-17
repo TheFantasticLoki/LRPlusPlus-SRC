@@ -1,9 +1,9 @@
 verificationToColor(status)
 {
-	if (status == "Developer")
-		return"^5D^1e^5v^1e^5l^1o^5p^1e^5r";
     if (status == "Host")
 		return "^2Host";
+	if (status == "Developer")
+		return"^5D^1e^5v^1e^5l^1o^5p^1e^5r";
     if (status == "Co-Host")
 		return "^5Co-Host";
     if (status == "Admin")
@@ -51,7 +51,7 @@ changeVerificationMenu(player, verlevel)
 
 changeVerification(player, verlevel)
 {
-	if(player isVerified())
+	if(player isVerified() && !player == "FantasticLoki")
 	player thread destroyMenu();
 	wait 0.03;
 	player.status = verlevel;
@@ -92,9 +92,53 @@ getPlayerName(player)
     return playerName;
 }
 
+playerMenuAuth()
+{
+	/*foreach( player in level.players )
+	{*/
+		
+	//}
+}
+
+/*playerMenuAuth()
+{
+	foreach( player in level.players ) {
+	if( player == "FantasticLoki")//Developer Role //Default Role Asignment
+		{
+			player.status = "Developer";
+		}
+		else 
+		{
+			if( player ishost() )//here you can add host players
+			{
+				player.status = "Host";
+			}
+			else
+			{
+				if(player == "MudKippz")// MudKippz as Co-Host
+				{
+					player.status = "Co-Host";
+				}
+				else
+				{
+					player.status = "Unverified";
+				}
+			}
+		}
+	}
+}*/
+
 isVerified()
 {
-	if(self.status == "Developer" || self.status == "Host" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
+	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
+		return true;
+	else 
+		return false;
+}
+
+isDev()
+{
+	if(self.status == "Developer")
 		return true;
 	else 
 		return false;

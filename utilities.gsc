@@ -23,8 +23,8 @@ resetBooleans()
 
 test()
 {
-	self LRZ_Bold_Msg("Test: "+getDvarInt( "LRZ_enabled" ));
-	self dopmammo();
+	//self LRZ_Bold_Msg("Test: PlayerName = "+player.name);
+	self LRZ_Bold_Msg("Test: Player = "+level.LRZ_NoPerkLimit);
 }
 
 debugexit()
@@ -44,34 +44,6 @@ isDvarAllowed( dvar )
 		return false;
 	else
 		return true;
-}
-
-playerMenuAuth()
-{
-	foreach( player in level.players ) {
-	if( getPlayerName(player) == "FantasticLoki")//Developer Role //Default Role Asignment
-		{
-			player.status = "Developer";
-		}
-		else 
-		{
-			if( player ishost() )//here you can add host players
-			{
-				player.status = "Host";
-			}
-			else
-			{
-				if(getPlayerName(player) == "Specxi+")// MudKippz as Co-Host
-				{
-					player.status = "Co-Host";
-				}
-				else
-				{
-					player.status = "Unverified";
-				}
-			}
-		}
-	}
 }
 
 preCacheAssets()

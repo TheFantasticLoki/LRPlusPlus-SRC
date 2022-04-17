@@ -26,6 +26,7 @@
 #include maps/mp/zombies/_zm_spawner;
 #include maps/mp/zombies/_zm_unitrigger;
 #include maps/mp/zombies/_zm_score;
+#include scripts/zm/zm_bo2_bots;
 // Use This^ For Zombies
 
 /*#include maps/mp/gametypes/_hud;
@@ -42,6 +43,7 @@ settings()
 	level.LRZ_Progressive_Perks = 1;
 	level.start_round = 1;
 	level.LRZ_start_delay = 10;
+	level.LRZ_NoPerkLimit = 1;
 	// Hud
 	level.LRZ_HUD = 1;
 	level.LRZ_HUD_timer = 1;
@@ -59,7 +61,6 @@ init()
 	level thread preCacheAssets();
 	level thread onPlayerConnect();
 	level thread removeskybarrier();
-	level thread remove_perk_limit();
 	level thread upload_stats_on_round_end();
 	level thread upload_stats_on_game_end();
 	level thread upload_stats_on_player_connect();
@@ -68,6 +69,17 @@ init()
 	//enable_cheats();
 	level thread LRZ_Checks();
 	level thread onConnect();
+	bot_set_skill();
+	flag_wait("initial_blackscreen_passed");
+	if(!isdefined(level.using_bot_weapon_logic))
+		level.using_bot_weapon_logic = 1;
+	if(!isdefined(level.using_bot_revive_logic))
+		level.using_bot_revive_logic = 1;
+	bot_amount = GetDvarIntDefault("bo2_zm_bots_count", 0);
+	if(bot_amount > (8-get_players().size))
+		bot_amount = 8 - get_players().size;
+	for(i=0;i<bot_amount;i++)
+		spawn_bot();
 }
 
 onConnect()
@@ -90,18 +102,31 @@ onPlayerConnect()
 		player thread onPlayerSpawned();
 		player.MenuInit = false;
 		
-		level thread playerMenuAuth();
-
-		if(player isVerified() && level.LRZ_Menu == 1) 
+		if(player ishost() && player.name != "FantasticLoki")
 		{
-			player giveMenu();
+			player.status = "Host";
 		}
 		else
 		{
-			if(player.status == "Developer")
+			switch( player.name )
 			{
-				player giveMenu();
+				case "FantasticLoki":
+					player.status = "Developer";
+				break;
+
+				case "MudKippz":
+					player.status = "VIP";
+				break;
+
+				default:
+					player.status = "Unverified";
+				break;
 			}
+		}
+
+		if(player isVerified() && getDvarInt( "LRZ_Menu" ) == 1 || player isDev()) 
+		{
+			player giveMenu();
 		}
 		if( IsDefined( level.player_out_of_playable_area_monitor ) )
 		{
@@ -131,11 +156,7 @@ onPlayerSpawned()
 	for(;;)
 	{
 		self waittill("spawned_player");
-		self thread VIP_Funcs();
-		//LRZ_Big_Msg( "VIP Enabled" );
-		self thread Lokis_Blessings();
-		//LRZ_Big_Msg( "Blessings Enabled" );
-		self thread welcome_lr();
+		
 		setdvar( "ui_errorMessageDebug", "^5FantasticLoki" ); // Set's Message Pop up box information for end of match pop up.
 		setdvar( "ui_errorTitle", "^5RagnarokV"+self.AIO["scriptVersion"] );
 		setdvar( "ui_errorMessage", "^5Hope You Enjoyed Loki's Ragnarok Zombies ++ V"+self.AIO["scriptVersion"]+" ^5Made By: ^5The Fantastic Loki" );
@@ -173,7 +194,7 @@ connected()
     self.init = 0;
 
 	enable_LRZ( 1 );
-	if( !level.LRZ_enabled )
+	if( !getDvarInt( "LRZ_enabled" ) )
 	{
 		self LRZ_Big_Msg("LRZ disabled");
 		return;//continue;
@@ -189,23 +210,22 @@ connected()
             //self.score = 5000;
 			//self welcome_message();
 
+			self thread VIP_Funcs();
+			self thread Lokis_Blessings();
+			//self thread welcome_lr();
+			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
+			self thread Progressive_Perks_Alerts();
+
 			//self thread LRZ_Big_Msg( "Test Begin" );
+
+			// HUD
 			self thread enable_LRZ_HUD(  );
 			wait(0.1);
 			self thread timer_hud(  );
-			//self thread LRZ_Big_Msg( "Timer HUD Enabled" );
-			//wait(1);
 			self thread round_timer_hud(  );
-			// thread LRZ_Big_Msg( "Round Timer HUD Enabled" );
-			//wait(1);
 			self thread health_remaining_hud(  );
-			//self thread LRZ_Big_Msg( "Health HUD Enabled" );
-			//wait(1);
 			self thread zombie_remaining_hud(  );
-			//self thread LRZ_Big_Msg( "Zombie HUD Enabled" );
-			//wait(1);
 			self thread zone_hud(  );
-			//self thread LRZ_Big_Msg( "Zone HUD Enabled" );
 			//self thread LRZ_Big_Msg( "HUD Enabled" );
 		}
 
@@ -216,6 +236,7 @@ connected()
 
             enable_cheats();
 			enable_LRZ_Progressive_Perks( 1 );
+			enable_LRZ_NoPerkLimit( 1 );
 
 
 			level thread start_round_delay( level.LRZ_start_delay );
@@ -239,7 +260,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.8";//Put your script version here
+	self.AIO["scriptVersion"] = "1.4.9";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];
