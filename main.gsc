@@ -60,7 +60,6 @@ init()
 	level thread preCacheAssets();
 	level thread onPlayerConnect();
 	level thread removeskybarrier();
-	level thread remove_perk_limit();
 	level thread upload_stats_on_round_end();
 	level thread upload_stats_on_game_end();
 	level thread upload_stats_on_player_connect();
@@ -143,9 +142,9 @@ onPlayerSpawned()
 	for(;;)
 	{
 		self waittill("spawned_player");
-		self thread VIP_Funcs();
+		
 		//LRZ_Big_Msg( "VIP Enabled" );
-		self thread Lokis_Blessings();
+		
 		//LRZ_Big_Msg( "Blessings Enabled" );
 		self thread welcome_lr();
 		setdvar( "ui_errorMessageDebug", "^5FantasticLoki" ); // Set's Message Pop up box information for end of match pop up.
@@ -201,23 +200,19 @@ connected()
             //self.score = 5000;
 			//self welcome_message();
 
+			self thread VIP_Funcs();
+			self thread Lokis_Blessings();
+
 			//self thread LRZ_Big_Msg( "Test Begin" );
+
+			// HUD
 			self thread enable_LRZ_HUD(  );
 			wait(0.1);
 			self thread timer_hud(  );
-			//self thread LRZ_Big_Msg( "Timer HUD Enabled" );
-			//wait(1);
 			self thread round_timer_hud(  );
-			// thread LRZ_Big_Msg( "Round Timer HUD Enabled" );
-			//wait(1);
 			self thread health_remaining_hud(  );
-			//self thread LRZ_Big_Msg( "Health HUD Enabled" );
-			//wait(1);
 			self thread zombie_remaining_hud(  );
-			//self thread LRZ_Big_Msg( "Zombie HUD Enabled" );
-			//wait(1);
 			self thread zone_hud(  );
-			//self thread LRZ_Big_Msg( "Zone HUD Enabled" );
 			//self thread LRZ_Big_Msg( "HUD Enabled" );
 		}
 
@@ -225,6 +220,7 @@ connected()
         {
             level.init = 1;
 			level thread LokisZombiesPlusPlus(); 
+			level thread remove_perk_limit();
 
             enable_cheats();
 			enable_LRZ_Progressive_Perks( 1 );
