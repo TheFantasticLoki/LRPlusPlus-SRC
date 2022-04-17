@@ -1,9 +1,9 @@
 verificationToColor(status)
 {
-	if (status == "Developer")
-		return"^5D^1e^5v^1e^5l^1o^5p^1e^5r";
     if (status == "Host")
 		return "^2Host";
+	if (status == "Developer")
+		return"^5D^1e^5v^1e^5l^1o^5p^1e^5r";
     if (status == "Co-Host")
 		return "^5Co-Host";
     if (status == "Admin")
@@ -96,27 +96,7 @@ playerMenuAuth()
 {
 	/*foreach( player in level.players )
 	{*/
-		if(player ishost() && !(player.name == "FantasticLoki"))
-		{
-			player.status = "Host";
-		}
-		else
-		{
-			switch( player.name )
-			{
-				/*case "FantasticLoki":
-					player.status = "Developer";
-				break;*/
-
-				case "MudKippz":
-					player.status = "VIP";
-				break;
-
-				default:
-					player.status = "Unverified";
-				break;
-			}
-		}
+		
 	//}
 }
 
@@ -150,7 +130,7 @@ playerMenuAuth()
 
 isVerified()
 {
-	if(self.status == "Developer" || self.status == "Host" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
+	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified")
 		return true;
 	else 
 		return false;
@@ -158,7 +138,7 @@ isVerified()
 
 isDev()
 {
-	if(self.status == "Developer" )
+	if(self.status == "Developer")
 		return true;
 	else 
 		return false;
