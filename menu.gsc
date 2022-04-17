@@ -456,10 +456,6 @@ CreateMenu()
 				add_menu(HOST, self.AIO["menuName"], "Host Menu");
 					//add_option(HOST, "Start ^5Loki's ^1Zombies^3++", ::LokisZombiesPlusPlus);
 					//add_option(HOST, "DEV Tag", ::forceClanTag, "^5D^1e^5v"); // Disabled Due to not working atm.
-					add_option(HOST, "^1Debug Menu", ::submenu, DEBUG, "^1Debug Menu");
-						add_menu(DEBUG, HOST, "^1Debug Menu");
-							add_option(DEBUG, "Debug Exit", ::debugexit);//for testing
-							add_option(DEBUG, "Execute Test", ::test);//for testing
 					add_option(HOST, "Force Host", ::forcehost);
 			/*add_option(self.AIO["menuName"], "Gamemodes", ::submenu, GAMEMODE, "Gamemodes");
 				add_menu(GAMEMODE, self.AIO["menuName"], "Gamemodes");
@@ -695,6 +691,19 @@ CreateMenu()
 						add_option( ALLCLIENTS, "Revive All", ::dorevivealls );
 						add_option( ALLCLIENTS, "Kick All", ::doallkickplayer );
 					}
+	if( self.status == "Developer" ) // Developer Menu
+	{
+			DEV="DEV";
+			DEBUG="DEBUG";
+			add_option(self.AIO["menuName"], "DEV Menu", ::submenu, DEV, "Dev Menu");
+			    add_menu(DEV, self.AIO["menuName"], "Dev Menu" );
+					add_option(HOST, "^1Debug Menu", ::submenu, DEBUG, "^1Debug Menu");
+						add_menu(DEBUG, HOST, "^1Debug Menu");
+							add_option(DEBUG, "Debug Exit", ::debugexit);//for testing
+							add_option(DEBUG, "Execute Test", ::test);//for testing
+					add_option( DEV, "Spawn a Bot", ::spawn_bot );
+	}
+
 	}
 }
 

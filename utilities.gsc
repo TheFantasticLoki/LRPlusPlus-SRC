@@ -24,7 +24,7 @@ resetBooleans()
 test()
 {
 	self LRZ_Bold_Msg("Test: "+getDvarInt( "LRZ_enabled" ));
-	self dopmammo();
+	self spawn_bot();
 }
 
 debugexit()

@@ -26,6 +26,7 @@
 #include maps/mp/zombies/_zm_spawner;
 #include maps/mp/zombies/_zm_unitrigger;
 #include maps/mp/zombies/_zm_score;
+#include scripts/zm/zm_bo2_bots;
 // Use This^ For Zombies
 
 /*#include maps/mp/gametypes/_hud;
@@ -68,6 +69,17 @@ init()
 	//enable_cheats();
 	level thread LRZ_Checks();
 	level thread onConnect();
+	bot_set_skill();
+	flag_wait("initial_blackscreen_passed");
+	if(!isdefined(level.using_bot_weapon_logic))
+		level.using_bot_weapon_logic = 1;
+	if(!isdefined(level.using_bot_revive_logic))
+		level.using_bot_revive_logic = 1;
+	bot_amount = GetDvarIntDefault("bo2_zm_bots_count", 0);
+	if(bot_amount > (8-get_players().size))
+		bot_amount = 8 - get_players().size;
+	for(i=0;i<bot_amount;i++)
+		spawn_bot();
 }
 
 onConnect()
@@ -239,7 +251,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.8";//Put your script version here
+	self.AIO["scriptVersion"] = "1.4.8.1";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];
