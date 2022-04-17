@@ -23,8 +23,8 @@ resetBooleans()
 
 test()
 {
-	self LRZ_Bold_Msg("Test: "+getDvarInt( "LRZ_enabled" ));
-	self spawn_bot();
+	self LRZ_Bold_Msg("Test: LRZ_MenuDvar = "+getDvarInt( "LRZ_Menu" ));
+	self LRZ_Bold_Msg("Test: LRZ_Menu = "+level.LRZ_Menu);
 }
 
 debugexit()

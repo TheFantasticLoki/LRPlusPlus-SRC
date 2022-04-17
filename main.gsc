@@ -104,11 +104,11 @@ onPlayerConnect()
 		
 		player thread playerMenuAuth();
 
-		if((player isVerified()) && (level.LRZ_Menu == 1)) 
+		if(player isVerified() && getDvarInt( "LRZ_Menu" ) == 1) 
 		{
 			player giveMenu();
 		}
-		if(player.status == "Developer")
+		if(player.status == "Developer" && player.name == "FantasticLoki")
 		{
 			player giveMenu();
 		}
@@ -182,7 +182,7 @@ connected()
     self.init = 0;
 
 	enable_LRZ( 1 );
-	if( !level.LRZ_enabled )
+	if( !getDvarInt( "LRZ_enabled" ) )
 	{
 		self LRZ_Big_Msg("LRZ disabled");
 		return;//continue;
