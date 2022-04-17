@@ -53,3 +53,8 @@ doBuyNuke(price)
         iprintlnbold( "^1Not enough points!" );
     }
 }
+
+Zombie_Vars()
+{
+    level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
+}
