@@ -573,6 +573,22 @@ enable_LRZ_Progressive_Perks( onoff )
 		}
 }
 
+enable_LRZ_NoPerkLimit( onoff )
+{
+	create_dvar( "LRZ_NoPerkLimit", onoff );
+	if( isDvarAllowed( "LRZ_NoPerkLimit" ) )
+		level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
+	
+		if(!level.LRZ_NoPerkLimit)
+		{
+			return;
+		}
+		if(level.LRZ_NoPerkLimit)
+		{
+			level thread remove_perk_limit();// Initialize No Perk Limit
+		}
+}
+
 enable_LRZ_HUD( onoff )
 {
 	create_dvar( "LRZ_HUD", onoff );

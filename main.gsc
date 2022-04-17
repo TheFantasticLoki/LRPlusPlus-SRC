@@ -43,6 +43,7 @@ settings()
 	level.LRZ_Progressive_Perks = 1;
 	level.start_round = 1;
 	level.LRZ_start_delay = 10;
+	level.LRZ_NoPerkLimit = 1;
 	// Hud
 	level.LRZ_HUD = 1;
 	level.LRZ_HUD_timer = 1;
@@ -220,10 +221,10 @@ connected()
         {
             level.init = 1;
 			level thread LokisZombiesPlusPlus(); 
-			level thread remove_perk_limit();
 
             enable_cheats();
 			enable_LRZ_Progressive_Perks( 1 );
+			enable_LRZ_NoPerkLimit( 1 );
 
 
 			level thread start_round_delay( level.LRZ_start_delay );
