@@ -36,7 +36,7 @@ Lokis_Blessings()
 	for(;;)
 	{
 		level waittill("start_of_round");
-		if( level.round_number > 14 )
+		if( level.round_number > 14 && level.round_number < 25 )
 		{
 			self iprintln("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
 			foreach( player in level.players )
@@ -49,7 +49,7 @@ Lokis_Blessings()
 			self iprintln("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
 			foreach( player in level.players )
 			{
-				player.score = player.score + 20000;
+				player.score = player.score + 10000;
 				player thread drinkallperks();
 			}
 		}
