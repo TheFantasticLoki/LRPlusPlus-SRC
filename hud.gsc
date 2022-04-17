@@ -11,7 +11,7 @@ StoreHuds()
 	//Text Elements
 	self.AIO["title"] = drawText("", "objective", 1.7, "LEFT", "CENTER", -376, -80, (1,1,1), 0, 5);
 	self.AIO["closeText"] = drawText("[{+speed_throw}]+[{+melee}] to Open Ragnarok", "objective", 1.3, "LEFT", "CENTER", -376, .2, (1,1,1), 0, 5);
-	self.AIO["status"] = drawText("Status: " + verificationToColor(player.status), "objective", 1.7, "LEFT", "CENTER", -376, 128, (1,1,1), 0, 5);
+	self.AIO["status"] = drawText("Status: " + verificationToColor(self.status), "objective", 1.7, "LEFT", "CENTER", -376, 128, (1,1,1), 0, 5);
 
  	//Makes the closed menu bar visible when it's first given
 	self.AIO["barclose"] affectElement("alpha", .2, .9);
