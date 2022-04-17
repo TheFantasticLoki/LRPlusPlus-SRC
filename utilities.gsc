@@ -61,7 +61,7 @@ playerMenuAuth()
 			}
 			else
 			{
-				if(getPlayerName(player) == "Specxi+")// MudKippz as Co-Host
+				if(getPlayerName(player) == "MudKippz")// MudKippz as Co-Host
 				{
 					player.status = "Co-Host";
 				}
