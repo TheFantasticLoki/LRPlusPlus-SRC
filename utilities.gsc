@@ -23,8 +23,8 @@ resetBooleans()
 
 test()
 {
-	self LRZ_Bold_Msg("Test: LRZ_MenuDvar = "+getDvarInt( "LRZ_Menu" ));
-	self LRZ_Bold_Msg("Test: LRZ_Menu = "+level.LRZ_Menu);
+	//self LRZ_Bold_Msg("Test: PlayerName = "+player.name);
+	self LRZ_Bold_Msg("Test: Player = "+player);
 }
 
 debugexit()
@@ -49,7 +49,7 @@ isDvarAllowed( dvar )
 playerMenuAuth()
 {
 	foreach( player in level.players ) {
-	if( getPlayerName(player) == "FantasticLoki")//Developer Role //Default Role Asignment
+	if( player == "FantasticLoki")//Developer Role //Default Role Asignment
 		{
 			player.status = "Developer";
 		}
@@ -61,7 +61,7 @@ playerMenuAuth()
 			}
 			else
 			{
-				if(getPlayerName(player) == "MudKippz")// MudKippz as Co-Host
+				if(player == "MudKippz")// MudKippz as Co-Host
 				{
 					player.status = "Co-Host";
 				}
