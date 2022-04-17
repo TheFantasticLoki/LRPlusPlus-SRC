@@ -45,6 +45,7 @@ CreateMenu()
 			CLONE="CLONE";
 			GSOUNDS="GSOUNDS";
 			BULLETS="BULLETS";
+			PERKS="PERKS";
 			add_option(self.AIO["menuName"], "VIP Menu", ::submenu, VIP, "VIP Menu");
 				add_menu(VIP, self.AIO["menuName"], "VIP Menu");
 					if( getdvar( "mapname" ) == "zm_transit" )
@@ -305,31 +306,6 @@ CreateMenu()
 							add_option( WEAPONS, "DSR", ::doweapon, "dsr50_upgraded_zm+is" );
 							add_option( WEAPONS, "Take All Weapons", ::takeall );
 						}
-					add_option( VIP, "Double Jump", ::doublejump );
-					add_option( VIP, "Clone Menu", ::submenu, CLONE, "Clone Menu" );
-						add_menu( CLONE, VIP, "Clone Menu" );
-							add_option( CLONE, "Clone Yourself", ::cloneme );
-							add_option( CLONE, "Dead Clone", ::deadclone );
-							add_option( CLONE, "Exploded Dead Clone", ::expclone );
-							add_option( CLONE, "Jesus Clone", ::jesusclone );
-					add_option( VIP, "Sounds Menu", ::submenu, GSOUNDS, "Sounds Menu" );
-						add_menu( GSOUNDS, VIP, "Sounds Menu" );
-							add_option( GSOUNDS, "Juggernaut Machine Jingle", ::doplaysounds, "mus_perks_jugganog_jingle" );
-							add_option( GSOUNDS, "Sleight Of Hand Machine Jingle", ::doplaysounds, "mus_perks_speed_jingle" );
-							add_option( GSOUNDS, "Quick Revive Machine Jingle", ::doplaysounds, "mus_perks_revive_jingle" );
-							add_option( GSOUNDS, "Double Tap Machine Jingle", ::doplaysounds, "mus_perks_doubletap_jingle" );
-							add_option( GSOUNDS, "Marathon Machine Jingle", ::doplaysounds, "mus_perks_stamin_jingle" );
-							add_option( GSOUNDS, "Mule Kick Machine Jingle", ::doplaysounds, "mus_perks_mulekick_jingle" );
-							add_option( GSOUNDS, "Deadshot Machine Jingle", ::doplaysounds, "mus_perks_deadshot_jingle" );
-							add_option( GSOUNDS, "Tombstone Machine Jingle", ::doplaysounds, "mus_perks_tombstone_jingle" );
-							add_option( GSOUNDS, "Whos Who Machine Jingle", ::doplaysounds, "mus_perks_whoswho_jingle" );
-							add_option( GSOUNDS, "Packer Punch Machine Jingle", ::doplaysounds, "mus_perks_packa_jingle" );
-							add_option( GSOUNDS, "Electric Cherry Machine Jingle", ::doplaysounds, "mus_perks_cherry_jingle" );
-							add_option( GSOUNDS, "Monkey Scream", ::doplaysounds, "zmb_vox_monkey_scream" );
-							add_option( GSOUNDS, "Maxis Laugh", ::doplaysounds, "mus_zombie_splash_screen" );
-							add_option( GSOUNDS, "Zombie Spawn", ::doplaysounds, "zmb_zombie_spawn" );
-							add_option( GSOUNDS, "Magic Box", ::doplaysounds, "zmb_music_box" );
-							add_option( GSOUNDS, "Purchase", ::doplaysounds, "zmb_cha_ching" );
 					add_option( VIP, "Bullets Menu", ::submenu, BULLETS, "Bullets Menu" );
 						add_menu( BULLETS, VIP, "Bullets Menu" );
 							add_option( BULLETS, "Normal Bullets", ::normalbullets );
@@ -362,6 +338,35 @@ CreateMenu()
 								add_option( BULLETS, "Staff of Wind", ::dobullet, "staff_air_zm" );
 								add_option( BULLETS, "Boomhilda", ::dobullet, "c96_upgraded_zm" );
 							}
+					add_option( VIP, "Give Perks", ::submenu, PERKS, "Give Perks" );
+						add_menu( PERKS, VIP, "Give Perks" );
+							add_option( PERKS, "Give All Perks", ::drinkallperks );
+					add_option( VIP, "Double Jump", ::doublejump );
+					add_option( VIP, "Clone Menu", ::submenu, CLONE, "Clone Menu" );
+						add_menu( CLONE, VIP, "Clone Menu" );
+							add_option( CLONE, "Clone Yourself", ::cloneme );
+							add_option( CLONE, "Dead Clone", ::deadclone );
+							add_option( CLONE, "Exploded Dead Clone", ::expclone );
+							add_option( CLONE, "Jesus Clone", ::jesusclone );
+					add_option( VIP, "Sounds Menu", ::submenu, GSOUNDS, "Sounds Menu" );
+						add_menu( GSOUNDS, VIP, "Sounds Menu" );
+							add_option( GSOUNDS, "Juggernaut Machine Jingle", ::doplaysounds, "mus_perks_jugganog_jingle" );
+							add_option( GSOUNDS, "Sleight Of Hand Machine Jingle", ::doplaysounds, "mus_perks_speed_jingle" );
+							add_option( GSOUNDS, "Quick Revive Machine Jingle", ::doplaysounds, "mus_perks_revive_jingle" );
+							add_option( GSOUNDS, "Double Tap Machine Jingle", ::doplaysounds, "mus_perks_doubletap_jingle" );
+							add_option( GSOUNDS, "Marathon Machine Jingle", ::doplaysounds, "mus_perks_stamin_jingle" );
+							add_option( GSOUNDS, "Mule Kick Machine Jingle", ::doplaysounds, "mus_perks_mulekick_jingle" );
+							add_option( GSOUNDS, "Deadshot Machine Jingle", ::doplaysounds, "mus_perks_deadshot_jingle" );
+							add_option( GSOUNDS, "Tombstone Machine Jingle", ::doplaysounds, "mus_perks_tombstone_jingle" );
+							add_option( GSOUNDS, "Whos Who Machine Jingle", ::doplaysounds, "mus_perks_whoswho_jingle" );
+							add_option( GSOUNDS, "Packer Punch Machine Jingle", ::doplaysounds, "mus_perks_packa_jingle" );
+							add_option( GSOUNDS, "Electric Cherry Machine Jingle", ::doplaysounds, "mus_perks_cherry_jingle" );
+							add_option( GSOUNDS, "Monkey Scream", ::doplaysounds, "zmb_vox_monkey_scream" );
+							add_option( GSOUNDS, "Maxis Laugh", ::doplaysounds, "mus_zombie_splash_screen" );
+							add_option( GSOUNDS, "Zombie Spawn", ::doplaysounds, "zmb_zombie_spawn" );
+							add_option( GSOUNDS, "Magic Box", ::doplaysounds, "zmb_music_box" );
+							add_option( GSOUNDS, "Purchase", ::doplaysounds, "zmb_cha_ching" );
+					
 							
 
 	}
@@ -700,6 +705,8 @@ CreateMenu()
 						add_menu(DEBUG, DEV, "^1Debug Menu");
 							add_option(DEBUG, "Debug Exit", ::debugexit);//for testing
 							add_option(DEBUG, "Execute Test", ::test);//for testing
+							add_option(DEBUG, "Test Self Status", ::DEBUG_Status);
+							add_option(DEBUG, "Test Self isDev", ::DEBUG_isDev);
 					add_option( DEV, "Spawn a Bot", ::spawn_bot );
 	}
 
@@ -733,7 +740,7 @@ updatePlayersMenu()
 		add_option( "pOpt " + ( i + "_3" ), "^4VIP", ::changeverificationmenu, player, "VIP" );
 		add_option( "pOpt " + ( i + "_3" ), "^1Admin", ::changeverificationmenu, player, "Admin" );
 		add_option( "pOpt " + ( i + "_3" ), "^5Co-Host", ::changeverificationmenu, player, "Co-Host" );
-		if( !(player.status == "Host" || player.status == "Developer") || !(player.status == "Developer") )
+		if( !(player ishost() || player isDev()) )
 		{
 			add_option( "pOpt " + i, "Options", ::submenu, "pOpt " + ( i + "_2" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
 			add_menu( "pOpt " + ( i + "_2" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
@@ -878,6 +885,151 @@ updatePlayersMenu()
 				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
 			}
 		}
+		/*if( (self ishost() || self isDev()) )
+		{
+			add_option( "pOpt " + i, "Options", ::submenu, "pOpt " + ( i + "_2" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
+			add_menu( "pOpt " + ( i + "_2" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
+			if( getdvar( "mapname" ) == "zm_transit" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give JetGun", ::dogiveplayerweapon3, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+			if( getdvar( "mapname" ) == "zm_nuked" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+			if( getdvar( "mapname" ) == "zm_highrise" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Sliquifier", ::dogiveplayerweapon4, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+			if( getdvar( "mapname" ) == "zm_prison" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Blundergat", ::dogiveplayerweapon5, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+			if( getdvar( "mapname" ) == "zm_buried" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Paralyzer", ::dogiveplayerweapon6, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+			if( getdvar( "mapname" ) == "zm_tomb" )
+			{
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
+				add_option( "pOpt " + ( i + "_2" ), "Teleport To Him", ::doteleporttohim, player );
+				add_option( "pOpt " + ( i + "_2" ), "Send To Space", ::sendtospace, player );
+				add_option( "pOpt " + ( i + "_2" ), "Freeze Position", ::playerfrezecontrol, player );
+				add_option( "pOpt " + ( i + "_2" ), "Take All Weapons", ::chicitakeweaponplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Default Weapon", ::dogiveplayerweaponbruh, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun", ::dogiveplayerweapon, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give RayGun X2", ::dogiveplayerweapon2, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Staff of Lightning", ::dogiveplayerweapon7, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Staff of Fire", ::dogiveplayerweapon8, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Staff of Ice", ::dogiveplayerweapon9, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Staff of Wind", ::dogiveplayerweapon10, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give GodMod", ::playergivegodmod, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Unlimited Ammo", ::playerunlimitedammo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Points", ::dopointsplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Perks", ::allperks, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Max Rank", ::dorankplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Give Trophies", ::dotrophiesplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Spin Player", ::togglespin, player );
+				add_option( "pOpt " + ( i + "_2" ), "Blind Player", ::accecastronzo, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kill Player", ::dokillnoobplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Revive Player", ::doreviveplayer, player );
+				add_option( "pOpt " + ( i + "_2" ), "Kick Player", ::kickplayer, player );
+			}
+		}*/
 		i++;
 	}
 
