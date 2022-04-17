@@ -560,6 +560,11 @@ enable_LRZ_Progressive_Perks( onoff )
 	
 		if(!level.LRZ_Progressive_Perks)
 		{
+			setDvar("perk_weapRateMultiplier", "0.75");
+			setDvar("perk_weapReloadMultiplier", "0.5");
+			setDvar("perk_weapSpreadMultiplier", "0.65");
+			setDvar("player_clipSizeMultiplier", "1.0");
+			setDvar("player_lastStandBleedoutTime", "45");
 			return;
 		}
 		if(level.LRZ_Progressive_Perks)
