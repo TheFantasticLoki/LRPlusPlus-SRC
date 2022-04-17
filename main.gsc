@@ -141,10 +141,6 @@ onPlayerSpawned()
 	{
 		self waittill("spawned_player");
 		
-		//LRZ_Big_Msg( "VIP Enabled" );
-		
-		//LRZ_Big_Msg( "Blessings Enabled" );
-		self thread welcome_lr();
 		setdvar( "ui_errorMessageDebug", "^5FantasticLoki" ); // Set's Message Pop up box information for end of match pop up.
 		setdvar( "ui_errorTitle", "^5RagnarokV"+self.AIO["scriptVersion"] );
 		setdvar( "ui_errorMessage", "^5Hope You Enjoyed Loki's Ragnarok Zombies ++ V"+self.AIO["scriptVersion"]+" ^5Made By: ^5The Fantastic Loki" );
@@ -200,6 +196,7 @@ connected()
 
 			self thread VIP_Funcs();
 			self thread Lokis_Blessings();
+			self thread welcome_lr();
 
 			//self thread LRZ_Big_Msg( "Test Begin" );
 
