@@ -733,10 +733,10 @@ updatePlayersMenu()
             self.menu.curs["PlayersMenu"] = playersizefixed;
         }
 		
-		add_option( "PlayersMenu", "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ), ::submenu, "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
-		add_menu( "pOpt " + i, "PlayersMenu", "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
-		add_option( "pOpt " + i, "Status", ::submenu, "pOpt " + ( i + "_3" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
-		add_menu( "pOpt " + ( i + "_3" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
+		add_option( "PlayersMenu", "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ), ::submenu, "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
+		add_menu( "pOpt " + i, "PlayersMenu", "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
+		add_option( "pOpt " + i, "Status", ::submenu, "pOpt " + ( i + "_3" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
+		add_menu( "pOpt " + ( i + "_3" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
 		add_option( "pOpt " + ( i + "_3" ), "Unverify", ::changeverificationmenu, player, "Unverified" );
 		add_option( "pOpt " + ( i + "_3" ), "^3Verify", ::changeverificationmenu, player, "Verified" );
 		add_option( "pOpt " + ( i + "_3" ), "^4VIP", ::changeverificationmenu, player, "VIP" );
@@ -744,8 +744,8 @@ updatePlayersMenu()
 		add_option( "pOpt " + ( i + "_3" ), "^5Co-Host", ::changeverificationmenu, player, "Co-Host" );
 		if( !(player ishost() || player isDev()) )
 		{
-			add_option( "pOpt " + i, "Options", ::submenu, "pOpt " + ( i + "_2" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
-			add_menu( "pOpt " + ( i + "_2" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playername ) ) );
+			add_option( "pOpt " + i, "Options", ::submenu, "pOpt " + ( i + "_2" ), "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
+			add_menu( "pOpt " + ( i + "_2" ), "pOpt " + i, "[" + ( verificationtocolor( player.status ) + ( "^7] " + playerName ) ) );
 			if( getdvar( "mapname" ) == "zm_transit" )
 			{
 				add_option( "pOpt " + ( i + "_2" ), "Teleport To Me", ::doteleporttome, player );
