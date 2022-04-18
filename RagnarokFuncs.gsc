@@ -56,5 +56,9 @@ doBuyNuke(price)
 
 Zombie_Vars()
 {
-    level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
+    for(;;)
+    {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
+        wait 0.005;
+    }
 }

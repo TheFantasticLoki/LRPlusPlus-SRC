@@ -680,6 +680,7 @@ enable_LRZ_Progressive_Perks( onoff )
 		if(level.LRZ_Progressive_Perks)
 		{
 			self thread Progressive_Perks();// Initialize Progressive Perks
+			self thread Progressive_Perks_Alerts();
 		}
 }
 
@@ -705,6 +706,28 @@ enable_LRZ_NoPerkLimit( onoff )
 			level thread remove_perk_limit();// Initialize No Perk Limit
 			wait 2.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
+		}
+}
+
+enable_LRZ_Harder_Zombies( onoff )
+{
+	create_dvar( "LRZ_Harder_Zombies", onoff );
+	if( isDvarAllowed( "LRZ_Harder_Zombies" ) )
+		level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
+
+		while( 1 )
+		{
+			level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
+			wait 5;
+		}
+	
+		if(!level.LRZ_Harder_Zombies)
+		{
+			return;
+		}
+		if(level.LRZ_Harder_Zombies)
+		{
+			level thread Zombie_Vars();// Initialize Harder Zombies
 		}
 }
 
@@ -895,7 +918,7 @@ timer_hud_watcher( onoff )
 	}
 }
 
-LRZ_Big_Msg( msg1, msg2 )
+LRZ_Big_Msg( msg1, msg2 ) // Must Be Threaded
 {
 	flag_wait( "initial_blackscreen_passed" );
 	text1 = self createfontstring( "hudbig", 2.5 );
@@ -1272,9 +1295,7 @@ zone_hud_watcher( x, y )
 				self.zone_hud.alpha = 0;
 				wait 0.2;
 
-				
 				self.zone_hud settext(zone);
-				
 
 				self.zone_hud fadeovertime(0.2);
 				self.zone_hud.alpha = 1;
@@ -1294,7 +1315,7 @@ LRZ_Zone_Hud_settext()
 	
 }
 
-LRZ_Bold_Msg( msg1, delay)
+LRZ_Bold_Msg( msg1, delay) // Can NOT be threaded
 {
 	self iprintlnBold(msg1);
 	if(!delay)

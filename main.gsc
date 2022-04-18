@@ -44,6 +44,7 @@ settings()
 	level.start_round = 1;
 	level.LRZ_start_delay = 10;
 	level.LRZ_NoPerkLimit = 1;
+	level.LRZ_Harder_Zombies = 0;
 	// Hud
 	level.LRZ_HUD = 1;
 	level.LRZ_HUD_timer = 1;
@@ -214,33 +215,42 @@ connected()
 			self thread Lokis_Blessings();
 			//self thread welcome_lr();
 			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
-			self thread Progressive_Perks_Alerts();
 
 			//self thread LRZ_Big_Msg( "Test Begin" );
 
 			// HUD
 			self thread enable_LRZ_HUD(  );
+			//self LRZ_Bold_Msg( "HUD Enabled" );
 			wait(0.1);
 			self thread timer_hud(  );
+			wait 0.05;
 			self thread round_timer_hud(  );
+			wait 0.05;
 			self thread health_remaining_hud(  );
+			wait 0.05;
 			self thread zombie_remaining_hud(  );
+			wait 0.05;
 			self thread zone_hud(  );
-			//self thread LRZ_Big_Msg( "HUD Enabled" );
+			wait 0.05;
 		}
 
 		if( !level.init )
         {
             level.init = 1;
 			level thread LokisZombiesPlusPlus(); 
+			wait 0.05;
+			level thread start_round_delay( level.LRZ_start_delay );
+			wait 0.05;
+			level thread set_starting_round( 1 );
+			wait 0.05;
 
             enable_cheats();
+			wait 0.05;
 			enable_LRZ_Progressive_Perks( 1 );
+			wait 0.05;
 			enable_LRZ_NoPerkLimit( 1 );
-
-
-			level thread start_round_delay( level.LRZ_start_delay );
-			level thread set_starting_round( 1 );
+			wait 0.05;
+			enable_LRZ_Harder_Zombies( 1 );
 
 			wait(0.05);
 		}
