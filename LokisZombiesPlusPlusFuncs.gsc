@@ -800,7 +800,7 @@ LRZ_Toggle_Harder_Zombies()
 	}
 }
 
-enable_LRZ_Nonstop_Zombies( onoff )
+/*enable_LRZ_Nonstop_Zombies( onoff )
 {
 	create_dvar( "LRZ_Nonstop_Zombies", onoff );
 	if( isDvarAllowed( "LRZ_Nonstop_Zombies" ) )
@@ -830,16 +830,16 @@ LRZ_Toggle_Nonstop_Zombies()
 		if(!level.LRZ_Nonstop_Zombies)
 		{
 			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
-			level.zombie_round_start_delay = 2; //remove the delay before zombies start to spawn
+			//level.zombie_round_start_delay = 2; //remove the delay before zombies start to spawn
 		}
 		if(level.LRZ_Nonstop_Zombies)
 		{
-			level.zombie_vars["zombie_between_round_time"] = 0; //remove the delay at the end of each round 
-			level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
+			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
+			//level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
 		}
 		wait 0.05;
 	}
-}
+}*/
 
 enable_LRZ_HUD( onoff )
 {

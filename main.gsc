@@ -236,8 +236,8 @@ connected()
 			self thread zone_hud(  );
 			wait 0.05;
 			self thread enable_LRZ_NoPerkLimit( 1 );
-			wait 0.05;
-			self thread enable_LRZ_Nonstop_Zombies( 0 );
+			//wait 0.05;
+			//self thread enable_LRZ_Nonstop_Zombies( 0 );
 			wait 0.05;
 		}
 
