@@ -6,9 +6,10 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
     setDvar("player_breath_hold_time", "10");
 	setDvar("perk_sprintMultiplier", "2.25");
     setDvar("player_meleeRange", "80");
+	level.zombie_vars["zombie_powerup_drop_max_per_round"] = "8";
 	self.flopp = 1;
-	level.zombie_ai_limit = 128;
-	level.zombie_actor_limit = 128;
+	level.zombie_ai_limit = 32;
+	level.zombie_actor_limit = 32;
 	level.claymores_max_per_player = 64;
 	if( getdvar( "mapname" ) == "zm_transit" || getdvar( "mapname" ) == "zm_town")//Remove Fog on Tranzit
     {
@@ -112,13 +113,19 @@ Loki_Binds()
 {
 	for(;;)
 	{
-		if( self usebuttonpressed() && self actionslotonebuttonpressed() )
+		while( self usebuttonpressed() )
 		{
-			self camo_change(39);
-		}
-		if( self usebuttonpressed() && self actionslottwobuttonpressed() )
-		{
-			self.score = self.score + 1000;
+			if( self actionslottwobuttonpressed() )
+			{
+				self.score = self.score + 1000;
+				wait 0.001;
+			}
+			if( self actionslotonebuttonpressed() )
+			{
+				self camo_change(39);
+				wait 0.001;
+			}
+			wait 0.001;
 		}
 		wait 0.1;
 	}
@@ -667,19 +674,22 @@ enable_LRZ_Progressive_Perks( onoff )
 {
 	create_dvar( "LRZ_Progressive_Perks", onoff );
 	if( isDvarAllowed( "LRZ_Progressive_Perks" ) )
+	{
 		level.LRZ_Progressive_Perks = getDvarInt( "LRZ_Progressive_Perks" );
 
-		self thread LRZ_Toggle_Progressive_Perks();
+		level thread LRZ_Toggle_Progressive_Perks();
 		level notify("LRZ_Trigger_Progressive_Perks");
 		while( 1 )
 		{
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_Progressive_Perks" ) )
 			{
 				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_Progressive_Perks" );
+				wait 0.05;
 				level notify("LRZ_Trigger_Progressive_Perks");
 			}
 			wait 0.5;
 		}
+	}
 }
 
 LRZ_Toggle_Progressive_Perks()
@@ -700,8 +710,10 @@ LRZ_Toggle_Progressive_Perks()
 		if(level.LRZ_Progressive_Perks)
 		{
 			self thread Progressive_Perks();// Initialize Progressive Perks
+			wait 0.05;
 			self thread Progressive_Perks_Alerts();
 		}
+		wait 0.05;
 	}
 }
 
@@ -718,7 +730,8 @@ enable_LRZ_NoPerkLimit( onoff )
 		{
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_NoPerkLimit" ) )
 			{
-				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit");
+				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
+				wait 0.05;
 				level notify("LRZ_Trigger_Perk_Limit");
 			}
 			wait 0.5;
@@ -739,7 +752,7 @@ LRZ_No_Perk_Limit()
 		if(level.LRZ_NoPerkLimit)
 		{
 			level thread remove_perk_limit();// Initialize No Perk Limit
-			wait 2.0;
+			wait 1.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
 			wait 0.05;
 		}
@@ -751,23 +764,81 @@ enable_LRZ_Harder_Zombies( onoff )
 {
 	create_dvar( "LRZ_Harder_Zombies", onoff );
 	if( isDvarAllowed( "LRZ_Harder_Zombies" ) )
+	{
 		level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
 
+		level thread LRZ_Toggle_Harder_Zombies();
+		level notify("LRZ_Trigger_Harder_Zombies");
 		while( 1 )
 		{
-			level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
-			wait 5;
+			if( level.LRZ_Harder_Zombies != getDvarInt( "LRZ_Harder_Zombies" ) )
+			{
+				level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
+				wait 0.05;
+				level notify("LRZ_Trigger_Harder_Zombies");
+			}
+			wait 0.5;
 		}
-	
+	}
+}
+
+LRZ_Toggle_Harder_Zombies()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Harder_Zombies");
 		if(!level.LRZ_Harder_Zombies)
 		{
-			level.zombie_vars[ "zombie_spawn_delay" ] = "1.9";
-			return;
+			level.zombie_vars[ "zombie_spawn_delay" ] = "1.8";
+			//return;
 		}
 		if(level.LRZ_Harder_Zombies)
 		{
 			self thread Zombie_Vars();// Initialize Harder Zombies
 		}
+		wait 0.05;
+	}
+}
+
+enable_LRZ_Nonstop_Zombies( onoff )
+{
+	create_dvar( "LRZ_Nonstop_Zombies", onoff );
+	if( isDvarAllowed( "LRZ_Nonstop_Zombies" ) )
+	{
+		level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
+
+		level thread LRZ_Toggle_Harder_Zombies();
+		level notify("LRZ_Trigger_Nonstop_Zombies");
+		while( 1 )
+		{
+			if( level.LRZ_Nonstop_Zombies != getDvarInt( "LRZ_Nonstop_Zombies" ) )
+			{
+				level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
+				wait 0.05;
+				level notify("LRZ_Trigger_Nonstop_Zombies");
+			}
+			wait 0.5;
+		}
+	}
+}
+
+LRZ_Toggle_Nonstop_Zombies()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Nonstop_Zombies");
+		if(!level.LRZ_Nonstop_Zombies)
+		{
+			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
+			level.zombie_round_start_delay = 2; //remove the delay before zombies start to spawn
+		}
+		if(level.LRZ_Nonstop_Zombies)
+		{
+			level.zombie_vars["zombie_between_round_time"] = 0; //remove the delay at the end of each round 
+			level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
+		}
+		wait 0.05;
+	}
 }
 
 enable_LRZ_HUD( onoff )
@@ -779,9 +850,25 @@ enable_LRZ_HUD( onoff )
 
 LRZ_Checks()
 {
-	if( level.LRZ_enabled == 1)
+	for(;;)
 	{
-		level notify("LRZ_ON");
+		if( level.LRZ_enabled != getDvarInt( "LRZ_enabled" ) )
+		{
+			level.LRZ_enabled = getDvarInt( "LRZ_enabled" );
+			wait 0.005;
+			//level notify("LRZ_Trigger_Enable");
+		}
+		wait 0.05;
+		if( getDvarInt( "LRZ_enabled" ) == 1 )
+		{
+			level notify("LRZ_Trigger_Enable");
+		}
+		wait 0.05;
+		if( getDvarInt( "LRZ_enabled" ) == 0 )
+		{
+			level notify("LRZ_Trigger_Disable");
+		}
+		wait 0.05;
 	}
 }
 
@@ -957,7 +1044,7 @@ timer_hud_watcher( onoff )
 	}
 }
 
-LRZ_Big_Msg( msg1, msg2 ) // Must Be Threaded
+LRZ_Big_Msg( msg1, msg2, delay, icon ) // Must Be Threaded
 {
 	flag_wait( "initial_blackscreen_passed" );
 	text1 = self createfontstring( "hudbig", 2.5 );
@@ -982,12 +1069,15 @@ LRZ_Big_Msg( msg1, msg2 ) // Must Be Threaded
 	text2.y = -120;
 	text2.x = 0;
 	wait 0.6;
-	iconm8 = self drawshader( "lui_loader_no_offset", 0, 110, 80, 80, ( 1, 1, 1 ), 1, 1 );
+	iconm8 = self drawshader( icon, 0, 110, 80, 80, ( 1, 1, 1 ), 1, 1 );
 	iconm8 moveovertime( 1 );
 	wait 0.6;
 	text1 setpulsefx( 50, 6050, 600 );
 	text2 setpulsefx( 50, 6050, 600 );
-	wait 2.5;
+	if( !delay )
+		wait 2.5;
+	else
+		wait delay;
 	text1 fadeovertime( 3 );
 	text2 fadeovertime( 3 );
 	iconm8 fadeovertime( 3 );

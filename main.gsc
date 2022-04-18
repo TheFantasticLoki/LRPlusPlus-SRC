@@ -42,9 +42,9 @@ settings()
 	level.LRZ_Menu = 0;
 	level.LRZ_Progressive_Perks = 1;
 	level.start_round = 1;
-	level.LRZ_start_delay = 10;
+	level.LRZ_start_delay = 15;
 	level.LRZ_NoPerkLimit = 1;
-	level.LRZ_Harder_Zombies = 0;
+	level.LRZ_Harder_Zombies = 1;
 	// Hud
 	level.LRZ_HUD = 1;
 	level.LRZ_HUD_timer = 1;
@@ -177,12 +177,12 @@ onPlayerSpawned()
 			if(self.menu.open)//if the menu is open when you spawn
 				self freezeControlsallowlook(false);
 		}
-		if(self isHost())
-		{
-			self freezecontrols(false);
-		}
 		if(!isFirstSpawn)//First official spawn
 		{
+			if(self isHost())
+			{
+				self freezecontrols(false);
+			}
 
 			isFirstSpawn = true;
 		}
@@ -194,15 +194,19 @@ connected()
 	self endon( "disconnect" );
     self.init = 0;
 
+	self thread VIP_Funcs();
 	enable_LRZ( 1 );
 	if( !getDvarInt( "LRZ_enabled" ) )
 	{
-		self LRZ_Big_Msg("LRZ disabled");
-		return;//continue;
+		self iprintln("^5Loki's Ragnarok Zombies++^7 is Disabled");
+		level notify("LRZ_Trigger_Disable");
+		level waittill( "LRZ_Trigger_Enable" );
+		//return;//continue;
 	}
-	for(;;)
+	while( getDvarInt( "LRZ_enabled" ) == 1 )
     {
 		self waittill( "spawned_player" );
+		self endon( "LRZ_Trigger_Disable" );
 
 		if( !self.init )
         {
@@ -211,7 +215,6 @@ connected()
             //self.score = 5000;
 			//self welcome_message();
 
-			self thread VIP_Funcs();
 			self thread Lokis_Blessings();
 			//self thread welcome_lr();
 			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
@@ -221,7 +224,7 @@ connected()
 			// HUD
 			self thread enable_LRZ_HUD(  );
 			//self LRZ_Bold_Msg( "HUD Enabled" );
-			wait(0.1);
+			wait 0.1;
 			self thread timer_hud(  );
 			wait 0.05;
 			self thread round_timer_hud(  );
@@ -231,6 +234,10 @@ connected()
 			self thread zombie_remaining_hud(  );
 			wait 0.05;
 			self thread zone_hud(  );
+			wait 0.05;
+			self thread enable_LRZ_NoPerkLimit( 1 );
+			wait 0.05;
+			self thread enable_LRZ_Nonstop_Zombies( 0 );
 			wait 0.05;
 		}
 
@@ -246,15 +253,13 @@ connected()
 			wait 0.05;
 			level thread set_starting_round( 1 );
 			wait 0.05;
-
             enable_cheats();
 			wait 0.05;
 			enable_LRZ_Progressive_Perks( 1 );
+			//wait 0.05;
 			wait 0.05;
-			enable_LRZ_NoPerkLimit( 1 );
-
-			wait(0.05);
 		}
+		wait 0.001;
 	}
 }
 

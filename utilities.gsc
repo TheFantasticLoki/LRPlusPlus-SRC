@@ -24,7 +24,8 @@ resetBooleans()
 test()
 {
 	//self LRZ_Bold_Msg("Test: PlayerName = "+player.name);
-	self LRZ_Bold_Msg("Test: spawn delay = "+level.zombie_vars["zombie_spawn_delay"]);
+	//self LRZ_Bold_Msg("Test: Zombie Between Round Time = "+level.zombie_vars["zombie_between_round_time"]); // = 10
+	self LRZ_Bold_Msg("Test: Zombie Round Start Delay = "+(level.zombie_round_start_delay)); 
 }
 
 debugexit()
