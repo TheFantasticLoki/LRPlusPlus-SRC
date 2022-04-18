@@ -18,7 +18,7 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
 
 remove_perk_limit()
 {
-    level waittill( "start_of_round" );
+    //level waittill( "start_of_round" );
     level.perk_purchase_limit = 9;
 }
 
@@ -129,6 +129,7 @@ Progressive_Perks()
 	for(;;)
 	{
 		level waittill("start_of_round");
+		level endon( "END_LRZ_Progressive_Perks" );
 		if( level.round_number >=1 && level.round_number <=10 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.75");
@@ -667,46 +668,83 @@ enable_LRZ_Progressive_Perks( onoff )
 	create_dvar( "LRZ_Progressive_Perks", onoff );
 	if( isDvarAllowed( "LRZ_Progressive_Perks" ) )
 		level.LRZ_Progressive_Perks = getDvarInt( "LRZ_Progressive_Perks" );
-	
+
+		self thread LRZ_Toggle_Progressive_Perks();
+		level notify("LRZ_Trigger_Progressive_Perks");
+		while( 1 )
+		{
+			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_Progressive_Perks" ) )
+			{
+				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_Progressive_Perks" );
+				level notify("LRZ_Trigger_Progressive_Perks");
+			}
+			wait 0.5;
+		}
+}
+
+LRZ_Toggle_Progressive_Perks()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Progressive_Perks");
 		if(!level.LRZ_Progressive_Perks)
 		{
+			level notify( "END_LRZ_Progressive_Perks" );
 			setDvar("perk_weapRateMultiplier", "0.75");
 			setDvar("perk_weapReloadMultiplier", "0.5");
 			setDvar("perk_weapSpreadMultiplier", "0.65");
 			setDvar("player_clipSizeMultiplier", "1.0");
 			setDvar("player_lastStandBleedoutTime", "45");
-			return;
+			//return;
 		}
 		if(level.LRZ_Progressive_Perks)
 		{
 			self thread Progressive_Perks();// Initialize Progressive Perks
 			self thread Progressive_Perks_Alerts();
 		}
+	}
 }
 
 enable_LRZ_NoPerkLimit( onoff )
 {
 	create_dvar( "LRZ_NoPerkLimit", onoff );
 	if( isDvarAllowed( "LRZ_NoPerkLimit" ) )
+	{
 		level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
 
+		self thread LRZ_No_Perk_Limit();
+		level notify("LRZ_Trigger_Perk_Limit");
 		while( 1 )
 		{
-			level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
-			wait 5;
+			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_NoPerkLimit" ) )
+			{
+				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit");
+				level notify("LRZ_Trigger_Perk_Limit");
+			}
+			wait 0.5;
 		}
-	
+	}
+}
+
+LRZ_No_Perk_Limit()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Perk_Limit");
 		if(!level.LRZ_NoPerkLimit)
 		{
 			level.perk_purchase_limit = 4;
-			return;
+			//return;
 		}
 		if(level.LRZ_NoPerkLimit)
 		{
 			level thread remove_perk_limit();// Initialize No Perk Limit
 			wait 2.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
+			wait 0.05;
 		}
+		wait 0.05;
+	}
 }
 
 enable_LRZ_Harder_Zombies( onoff )
@@ -723,11 +761,12 @@ enable_LRZ_Harder_Zombies( onoff )
 	
 		if(!level.LRZ_Harder_Zombies)
 		{
+			level.zombie_vars[ "zombie_spawn_delay" ] = "1.9";
 			return;
 		}
 		if(level.LRZ_Harder_Zombies)
 		{
-			level thread Zombie_Vars();// Initialize Harder Zombies
+			self thread Zombie_Vars();// Initialize Harder Zombies
 		}
 }
 
@@ -811,8 +850,8 @@ set_starting_round( round )
 	
 
 	level.first_round = false;
-    level.zombie_move_speed = 130;
-	level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
+    //level.zombie_move_speed = 130;
+	//level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
 	level.round_number = level.start_round;
 }
 

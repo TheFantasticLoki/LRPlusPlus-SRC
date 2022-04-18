@@ -58,7 +58,30 @@ Zombie_Vars()
 {
     for(;;)
     {
-        level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
-        wait 0.005;
+        while( level.round_number >= 1 && level.round_number <= 5 )
+        {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 1.5;
+        wait 0.1;
+        }
+        while( level.round_number >= 6 && level.round_number <= 10 )
+        {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 1.25;
+        wait 0.1;
+        }
+        while( level.round_number >= 11 && level.round_number <= 15 )
+        {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 1;
+        wait 0.1;
+        }
+        while( level.round_number >= 16 && level.round_number <= 20 )
+        {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 0.75;
+        wait 0.1;
+        }
+        while( level.round_number >= 21 )
+        {
+        level.zombie_vars[ "zombie_spawn_delay" ] = 0.50;
+        wait 0.1;
+        }
     }
 }

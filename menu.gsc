@@ -707,6 +707,8 @@ CreateMenu()
 							add_option(DEBUG, "Execute Test", ::test);//for testing
 							add_option(DEBUG, "Test Self Status", ::DEBUG_Status);
 							add_option(DEBUG, "Test Self isDev", ::DEBUG_isDev);
+							add_option(DEBUG, "Test Spawn Delay", ::DEBUG_SpawnDelay);
+							add_option(DEBUG, "Test Perk Limit", ::DEBUG_PerkLimit);
 					add_option( DEV, "Spawn a Bot", ::spawn_bot );
 	}
 

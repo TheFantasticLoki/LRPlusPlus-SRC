@@ -24,7 +24,7 @@ resetBooleans()
 test()
 {
 	//self LRZ_Bold_Msg("Test: PlayerName = "+player.name);
-	self LRZ_Bold_Msg("Test: Player = "+level.LRZ_NoPerkLimit);
+	self LRZ_Bold_Msg("Test: spawn delay = "+level.zombie_vars["zombie_spawn_delay"]);
 }
 
 debugexit()
