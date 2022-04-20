@@ -1,12 +1,13 @@
 
 LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
 {
+	level endon( "LRZ_Trigger_Disable" );
 	setDvar("revive_trigger_radius", "125");//Additional Perk Tweaks
     setDvar("jump_height", "45");
     setDvar("player_breath_hold_time", "10");
 	setDvar("perk_sprintMultiplier", "2.25");
     setDvar("player_meleeRange", "80");
-	level.zombie_vars["zombie_powerup_drop_max_per_round"] = "8";
+	level.zombie_vars["zombie_powerup_drop_max_per_round"] = 8;
 	self.flopp = 1;
 	level.zombie_ai_limit = 32;
 	level.zombie_actor_limit = 32;
@@ -15,6 +16,38 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
     {
     	setDvar("r_fog", "0");
     }
+}
+
+LRZ_Visual_Settings()
+{
+	foreach( player in level.players )
+	{
+		setDvar("r_dof_enable", 0);
+		setDvar("r_dof_tweak", 1);
+		setDvar("r_dof_nearStart", 1);
+		setDvar("r_dof_nearEnd", 25);
+		setDvar("r_dof_nearBlur", 4);
+		setDvar("r_dof_farStart", 1800);
+		setDvar("r_dof_farEnd", 20000);
+		setDvar("r_dof_farBlur", 1.2);
+		setDvar("r_dof_viewModelEnd", 2);
+		setDvar("r_dof_viewModelStart", 1);
+		setDvar("r_bloomHiQuality", 1);
+		setDvar("r_bloomTweaks", 1);
+		self setClientDvar("r_dof_enable", 0);
+		self setClientDvar("r_dof_tweak", 1);
+		self setClientDvar("r_dof_nearStart", 1);
+		self setClientDvar("r_dof_nearEnd", 25);
+		self setClientDvar("r_dof_nearBlur", 4);
+		self setClientDvar("r_dof_farStart", 1800);
+		self setClientDvar("r_dof_farEnd", 20000);
+		self setClientDvar("r_dof_farBlur", 1.2);
+		self setClientDvar("r_dof_viewModelEnd", 2);
+		self setClientDvar("r_dof_viewModelStart", 1);
+		self setClientDvar("r_bloomHiQuality", 1);
+		self setClientDvar("r_bloomTweaks", 1);
+		wait 0.08;
+	}
 }
 
 remove_perk_limit()
@@ -28,6 +61,7 @@ Lokis_Blessings()
 	for(;;)
 	{
 		level waittill("start_of_round");
+		level endon( "LRZ_Trigger_Disable" );
 		if( level.round_number > 14 && level.round_number < 25 )
 		{
 			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
@@ -93,6 +127,74 @@ zombieCounter()
 	}
 }
 
+Define_Loki_CrossSize( size )
+{
+	create_dvar( "Loki_CrossSize", size );
+	if( isDvarAllowed( "Loki_CrossSize" ) )
+	{
+		level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+		self thread Loki_CrossSize();
+		level notify("Trigger_Loki_CrossSize");
+		while( 1 )
+		{
+			if( level.Loki_CrossSize != getDvarInt( "Loki_CrossSize" ) )
+			{
+				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
+				wait 0.08;
+				level notify("Trigger_Loki_CrossSize");
+			}
+			foreach( player in level.players )
+			{
+			if( level.Loki_CrossSize != getDvarInt( "Loki_CrossSize" ) )
+			{
+				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
+				wait 0.08;
+				level notify("Trigger_Loki_CrossSize");
+			}
+			}
+			wait 0.5;
+		}
+	}
+}
+
+Loki_CrossSize()
+{
+	while(1)
+	{
+		if( self.name == "FantasticLoki")
+		{
+			level waittill("Trigger_Loki_CrossSize");
+			self setSpreadOverride( level.Loki_CrossSize );
+			player setSpreadOverride( level.Loki_CrossSize );
+			wait 0.08;
+		}
+		wait 0.08;
+	}
+
+}
+
+Loki_CrossSize_up()
+{
+	level.Loki_CrossSize = level.Loki_CrossSize + 1;
+	setDvar("Loki_CrossSize", level.Loki_CrossSize);
+	level notify("Trigger_Loki_CrossSize");
+	self iprintlnbold( "CrossSize Set To ^1" + ( level.Loki_CrossSize + "" ) );
+	wait 0.5;
+
+}
+
+Loki_CrossSize_down()
+{
+	level.Loki_CrossSize = level.Loki_CrossSize - 1;
+	setDvar("Loki_CrossSize", level.Loki_CrossSize);
+	level notify("Trigger_Loki_CrossSize");
+	self iprintlnbold( "CrossSize Set To ^1" + ( level.Loki_CrossSize + "" ) );
+	wait 0.5;
+
+}
+
 VIP_Funcs()
 {
 	if( self.name == "FantasticLoki" )
@@ -101,6 +203,9 @@ VIP_Funcs()
 		self LRZ_Bold_Msg("^3Welcome ^7[^5D^1E^5V^7] ^1FantasticLoki");
 		self thread Loki_Binds();
 		self thread set_persistent_stats();
+		self setperk( "specialty_fastmantle" );
+		self setperk( "specialty_fastladderclimb" );
+		self thread Loki_CrossSize();
 	}
 	if( self.name == "MudKippz" )
 	{
@@ -118,17 +223,33 @@ Loki_Binds()
 			if( self actionslottwobuttonpressed() )
 			{
 				self.score = self.score + 1000;
-				wait 0.001;
+				wait 0.08;
 			}
 			if( self actionslotonebuttonpressed() )
 			{
 				self camo_change(39);
-				wait 0.001;
+				wait 0.08;
 			}
-			wait 0.001;
+			wait 0.08;
 		}
 		wait 0.1;
 	}
+}
+
+LRZ_Menu_Options_Toggle_LRZ()
+{
+	if(self.LRZPlusPlus == 0)
+    {
+        self iprintln("LRZ++: ^2On");
+        level notify("LRZ_Trigger_Enable");
+        self.LRZPlusPlus = 1;
+    }
+    else
+    {
+        self iprintln("LRZ++: ^1Off");
+        level notify("LRZ_Trigger_Disable");
+        self.LRZPlusPlus = 0;
+    }
 }
 
 Progressive_Perks()
@@ -137,6 +258,7 @@ Progressive_Perks()
 	{
 		level waittill("start_of_round");
 		level endon( "END_LRZ_Progressive_Perks" );
+		level endon( "LRZ_Trigger_Disable" );
 		if( level.round_number >=1 && level.round_number <=10 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.75");
@@ -684,7 +806,7 @@ enable_LRZ_Progressive_Perks( onoff )
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_Progressive_Perks" ) )
 			{
 				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_Progressive_Perks" );
-				wait 0.05;
+				wait 0.08;
 				level notify("LRZ_Trigger_Progressive_Perks");
 			}
 			wait 0.5;
@@ -697,6 +819,7 @@ LRZ_Toggle_Progressive_Perks()
 	for(;;)
 	{
 		level waittill("LRZ_Trigger_Progressive_Perks");
+		level endon( "LRZ_Trigger_Disable" );
 		if(!level.LRZ_Progressive_Perks)
 		{
 			level notify( "END_LRZ_Progressive_Perks" );
@@ -710,10 +833,10 @@ LRZ_Toggle_Progressive_Perks()
 		if(level.LRZ_Progressive_Perks)
 		{
 			self thread Progressive_Perks();// Initialize Progressive Perks
-			wait 0.05;
+			wait 0.08;
 			self thread Progressive_Perks_Alerts();
 		}
-		wait 0.05;
+		wait 0.08;
 	}
 }
 
@@ -731,7 +854,7 @@ enable_LRZ_NoPerkLimit( onoff )
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_NoPerkLimit" ) )
 			{
 				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
-				wait 0.05;
+				wait 0.08;
 				level notify("LRZ_Trigger_Perk_Limit");
 			}
 			wait 0.5;
@@ -754,9 +877,9 @@ LRZ_No_Perk_Limit()
 			level thread remove_perk_limit();// Initialize No Perk Limit
 			wait 1.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
-			wait 0.05;
+			wait 0.08;
 		}
-		wait 0.05;
+		wait 0.08;
 	}
 }
 
@@ -774,7 +897,7 @@ enable_LRZ_Harder_Zombies( onoff )
 			if( level.LRZ_Harder_Zombies != getDvarInt( "LRZ_Harder_Zombies" ) )
 			{
 				level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
-				wait 0.05;
+				wait 0.08;
 				level notify("LRZ_Trigger_Harder_Zombies");
 			}
 			wait 0.5;
@@ -796,11 +919,11 @@ LRZ_Toggle_Harder_Zombies()
 		{
 			self thread Zombie_Vars();// Initialize Harder Zombies
 		}
-		wait 0.05;
+		wait 0.08;
 	}
 }
 
-/*enable_LRZ_Nonstop_Zombies( onoff )
+enable_LRZ_Nonstop_Zombies( onoff )
 {
 	create_dvar( "LRZ_Nonstop_Zombies", onoff );
 	if( isDvarAllowed( "LRZ_Nonstop_Zombies" ) )
@@ -814,7 +937,7 @@ LRZ_Toggle_Harder_Zombies()
 			if( level.LRZ_Nonstop_Zombies != getDvarInt( "LRZ_Nonstop_Zombies" ) )
 			{
 				level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
-				wait 0.05;
+				wait 0.08;
 				level notify("LRZ_Trigger_Nonstop_Zombies");
 			}
 			wait 0.5;
@@ -827,6 +950,7 @@ LRZ_Toggle_Nonstop_Zombies()
 	for(;;)
 	{
 		level waittill("LRZ_Trigger_Nonstop_Zombies");
+		level endon( "LRZ_Trigger_Disable" );
 		if(!level.LRZ_Nonstop_Zombies)
 		{
 			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
@@ -834,12 +958,12 @@ LRZ_Toggle_Nonstop_Zombies()
 		}
 		if(level.LRZ_Nonstop_Zombies)
 		{
-			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
+			level.zombie_vars["zombie_between_round_time"] = 1; //remove the delay at the end of each round 
 			//level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
 		}
-		wait 0.05;
+		wait 0.08;
 	}
-}*/
+}
 
 enable_LRZ_HUD( onoff )
 {
@@ -855,20 +979,20 @@ LRZ_Checks()
 		if( level.LRZ_enabled != getDvarInt( "LRZ_enabled" ) )
 		{
 			level.LRZ_enabled = getDvarInt( "LRZ_enabled" );
-			wait 0.005;
+			wait 0.08;
 			//level notify("LRZ_Trigger_Enable");
 		}
-		wait 0.05;
+		wait 0.08;
 		if( getDvarInt( "LRZ_enabled" ) == 1 )
 		{
 			level notify("LRZ_Trigger_Enable");
 		}
-		wait 0.05;
+		wait 0.08;
 		if( getDvarInt( "LRZ_enabled" ) == 0 )
 		{
 			level notify("LRZ_Trigger_Disable");
 		}
-		wait 0.05;
+		wait 0.08;
 	}
 }
 
@@ -979,6 +1103,7 @@ zombie_spawn_wait(time)
 timer_hud()
 {	
 	self endon("disconnect");
+	level endon( "LRZ_Trigger_Disable" );
 
 	self.timer_hud = newClientHudElem(self);
 	self.timer_hud.alignx = "left";
@@ -1020,6 +1145,7 @@ timer_hud_watcher( onoff )
 {
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_timer" ) )
@@ -1094,6 +1220,7 @@ LRZ_Big_Msg( msg1, msg2, delay, icon ) // Must Be Threaded
 round_timer_hud()
 {
 	self endon("disconnect");
+	level endon( "LRZ_Trigger_Disable" );
 
 	self.round_timer_hud = newClientHudElem(self);
 	self.round_timer_hud.alignx = "left";
@@ -1144,6 +1271,7 @@ round_timer_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_round_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_round_timer" ) )
@@ -1229,6 +1357,7 @@ zombie_remaining_hud()
 {
 	self endon( "disconnect" );
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	//level waittill( "spawned_player" );
 
@@ -1242,7 +1371,7 @@ zombie_remaining_hud()
         self.zombie_counter_hud.label = &"Zombies: ^1";
 		self.zombie_counter_hud setValue( ( maps/mp/zombies/_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
         
-        wait 0.05; 
+        wait 0.08; 
     }
 }
 
@@ -1250,6 +1379,7 @@ zombie_remaining_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_zombie_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_zombie_counter" ) )
@@ -1278,6 +1408,7 @@ health_remaining_hud()
 {
 	self endon( "disconnect" );
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	//level waittill( "spawned_player" );
 
@@ -1291,7 +1422,7 @@ health_remaining_hud()
         self.health_counter_hud.label = &"Health: ^2";
 		self.health_counter_hud setValue( self.health );
         
-        wait 0.05; 
+        wait 0.08; 
     }
 }
 
@@ -1299,6 +1430,7 @@ health_remaining_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_health_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_health_counter" ) )
@@ -1329,6 +1461,7 @@ trap_timer_hud()
 		return;
 
 	self endon( "disconnect" );
+	self endon( "LRZ_Trigger_Disable" );
 
 	self.trap_timer_hud = newclienthudelem( self );
 	self.trap_timer_hud.alignx = "left";
@@ -1397,6 +1530,7 @@ zone_hud_watcher( x, y )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_zone", 1 );
 	if( !isDvarAllowed( "LRZ_HUD_zone" ) )
@@ -1433,7 +1567,7 @@ zone_hud_watcher( x, y )
 				continue;
 			}
 
-			wait 0.05;
+			wait 0.08;
 		}
 		self.zone_hud.alpha = 0;
 	}

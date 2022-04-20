@@ -52,6 +52,8 @@ settings()
 	level.LRZ_HUD_zombie_counter = 1;
 	level.LRZ_HUD_health_counter = 1;
 	level.LRZ_HUD_zone_names = 1;
+	// Loki's Dvars
+	level.Loki_CrossSize = 2;
 }
 
 init()
@@ -195,18 +197,25 @@ connected()
     self.init = 0;
 
 	self thread VIP_Funcs();
-	enable_LRZ( 1 );
-	if( !getDvarInt( "LRZ_enabled" ) )
+	if(self.name == "FantasticLoki")
+		self thread Define_Loki_CrossSize( 2 );
+	level notify("Trigger_Loki_CrossSize");
+	for(;;)
 	{
-		self iprintln("^5Loki's Ragnarok Zombies++^7 is Disabled");
+	enable_LRZ( 1 );
+	while( !getDvarInt( "LRZ_enabled" ) )
+	{
 		level notify("LRZ_Trigger_Disable");
+		wait 0.08;
+		self iprintln("^5Loki's Ragnarok Zombies++^7 is Disabled");
 		level waittill( "LRZ_Trigger_Enable" );
+		wait 0.08;
 		//return;//continue;
 	}
 	while( getDvarInt( "LRZ_enabled" ) == 1 )
     {
 		self waittill( "spawned_player" );
-		self endon( "LRZ_Trigger_Disable" );
+		level endon( "LRZ_Trigger_Disable" );
 
 		if( !self.init )
         {
@@ -218,9 +227,7 @@ connected()
 			self thread Lokis_Blessings();
 			//self thread welcome_lr();
 			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
-
-			//self thread LRZ_Big_Msg( "Test Begin" );
-
+			self thread LRZ_Visual_Settings();
 			// HUD
 			self thread enable_LRZ_HUD(  );
 			//self LRZ_Bold_Msg( "HUD Enabled" );
@@ -254,12 +261,21 @@ connected()
 			level thread set_starting_round( 1 );
 			wait 0.05;
             enable_cheats();
+			if( getDvarInt( "sv_cheats" ) == 1 )
+			{
+				self setClientDvar( "r_lodBiasRigid", -1000 );
+				self setClientDvar( "r_lodBiasSkinned", -1000 );
+				setDvar( "r_lodBiasRigid", -1000 );
+				setDvar( "r_lodBiasSkinned", -1000 );
+			}
 			wait 0.05;
 			enable_LRZ_Progressive_Perks( 1 );
 			//wait 0.05;
 			wait 0.05;
 		}
-		wait 0.001;
+		wait 0.08;
+	}
+	wait 0.08;
 	}
 }
 
