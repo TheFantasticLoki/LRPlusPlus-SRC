@@ -58,19 +58,26 @@ remove_perk_limit()
 
 Lokis_Blessings()
 {
+	self.Blessing1Triggered = 0;
+	self.Blessing2Triggered = 0;
 	for(;;)
 	{
 		level waittill("start_of_round");
 		level endon( "LRZ_Trigger_Disable" );
-		if( level.round_number > 14 && level.round_number < 25 )
+		if( self.Blessing1Triggered == 0 )
 		{
-			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
-			foreach( player in level.players )
+			if( level.round_number > 14 && level.round_number < 25 )
 			{
-				player.score = player.score + 5000;
+				self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
+				foreach( player in level.players )
+				{
+					player.score = player.score + 5000;
+				}
+				wait 0.08;
+				self.Blessing1Triggered = 1;
 			}
 		}
-		if( level.round_number > 24)
+		if( level.round_number > 24 && Blessing2Triggered == 0 )
 		{
 			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
 			foreach( player in level.players )
@@ -78,6 +85,8 @@ Lokis_Blessings()
 				player.score = player.score + 10000;
 				player thread drinkallperks();
 			}
+			wait 0.08;
+			self.Blessing2Triggered = 1;
 		}
 	}
 }
@@ -266,47 +275,38 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.7");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.65");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.6");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.55");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.45");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.4");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.35");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.3");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
 		}
     	if( level.round_number >=1 && level.round_number <=10 )
 		{
@@ -315,48 +315,39 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.45");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.4");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.375");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
 			
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.35");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.325");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.3");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.2");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.15");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
 		}
 		if( getdvar( "mapname" ) == "zm_prison" || getdvar( "mapname" ) == "zm_tomb" )
 		{
@@ -367,47 +358,38 @@ Progressive_Perks()
 			if( level.round_number >=11 && level.round_number <=15 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.6");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.08x");
 			}
 			if( level.round_number >=16 && level.round_number <=20 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.55");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.18x");
 			}
 			if( level.round_number >=21 && level.round_number <=29 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.5");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.3x");
 			}
 			if( level.round_number >=30 && level.round_number <=35 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.45");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.44x");
 			}
 			if( level.round_number >=36 && level.round_number <=45 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.4");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.625x");
 			}
 			if( level.round_number >=46 && level.round_number <=52 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.35");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.857x");
 			}
 			if( level.round_number >=53 && level.round_number <=60 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.3");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.166x");
 			}
 			if( level.round_number >=61 && level.round_number <=80 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.25");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.6x");
 			}
 			if( level.round_number >=81 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.2");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 3.25x");
 			}
 		}
 		if( level.round_number >=1 && level.round_number <=10 )
@@ -417,47 +399,38 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.1");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.75");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.0");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.75");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("player_clipSizeMultiplier", "3.0");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
 		}
     	if( level.round_number >=1 && level.round_number <=10 )
 		{
@@ -466,148 +439,189 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=20 )
 		{
 			setDvar("player_lastStandBleedoutTime", "60");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
 		}
 		if( level.round_number >=21 && level.round_number <=35 )
 		{
 			setDvar("player_lastStandBleedoutTime", "90");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
 		}
 		if( level.round_number >=36 && level.round_number <=50 )
 		{
 			setDvar("player_lastStandBleedoutTime", "120");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
 		}
 		if( level.round_number >=51 && level.round_number <=100 )
 		{
 			setDvar("player_lastStandBleedoutTime", "240");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
 		}
 		if( level.round_number >=101 )
 		{
 			setDvar("player_lastStandBleedoutTime", "360");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
 		}
     }
 }
 
 Progressive_Perks_Alerts()
 {
+	if( level.LRZ_Progressive_Perks )
+	{
 	for(;;)
 	{
 		level waittill("start_of_round");
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
-			wait 0.5; 
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.08x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
+				wait 0.5; 
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.08x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+			}
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.18x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+			}
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.3x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.3x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+			}
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.44x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.44x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+			}
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.625x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+			}
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.857x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.857x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+			}
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.166x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.166x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+			}
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.6x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.6x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+			}
 		}
 		if( level.round_number >=81 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 3.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 3.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+			}
 		}
     	
 		if( level.round_number >=11 && level.round_number <=20 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+			}
 		}
 		if( level.round_number >=21 && level.round_number <=35 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+			}
 		}
 		if( level.round_number >=36 && level.round_number <=50 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+			}
 		}
 		if( level.round_number >=51 && level.round_number <=100 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+			}
 		}
 		if( level.round_number >=101 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+			}
 		}
+		wait 0.08;
     }
+	}
 }
 
 camo_change( value )
@@ -832,9 +846,8 @@ LRZ_Toggle_Progressive_Perks()
 		}
 		if(level.LRZ_Progressive_Perks)
 		{
+			//player thread Progressive_Perks_Alerts();// Init Progressive Perks Alert System
 			self thread Progressive_Perks();// Initialize Progressive Perks
-			wait 0.08;
-			self thread Progressive_Perks_Alerts();
 		}
 		wait 0.08;
 	}
