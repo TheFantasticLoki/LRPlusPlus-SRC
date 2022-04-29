@@ -260,7 +260,7 @@ connected()
 				level thread LokisZombiesPlusPlus(); 
 				wait 0.05;
 				//level thread Zombie_Vars();
-				level thread enable_LRZ_Harder_Zombies( 0 );
+				level thread enable_LRZ_Harder_Zombies( 1);
 				wait 0.05;
 				level thread start_round_delay( level.LRZ_start_delay );
 				wait 0.05;
@@ -298,7 +298,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.9.3";//Put your script version here
+	self.AIO["scriptVersion"] = "1.5";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];
