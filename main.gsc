@@ -42,8 +42,9 @@ settings()
 	level.LRZ_Menu = 0;
 	level.LRZ_Progressive_Perks = 1;
 	level.start_round = 1;
-	level.LRZ_start_delay = 10;
+	level.LRZ_start_delay = 15;
 	level.LRZ_NoPerkLimit = 1;
+	level.LRZ_Harder_Zombies = 1;
 	// Hud
 	level.LRZ_HUD = 1;
 	level.LRZ_HUD_timer = 1;
@@ -51,6 +52,8 @@ settings()
 	level.LRZ_HUD_zombie_counter = 1;
 	level.LRZ_HUD_health_counter = 1;
 	level.LRZ_HUD_zone_names = 1;
+	// Loki's Dvars
+	level.Loki_CrossSize = 2;
 }
 
 init()
@@ -140,6 +143,7 @@ onPlayerSpawned()
 	self endon("disconnect");
 	level endon("game_ended");
 	self unfreeze();
+	level notify("Trigger_Loki_CrossSize");
 
 	isFirstSpawn = false;
 	self.AIO["closeText"].archived = false;
@@ -176,12 +180,12 @@ onPlayerSpawned()
 			if(self.menu.open)//if the menu is open when you spawn
 				self freezeControlsallowlook(false);
 		}
-		if(self isHost())
-		{
-			self freezecontrols(false);
-		}
 		if(!isFirstSpawn)//First official spawn
 		{
+			if(self isHost())
+			{
+				self freezecontrols(false);
+			}
 
 			isFirstSpawn = true;
 		}
@@ -193,57 +197,91 @@ connected()
 	self endon( "disconnect" );
     self.init = 0;
 
-	enable_LRZ( 1 );
-	if( !getDvarInt( "LRZ_enabled" ) )
+	self thread VIP_Funcs();
+	if(self.name == "FantasticLoki")
 	{
-		self LRZ_Big_Msg("LRZ disabled");
-		return;//continue;
+		self thread Define_Loki_CrossSize( 2 );
 	}
+	
+	level notify("Trigger_Loki_CrossSize");
 	for(;;)
-    {
-		self waittill( "spawned_player" );
-
-		if( !self.init )
-        {
-            self.init = 1;
-
-            //self.score = 5000;
-			//self welcome_message();
-
-			self thread VIP_Funcs();
-			self thread Lokis_Blessings();
-			//self thread welcome_lr();
-			self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
-			self thread Progressive_Perks_Alerts();
-
-			//self thread LRZ_Big_Msg( "Test Begin" );
-
-			// HUD
-			self thread enable_LRZ_HUD(  );
-			wait(0.1);
-			self thread timer_hud(  );
-			self thread round_timer_hud(  );
-			self thread health_remaining_hud(  );
-			self thread zombie_remaining_hud(  );
-			self thread zone_hud(  );
-			//self thread LRZ_Big_Msg( "HUD Enabled" );
+	{
+		enable_LRZ( 1 );
+		while( !getDvarInt( "LRZ_enabled" ) )
+		{
+			level notify("LRZ_Trigger_Disable");
+			wait 0.08;
+			self iprintln("^5Loki's Ragnarok Zombies++^7 is Disabled");
+			level waittill( "LRZ_Trigger_Enable" );
+			wait 0.08;
+			//return;//continue;
 		}
+		while( getDvarInt( "LRZ_enabled" ) == 1 )
+    	{
+			self waittill( "spawned_player" );
+			level endon( "LRZ_Trigger_Disable" );
 
-		if( !level.init )
-        {
-            level.init = 1;
-			level thread LokisZombiesPlusPlus(); 
+			if( !self.init )
+    	    {
+    	        self.init = 1;
 
-            enable_cheats();
-			enable_LRZ_Progressive_Perks( 1 );
-			enable_LRZ_NoPerkLimit( 1 );
+    	        //self.score = 5000;
+				//self welcome_message();
 
+				self thread Lokis_Blessings();
+				//self thread welcome_lr();
+				self thread LRZ_Big_Msg("^5Loki's ^1Zombies^3++^5 Loaded, Enjoy!", "^6Features: ^7Progressive Perks|Doubled Melee & Revive Range|Zombie & Health Counter");
+				self thread LRZ_Visual_Settings();
+				// HUD
+				self thread enable_LRZ_HUD(  );
+				//self LRZ_Bold_Msg( "HUD Enabled" );
+				wait 0.1;
+				self thread timer_hud(  );
+				wait 0.05;
+				self thread round_timer_hud(  );
+				wait 0.05;
+				self thread health_remaining_hud(  );
+				wait 0.05;
+				self thread zombie_remaining_hud(  );
+				wait 0.05;
+				self thread zone_hud(  );
+				wait 0.05;
+				self thread enable_LRZ_NoPerkLimit( 1 );
+				wait 0.05;
+				self thread Progressive_Perks_Alerts( );
+				//wait 0.05;
+				//self thread enable_LRZ_Nonstop_Zombies( 0 );
+				wait 0.05;
+			}
 
-			level thread start_round_delay( level.LRZ_start_delay );
-			level thread set_starting_round( 1 );
-
-			wait(0.05);
+			if( !level.init )
+    	    {
+    	        level.init = 1;
+				level thread LokisZombiesPlusPlus(); 
+				wait 0.05;
+				//level thread Zombie_Vars();
+				level thread enable_LRZ_Harder_Zombies( 1);
+				wait 0.05;
+				level thread start_round_delay( level.LRZ_start_delay );
+				wait 0.05;
+				level thread set_starting_round( 1 );
+				wait 0.05;
+    	        enable_cheats();
+				if( getDvarInt( "sv_cheats" ) == 1 )
+				{
+					self setClientDvar( "r_lodBiasRigid", -1000 );
+					self setClientDvar( "r_lodBiasSkinned", -1000 );
+					setDvar( "r_lodBiasRigid", -1000 );
+					setDvar( "r_lodBiasSkinned", -1000 );
+				}
+				wait 0.05;
+				enable_LRZ_Progressive_Perks( 1 );
+				//wait 0.05;
+				wait 0.05;
+			}
+			wait 0.08;
 		}
+		wait 0.08;
 	}
 }
 
@@ -260,7 +298,7 @@ MenuInit()
 	
 	self.AIO = [];
 	self.AIO["menuName"] = "Ragnarok";//Put your menu name here
-	self.AIO["scriptVersion"] = "1.4.9";//Put your script version here
+	self.AIO["scriptVersion"] = "1.5";//Put your script version here
 	
 	//Setting the menu position for when it's first open
 	self.CurMenu = self.AIO["menuName"];

@@ -1,14 +1,16 @@
 
 LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
 {
+	level endon( "LRZ_Trigger_Disable" );
 	setDvar("revive_trigger_radius", "125");//Additional Perk Tweaks
     setDvar("jump_height", "45");
     setDvar("player_breath_hold_time", "10");
 	setDvar("perk_sprintMultiplier", "2.25");
     setDvar("player_meleeRange", "80");
+	level.zombie_vars["zombie_powerup_drop_max_per_round"] = 8;
 	self.flopp = 1;
-	level.zombie_ai_limit = 128;
-	level.zombie_actor_limit = 128;
+	level.zombie_ai_limit = 32;
+	level.zombie_actor_limit = 32;
 	level.claymores_max_per_player = 64;
 	if( getdvar( "mapname" ) == "zm_transit" || getdvar( "mapname" ) == "zm_town")//Remove Fog on Tranzit
     {
@@ -16,26 +18,66 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
     }
 }
 
+LRZ_Visual_Settings()
+{
+	foreach( player in level.players )
+	{
+		setDvar("r_dof_enable", 0);
+		setDvar("r_dof_tweak", 1);
+		setDvar("r_dof_nearStart", 1);
+		setDvar("r_dof_nearEnd", 25);
+		setDvar("r_dof_nearBlur", 4);
+		setDvar("r_dof_farStart", 1800);
+		setDvar("r_dof_farEnd", 20000);
+		setDvar("r_dof_farBlur", 1.2);
+		setDvar("r_dof_viewModelEnd", 2);
+		setDvar("r_dof_viewModelStart", 1);
+		setDvar("r_bloomHiQuality", 1);
+		setDvar("r_bloomTweaks", 1);
+		self setClientDvar("r_dof_enable", 0);
+		self setClientDvar("r_dof_tweak", 1);
+		self setClientDvar("r_dof_nearStart", 1);
+		self setClientDvar("r_dof_nearEnd", 25);
+		self setClientDvar("r_dof_nearBlur", 4);
+		self setClientDvar("r_dof_farStart", 1800);
+		self setClientDvar("r_dof_farEnd", 20000);
+		self setClientDvar("r_dof_farBlur", 1.2);
+		self setClientDvar("r_dof_viewModelEnd", 2);
+		self setClientDvar("r_dof_viewModelStart", 1);
+		self setClientDvar("r_bloomHiQuality", 1);
+		self setClientDvar("r_bloomTweaks", 1);
+		wait 0.08;
+	}
+}
+
 remove_perk_limit()
 {
-    level waittill( "start_of_round" );
+    //level waittill( "start_of_round" );
     level.perk_purchase_limit = 9;
 }
 
 Lokis_Blessings()
 {
+	self.Blessing1Triggered = 0;
+	self.Blessing2Triggered = 0;
 	for(;;)
 	{
 		level waittill("start_of_round");
-		if( level.round_number > 14 && level.round_number < 25 )
+		level endon( "LRZ_Trigger_Disable" );
+		if( self.Blessing1Triggered == 0 )
 		{
-			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
-			foreach( player in level.players )
+			if( level.round_number > 14 && level.round_number < 25 )
 			{
-				player.score = player.score + 5000;
+				self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 15 have some blessings!");
+				foreach( player in level.players )
+				{
+					player.score = player.score + 5000;
+				}
+				wait 0.08;
+				self.Blessing1Triggered = 1;
 			}
 		}
-		if( level.round_number > 24)
+		if( level.round_number > 24 && Blessing2Triggered == 0 )
 		{
 			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
 			foreach( player in level.players )
@@ -43,6 +85,8 @@ Lokis_Blessings()
 				player.score = player.score + 10000;
 				player thread drinkallperks();
 			}
+			wait 0.08;
+			self.Blessing2Triggered = 1;
 		}
 	}
 }
@@ -92,6 +136,74 @@ zombieCounter()
 	}
 }
 
+Define_Loki_CrossSize( size )
+{
+	create_dvar( "Loki_CrossSize", size );
+	if( isDvarAllowed( "Loki_CrossSize" ) )
+	{
+		level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+		self thread Loki_CrossSize();
+		level notify("Trigger_Loki_CrossSize");
+		while( 1 )
+		{
+			if( level.Loki_CrossSize != getDvarInt( "Loki_CrossSize" ) )
+			{
+				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
+				wait 0.08;
+				level notify("Trigger_Loki_CrossSize");
+			}
+			foreach( player in level.players )
+			{
+			if( level.Loki_CrossSize != getDvarInt( "Loki_CrossSize" ) )
+			{
+				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
+				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
+				wait 0.08;
+				level notify("Trigger_Loki_CrossSize");
+			}
+			}
+			wait 0.5;
+		}
+	}
+}
+
+Loki_CrossSize()
+{
+	while(1)
+	{
+		if( self.name == "FantasticLoki")
+		{
+			level waittill("Trigger_Loki_CrossSize");
+			self setSpreadOverride( level.Loki_CrossSize );
+			player setSpreadOverride( level.Loki_CrossSize );
+			wait 0.08;
+		}
+		wait 0.08;
+	}
+
+}
+
+Loki_CrossSize_up()
+{
+	level.Loki_CrossSize = level.Loki_CrossSize + 1;
+	setDvar("Loki_CrossSize", level.Loki_CrossSize);
+	level notify("Trigger_Loki_CrossSize");
+	self iprintlnbold( "CrossSize Set To ^1" + ( level.Loki_CrossSize + "" ) );
+	wait 0.5;
+
+}
+
+Loki_CrossSize_down()
+{
+	level.Loki_CrossSize = level.Loki_CrossSize - 1;
+	setDvar("Loki_CrossSize", level.Loki_CrossSize);
+	level notify("Trigger_Loki_CrossSize");
+	self iprintlnbold( "CrossSize Set To ^1" + ( level.Loki_CrossSize + "" ) );
+	wait 0.5;
+
+}
+
 VIP_Funcs()
 {
 	if( self.name == "FantasticLoki" )
@@ -100,6 +212,9 @@ VIP_Funcs()
 		self LRZ_Bold_Msg("^3Welcome ^7[^5D^1E^5V^7] ^1FantasticLoki");
 		self thread Loki_Binds();
 		self thread set_persistent_stats();
+		self setperk( "specialty_fastmantle" );
+		self setperk( "specialty_fastladderclimb" );
+		self thread Loki_CrossSize();
 	}
 	if( self.name == "MudKippz" )
 	{
@@ -112,16 +227,38 @@ Loki_Binds()
 {
 	for(;;)
 	{
-		if( self usebuttonpressed() && self actionslotonebuttonpressed() )
+		while( self usebuttonpressed() )
 		{
-			self camo_change(39);
-		}
-		if( self usebuttonpressed() && self actionslottwobuttonpressed() )
-		{
-			self.score = self.score + 1000;
+			if( self actionslottwobuttonpressed() )
+			{
+				self.score = self.score + 1000;
+				wait 0.08;
+			}
+			if( self actionslotonebuttonpressed() )
+			{
+				self camo_change(39);
+				wait 0.08;
+			}
+			wait 0.08;
 		}
 		wait 0.1;
 	}
+}
+
+LRZ_Menu_Options_Toggle_LRZ()
+{
+	if(self.LRZPlusPlus == 0)
+    {
+        self iprintln("LRZ++: ^2On");
+        level notify("LRZ_Trigger_Enable");
+        self.LRZPlusPlus = 1;
+    }
+    else
+    {
+        self iprintln("LRZ++: ^1Off");
+        level notify("LRZ_Trigger_Disable");
+        self.LRZPlusPlus = 0;
+    }
 }
 
 Progressive_Perks()
@@ -129,6 +266,8 @@ Progressive_Perks()
 	for(;;)
 	{
 		level waittill("start_of_round");
+		level endon( "END_LRZ_Progressive_Perks" );
+		level endon( "LRZ_Trigger_Disable" );
 		if( level.round_number >=1 && level.round_number <=10 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.75");
@@ -136,47 +275,38 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.7");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.65");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.6");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.55");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.45");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.4");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.35");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("perk_weapRateMultiplier", "0.3");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
 		}
     	if( level.round_number >=1 && level.round_number <=10 )
 		{
@@ -185,48 +315,39 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.45");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.4");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.375");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
 			
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.35");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.325");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.3");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.2");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("perk_weapReloadMultiplier", "0.15");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
 		}
 		if( getdvar( "mapname" ) == "zm_prison" || getdvar( "mapname" ) == "zm_tomb" )
 		{
@@ -237,47 +358,38 @@ Progressive_Perks()
 			if( level.round_number >=11 && level.round_number <=15 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.6");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.08x");
 			}
 			if( level.round_number >=16 && level.round_number <=20 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.55");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.18x");
 			}
 			if( level.round_number >=21 && level.round_number <=29 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.5");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.3x");
 			}
 			if( level.round_number >=30 && level.round_number <=35 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.45");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.44x");
 			}
 			if( level.round_number >=36 && level.round_number <=45 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.4");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.625x");
 			}
 			if( level.round_number >=46 && level.round_number <=52 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.35");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.857x");
 			}
 			if( level.round_number >=53 && level.round_number <=60 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.3");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.166x");
 			}
 			if( level.round_number >=61 && level.round_number <=80 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.25");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.6x");
 			}
 			if( level.round_number >=81 )
 			{
 				setDvar("perk_weapSpreadMultiplier", "0.2");
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 3.25x");
 			}
 		}
 		if( level.round_number >=1 && level.round_number <=10 )
@@ -287,47 +399,38 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.1");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
 			setDvar("player_clipSizeMultiplier", "1.75");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.0");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.25");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.5");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
 			setDvar("player_clipSizeMultiplier", "2.75");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
 		}
 		if( level.round_number >=81 )
 		{
 			setDvar("player_clipSizeMultiplier", "3.0");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
 		}
     	if( level.round_number >=1 && level.round_number <=10 )
 		{
@@ -336,148 +439,189 @@ Progressive_Perks()
 		if( level.round_number >=11 && level.round_number <=20 )
 		{
 			setDvar("player_lastStandBleedoutTime", "60");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
 		}
 		if( level.round_number >=21 && level.round_number <=35 )
 		{
 			setDvar("player_lastStandBleedoutTime", "90");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
 		}
 		if( level.round_number >=36 && level.round_number <=50 )
 		{
 			setDvar("player_lastStandBleedoutTime", "120");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
 		}
 		if( level.round_number >=51 && level.round_number <=100 )
 		{
 			setDvar("player_lastStandBleedoutTime", "240");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
 		}
 		if( level.round_number >=101 )
 		{
 			setDvar("player_lastStandBleedoutTime", "360");
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
 		}
     }
 }
 
 Progressive_Perks_Alerts()
 {
+	if( level.LRZ_Progressive_Perks )
+	{
 	for(;;)
 	{
 		level waittill("start_of_round");
 		if( level.round_number >=11 && level.round_number <=15 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
-			wait 0.5; 
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.08x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
+				wait 0.5; 
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.08x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+			}
 		}
 		if( level.round_number >=16 && level.round_number <=20 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.18x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+			}
 		}
 		if( level.round_number >=21 && level.round_number <=29 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.3x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.3x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+			}
 		}
 		if( level.round_number >=30 && level.round_number <=35 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.44x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.44x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+			}
 		}
 		if( level.round_number >=36 && level.round_number <=45 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.625x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+			}
 		}
 		if( level.round_number >=46 && level.round_number <=52 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 1.857x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.857x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+			}
 		}
 		if( level.round_number >=53 && level.round_number <=60 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.166x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.166x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+			}
 		}
 		if( level.round_number >=61 && level.round_number <=80 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 2.6x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.6x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+			}
 		}
 		if( level.round_number >=81 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot(HipFire Reduction)^7 3.25x");
-			wait 0.5;
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 3.25x");
+				wait 0.5;
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+			}
 		}
     	
 		if( level.round_number >=11 && level.round_number <=20 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+			}
 		}
 		if( level.round_number >=21 && level.round_number <=35 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+			}
 		}
 		if( level.round_number >=36 && level.round_number <=50 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+			}
 		}
 		if( level.round_number >=51 && level.round_number <=100 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+			}
 		}
 		if( level.round_number >=101 )
 		{
-			self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+			foreach( player in level.players )
+			{
+				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+			}
 		}
+		wait 0.08;
     }
+	}
 }
 
 camo_change( value )
@@ -666,46 +810,172 @@ enable_LRZ_Progressive_Perks( onoff )
 {
 	create_dvar( "LRZ_Progressive_Perks", onoff );
 	if( isDvarAllowed( "LRZ_Progressive_Perks" ) )
+	{
 		level.LRZ_Progressive_Perks = getDvarInt( "LRZ_Progressive_Perks" );
-	
+
+		level thread LRZ_Toggle_Progressive_Perks();
+		level notify("LRZ_Trigger_Progressive_Perks");
+		while( 1 )
+		{
+			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_Progressive_Perks" ) )
+			{
+				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_Progressive_Perks" );
+				wait 0.08;
+				level notify("LRZ_Trigger_Progressive_Perks");
+			}
+			wait 0.5;
+		}
+	}
+}
+
+LRZ_Toggle_Progressive_Perks()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Progressive_Perks");
+		level endon( "LRZ_Trigger_Disable" );
 		if(!level.LRZ_Progressive_Perks)
 		{
+			level notify( "END_LRZ_Progressive_Perks" );
 			setDvar("perk_weapRateMultiplier", "0.75");
 			setDvar("perk_weapReloadMultiplier", "0.5");
 			setDvar("perk_weapSpreadMultiplier", "0.65");
 			setDvar("player_clipSizeMultiplier", "1.0");
 			setDvar("player_lastStandBleedoutTime", "45");
-			return;
+			//return;
 		}
 		if(level.LRZ_Progressive_Perks)
 		{
+			//player thread Progressive_Perks_Alerts();// Init Progressive Perks Alert System
 			self thread Progressive_Perks();// Initialize Progressive Perks
 		}
+		wait 0.08;
+	}
 }
 
 enable_LRZ_NoPerkLimit( onoff )
 {
 	create_dvar( "LRZ_NoPerkLimit", onoff );
 	if( isDvarAllowed( "LRZ_NoPerkLimit" ) )
+	{
 		level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
 
+		self thread LRZ_No_Perk_Limit();
+		level notify("LRZ_Trigger_Perk_Limit");
 		while( 1 )
 		{
-			level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
-			wait 5;
+			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_NoPerkLimit" ) )
+			{
+				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
+				wait 0.08;
+				level notify("LRZ_Trigger_Perk_Limit");
+			}
+			wait 0.5;
 		}
-	
+	}
+}
+
+LRZ_No_Perk_Limit()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Perk_Limit");
 		if(!level.LRZ_NoPerkLimit)
 		{
 			level.perk_purchase_limit = 4;
-			return;
+			//return;
 		}
 		if(level.LRZ_NoPerkLimit)
 		{
 			level thread remove_perk_limit();// Initialize No Perk Limit
-			wait 2.0;
+			wait 1.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
+			wait 0.08;
 		}
+		wait 0.08;
+	}
+}
+
+enable_LRZ_Harder_Zombies( onoff )
+{
+	create_dvar( "LRZ_Harder_Zombies", onoff );
+	if( isDvarAllowed( "LRZ_Harder_Zombies" ) )
+	{
+		level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
+
+		level thread LRZ_Toggle_Harder_Zombies();
+		level notify("LRZ_Trigger_Harder_Zombies");
+		while( 1 )
+		{
+			if( level.LRZ_Harder_Zombies != getDvarInt( "LRZ_Harder_Zombies" ) )
+			{
+				level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
+				wait 0.08;
+				level notify("LRZ_Trigger_Harder_Zombies");
+			}
+			wait 0.5;
+		}
+	}
+}
+
+LRZ_Toggle_Harder_Zombies()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Harder_Zombies");
+		if(!level.LRZ_Harder_Zombies)
+		{
+			level.zombie_vars[ "zombie_spawn_delay" ] = "1.8";
+			//return;
+		}
+		if(level.LRZ_Harder_Zombies)
+		{
+			self thread Zombie_Vars();// Initialize Harder Zombies
+		}
+		wait 0.08;
+	}
+}
+
+enable_LRZ_Nonstop_Zombies( onoff )
+{
+	create_dvar( "LRZ_Nonstop_Zombies", onoff );
+	if( isDvarAllowed( "LRZ_Nonstop_Zombies" ) )
+	{
+		level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
+
+		level thread LRZ_Toggle_Harder_Zombies();
+		level notify("LRZ_Trigger_Nonstop_Zombies");
+		while( 1 )
+		{
+			if( level.LRZ_Nonstop_Zombies != getDvarInt( "LRZ_Nonstop_Zombies" ) )
+			{
+				level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
+				wait 0.08;
+				level notify("LRZ_Trigger_Nonstop_Zombies");
+			}
+			wait 0.5;
+		}
+	}
+}
+
+LRZ_Toggle_Nonstop_Zombies()
+{
+	for(;;)
+	{
+		level waittill("LRZ_Trigger_Nonstop_Zombies");
+		level endon( "LRZ_Trigger_Disable" );
+		if(!level.LRZ_Nonstop_Zombies)
+		{
+			level.zombie_vars["zombie_between_round_time"] = 10; //remove the delay at the end of each round 
+			//level.zombie_round_start_delay = 2; //remove the delay before zombies start to spawn
+		}
+		if(level.LRZ_Nonstop_Zombies)
+		{
+			level.zombie_vars["zombie_between_round_time"] = 1; //remove the delay at the end of each round 
+			//level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
+		}
+		wait 0.08;
+	}
 }
 
 enable_LRZ_HUD( onoff )
@@ -717,9 +987,25 @@ enable_LRZ_HUD( onoff )
 
 LRZ_Checks()
 {
-	if( level.LRZ_enabled == 1)
+	for(;;)
 	{
-		level notify("LRZ_ON");
+		if( level.LRZ_enabled != getDvarInt( "LRZ_enabled" ) )
+		{
+			level.LRZ_enabled = getDvarInt( "LRZ_enabled" );
+			wait 0.08;
+			//level notify("LRZ_Trigger_Enable");
+		}
+		wait 0.08;
+		if( getDvarInt( "LRZ_enabled" ) == 1 )
+		{
+			level notify("LRZ_Trigger_Enable");
+		}
+		wait 0.08;
+		if( getDvarInt( "LRZ_enabled" ) == 0 )
+		{
+			level notify("LRZ_Trigger_Disable");
+		}
+		wait 0.08;
 	}
 }
 
@@ -788,8 +1074,8 @@ set_starting_round( round )
 	
 
 	level.first_round = false;
-    level.zombie_move_speed = 130;
-	level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
+    //level.zombie_move_speed = 130;
+	//level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
 	level.round_number = level.start_round;
 }
 
@@ -830,6 +1116,7 @@ zombie_spawn_wait(time)
 timer_hud()
 {	
 	self endon("disconnect");
+	level endon( "LRZ_Trigger_Disable" );
 
 	self.timer_hud = newClientHudElem(self);
 	self.timer_hud.alignx = "left";
@@ -871,6 +1158,7 @@ timer_hud_watcher( onoff )
 {
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_timer" ) )
@@ -895,7 +1183,7 @@ timer_hud_watcher( onoff )
 	}
 }
 
-LRZ_Big_Msg( msg1, msg2 )
+LRZ_Big_Msg( msg1, msg2, delay, icon ) // Must Be Threaded
 {
 	flag_wait( "initial_blackscreen_passed" );
 	text1 = self createfontstring( "hudbig", 2.5 );
@@ -920,12 +1208,15 @@ LRZ_Big_Msg( msg1, msg2 )
 	text2.y = -120;
 	text2.x = 0;
 	wait 0.6;
-	iconm8 = self drawshader( "lui_loader_no_offset", 0, 110, 80, 80, ( 1, 1, 1 ), 1, 1 );
+	iconm8 = self drawshader( icon, 0, 110, 80, 80, ( 1, 1, 1 ), 1, 1 );
 	iconm8 moveovertime( 1 );
 	wait 0.6;
 	text1 setpulsefx( 50, 6050, 600 );
 	text2 setpulsefx( 50, 6050, 600 );
-	wait 2.5;
+	if( !delay )
+		wait 2.5;
+	else
+		wait delay;
 	text1 fadeovertime( 3 );
 	text2 fadeovertime( 3 );
 	iconm8 fadeovertime( 3 );
@@ -942,6 +1233,7 @@ LRZ_Big_Msg( msg1, msg2 )
 round_timer_hud()
 {
 	self endon("disconnect");
+	level endon( "LRZ_Trigger_Disable" );
 
 	self.round_timer_hud = newClientHudElem(self);
 	self.round_timer_hud.alignx = "left";
@@ -992,6 +1284,7 @@ round_timer_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_round_timer", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_round_timer" ) )
@@ -1077,6 +1370,7 @@ zombie_remaining_hud()
 {
 	self endon( "disconnect" );
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	//level waittill( "spawned_player" );
 
@@ -1090,7 +1384,7 @@ zombie_remaining_hud()
         self.zombie_counter_hud.label = &"Zombies: ^1";
 		self.zombie_counter_hud setValue( ( maps/mp/zombies/_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
         
-        wait 0.05; 
+        wait 0.08; 
     }
 }
 
@@ -1098,6 +1392,7 @@ zombie_remaining_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_zombie_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_zombie_counter" ) )
@@ -1126,6 +1421,7 @@ health_remaining_hud()
 {
 	self endon( "disconnect" );
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	//level waittill( "spawned_player" );
 
@@ -1139,7 +1435,7 @@ health_remaining_hud()
         self.health_counter_hud.label = &"Health: ^2";
 		self.health_counter_hud setValue( self.health );
         
-        wait 0.05; 
+        wait 0.08; 
     }
 }
 
@@ -1147,6 +1443,7 @@ health_remaining_hud_watcher( onoff )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_health_counter", onoff );
 	if( !isDvarAllowed( "LRZ_HUD_health_counter" ) )
@@ -1177,6 +1474,7 @@ trap_timer_hud()
 		return;
 
 	self endon( "disconnect" );
+	self endon( "LRZ_Trigger_Disable" );
 
 	self.trap_timer_hud = newclienthudelem( self );
 	self.trap_timer_hud.alignx = "left";
@@ -1245,6 +1543,7 @@ zone_hud_watcher( x, y )
 {	
 	self endon("disconnect");
 	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
 
 	create_dvar( "LRZ_HUD_zone", 1 );
 	if( !isDvarAllowed( "LRZ_HUD_zone" ) )
@@ -1272,9 +1571,7 @@ zone_hud_watcher( x, y )
 				self.zone_hud.alpha = 0;
 				wait 0.2;
 
-				
 				self.zone_hud settext(zone);
-				
 
 				self.zone_hud fadeovertime(0.2);
 				self.zone_hud.alpha = 1;
@@ -1283,7 +1580,7 @@ zone_hud_watcher( x, y )
 				continue;
 			}
 
-			wait 0.05;
+			wait 0.08;
 		}
 		self.zone_hud.alpha = 0;
 	}
@@ -1294,7 +1591,7 @@ LRZ_Zone_Hud_settext()
 	
 }
 
-LRZ_Bold_Msg( msg1, delay)
+LRZ_Bold_Msg( msg1, delay) // Can NOT be threaded
 {
 	self iprintlnBold(msg1);
 	if(!delay)
