@@ -16,6 +16,8 @@ This script features a LOT so please bear with me on this. Any features with an 
 - 64 placed claymore limit (hehehehehe hf)
 - A WIP Mod menu that is disabled by DEFAULT but will be used as an aid later on.
 - And more!!!
+
+
 Feature explanation time:
 Most of the script features can be toggled or changed by typing a specific dvar into the console using ~ AFTER loading into a map at least once.
 Most of these dvars can be found by typing LRZ_ into the console but the only one that isn't in that section is start_round which will let you choose a specific round to start at. This was used for debugging but I left it in for those that want it.
@@ -31,6 +33,7 @@ This feature decreases the default time it takes in between every zombie spawn o
 It also increases the speed multiplier from 8 to 12 meaning zombies will be 1.5x faster every round than they normally would as well as setting zombies to move at round 4 speed from round 1-4.
 I also increased the max zombies from 24 to 32
 Lastly I increased the zombie health increase multiplier from 0.1 to 0.15 as well as increased their static health increase from 100 to 150 but static health increase doesn't seem to be working atm.
+
 Now the big one... Progressive Perks
 This is a system I decided to make as a sort of homage to an old WAW Mod Menu feature but implemented in a Tasteful way.
 What this system does is increase the Double Tap & Speed Cola rate, Deadshot Effectiveness (Hipfire Size), ClipSizeMultiplier and Bleedout time as you get to higher rounds. This actually turned out really nicely and makes the game a lot more fun to play.
