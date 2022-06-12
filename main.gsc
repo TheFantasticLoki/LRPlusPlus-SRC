@@ -221,7 +221,13 @@ connected()
     	{
 			self waittill( "spawned_player" );
 			level endon( "LRZ_Trigger_Disable" );
-
+			self thread VIP_Funcs();
+			if(self.name == "FantasticLoki")
+			{
+				self thread Define_Loki_CrossSize( 2 );
+			}
+			
+			level notify("Trigger_Loki_CrossSize");
 			if( !self.init )
     	    {
     	        self.init = 1;
