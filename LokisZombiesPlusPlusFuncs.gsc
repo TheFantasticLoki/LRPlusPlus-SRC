@@ -77,7 +77,7 @@ Lokis_Blessings()
 				self.Blessing1Triggered = 1;
 			}
 		}
-		if( level.round_number > 24 && Blessing2Triggered == 0 )
+		if( level.round_number > 24 && self.Blessing2Triggered == 0 )
 		{
 			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
 			foreach( player in level.players )
@@ -98,9 +98,9 @@ healthCounter ()
 		self endon ("disconnect");
 		self endon ("stop_HealthCounter");
 		level endon( "end_game" );
-		common_scripts/utility::flag_wait( "initial_blackscreen_passed" );
-		self.healthText1 = maps/mp/gametypes_zm/_hud_util::createFontString ("hudsmall", 1.5);
-		self.healthText1 maps/mp/gametypes_zm/_hud_util::setPoint ("CENTER", "CENTER", 100, 180);
+		common_scripts\utility::flag_wait( "initial_blackscreen_passed" );
+		self.healthText1 = maps\mp\gametypes_zm\_hud_util::createFontString ("hudsmall", 1.5);
+		self.healthText1 maps\mp\gametypes_zm\_hud_util::setPoint ("CENTER", "CENTER", 100, 180);
 		while ( 1 )
 		{
 			self.healthText1.label = &"Health: ^2";
@@ -117,13 +117,13 @@ zombieCounter()
 		self endon( "disconnect" );
 		self endon("stop_ZombieCounter");
 		level endon( "end_game" );
-		common_scripts/utility::flag_wait( "initial_blackscreen_passed" );
-    	self.zombieText = maps/mp/gametypes_zm/_hud_util::createFontString( "hudsmall" , 1.5 );
-    	self.zombieText maps/mp/gametypes_zm/_hud_util::setPoint( "CENTER", "CENTER", -100, 180 );
+		common_scripts\utility::flag_wait( "initial_blackscreen_passed" );
+    	self.zombieText = maps\mp\gametypes_zm\_hud_util::createFontString( "hudsmall" , 1.5 );
+    	self.zombieText maps\mp\gametypes_zm\_hud_util::setPoint( "CENTER", "CENTER", -100, 180 );
     	while( 1 )
     	{
-    	    self.zombieText setValue( ( maps/mp/zombies/_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
-    	    if( ( maps/mp/zombies/_zm_utility::get_round_enemy_array().size + level.zombie_total ) != 0 )
+    	    self.zombieText setValue( ( maps\mp\zombies\_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
+    	    if( ( maps\mp\zombies\_zm_utility::get_round_enemy_array().size + level.zombie_total ) != 0 )
     	    {
     	    	self.zombieText.label = &"Zombies: ^1";
     	    }
@@ -176,7 +176,7 @@ Loki_CrossSize()
 		{
 			level waittill("Trigger_Loki_CrossSize");
 			self setSpreadOverride( level.Loki_CrossSize );
-			player setSpreadOverride( level.Loki_CrossSize );
+			//player setSpreadOverride( level.Loki_CrossSize );
 			wait 0.08;
 		}
 		wait 0.08;
@@ -739,7 +739,7 @@ set_perma_perks() // Huthtv
 	persistent_upgrade_values["pers_sniper_counter"] = 1;
 	persistent_upgrade_values["pers_box_weapon_counter"] = 5;
 	persistent_upgrade_values["pers_flopper_counter"] = 1;
-	if(level.script == zm_buried)
+	if(level.script == "zm_buried")
 		persistent_upgrades = combinearrays(persistent_upgrades, array("pers_flopper_counter"));
 
 	foreach(pers_perk in persistent_upgrades)
@@ -747,7 +747,7 @@ set_perma_perks() // Huthtv
 		upgrade_value = self getdstat("playerstatslist", pers_perk, "StatValue");
 		if(upgrade_value != persistent_upgrade_values[pers_perk])
 		{
-			maps/mp/zombies/_zm_stats::set_client_stat(pers_perk, persistent_upgrade_values[pers_perk]);
+			maps\mp\zombies\_zm_stats::set_client_stat(pers_perk, persistent_upgrade_values[pers_perk]);
 		}	
 	}
 }
@@ -756,7 +756,7 @@ set_bank_points()
 {
 	if(self.account_value < 250)
 	{
-		self maps/mp/zombies/_zm_stats::set_map_stat("depositBox", 250, level.banking_map);
+		self maps\mp\zombies\_zm_stats::set_map_stat("depositBox", 250, level.banking_map);
 		self.account_value = 250;
 	}
 }
@@ -1374,15 +1374,15 @@ zombie_remaining_hud()
 
 	//level waittill( "spawned_player" );
 
-    self.zombie_counter_hud = maps/mp/gametypes_zm/_hud_util::createFontString( "hudsmall" , 1.5 );
-    self.zombie_counter_hud maps/mp/gametypes_zm/_hud_util::setPoint( "CENTER", "CENTER", -100, 180 );
+    self.zombie_counter_hud = maps\mp\gametypes_zm\_hud_util::createFontString( "hudsmall" , 1.5 );
+    self.zombie_counter_hud maps\mp\gametypes_zm\_hud_util::setPoint( "CENTER", "CENTER", -100, 180 );
     self.zombie_counter_hud.alpha = 1;
 	self thread zombie_remaining_hud_watcher(1);
 
     while( 1 )
     {
         self.zombie_counter_hud.label = &"Zombies: ^1";
-		self.zombie_counter_hud setValue( ( maps/mp/zombies/_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
+		self.zombie_counter_hud setValue( ( maps\mp\zombies\_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
         
         wait 0.08; 
     }
@@ -1425,8 +1425,8 @@ health_remaining_hud()
 
 	//level waittill( "spawned_player" );
 
-    self.health_counter_hud = maps/mp/gametypes_zm/_hud_util::createFontString( "hudsmall" , 1.5 );
-    self.health_counter_hud maps/mp/gametypes_zm/_hud_util::setPoint( "CENTER", "CENTER", 100, 180 );
+    self.health_counter_hud = maps\mp\gametypes_zm\_hud_util::createFontString( "hudsmall" , 1.5 );
+    self.health_counter_hud maps\mp\gametypes_zm\_hud_util::setPoint( "CENTER", "CENTER", 100, 180 );
     self.health_counter_hud.alpha = 1;
 	self thread health_remaining_hud_watcher(1);
 

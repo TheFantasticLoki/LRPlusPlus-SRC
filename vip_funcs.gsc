@@ -1,5 +1,5 @@
 
-/*NOTE: Add this line into your includes - #include maps/mp/zombies/_zm_weapons; */
+/*NOTE: Add this line into your includes - #include maps\mp\zombies\_zm_weapons; */
 
 /*Pack-a-Punches current weapon*/
 UpgradeWeapon()

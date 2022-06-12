@@ -1,4 +1,4 @@
-doBuyMaxAmmo()
+doBuyMaxAmmo(price)
 {
     //iprintlnbold( "^1Executed" );
     if( self.score > price)

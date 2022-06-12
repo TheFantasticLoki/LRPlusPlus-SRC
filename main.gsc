@@ -1,38 +1,38 @@
-#include maps/mp/_utility;
-#include common_scripts/utility;
-#include maps/mp/gametypes_zm/_hud_util;
-#include maps/mp/zombies/_zm_utility;
-#include maps/mp/zombies/_zm_weapons;
-#include maps/mp/zombies/_zm_stats;
-#include maps/mp/gametypes_zm/_hud_message;
-#include maps/mp/gametypes_zm/_weapons;
-#include maps/mp/zombies/_zm;
-#include maps/mp/zombies/_zm_perks;
-#include maps/mp/zombies/_zm_powerups;
-#include maps/mp/gametypes_zm/_spawnlogic;
-#include maps/mp/gametypes_zm/_hostmigration;
-#include maps/mp/zombies/_zm_sidequests;
-#include maps/mp/zombies/_zm_audio;
-#include maps/mp/animscripts/zm_combat;
-#include maps/mp/animscripts/zm_utility;
-#include maps/mp/animscripts/utility;
-#include maps/mp/animscripts/shared;
-#include maps/mp/zombies/_zm_game_module;
-#include maps/mp/zombies/_zm_magicbox;
-#include maps/mp/gametypes_zm/_gv_actions;
-#include maps/mp/gametypes_zm/_damagefeedback;
-#include maps/mp/zombies/_zm_laststand;
-#include maps/mp/zombies/_zm_weap_cymbal_monkey;
-#include maps/mp/zombies/_zm_spawner;
-#include maps/mp/zombies/_zm_unitrigger;
-#include maps/mp/zombies/_zm_score;
-#include scripts/zm/zm_bo2_bots;
+#include common_scripts\utility;
+#include maps\mp\_utility;
+#include maps\mp\animscripts\zm_combat;
+#include maps\mp\animscripts\zm_utility;
+#include maps\mp\animscripts\utility;
+#include maps\mp\animscripts\shared;
+#include maps\mp\gametypes_zm\_hud_util;
+#include maps\mp\gametypes_zm\_hud_message;
+#include maps\mp\gametypes_zm\_weapons;
+#include maps\mp\gametypes_zm\_spawnlogic;
+#include maps\mp\gametypes_zm\_hostmigration;
+#include maps\mp\gametypes_zm\_gv_actions;
+#include maps\mp\gametypes_zm\_damagefeedback;
+#include maps\mp\zombies\_zm_utility;
+#include maps\mp\zombies\_zm_weapons;
+#include maps\mp\zombies\_zm_stats;
+#include maps\mp\zombies\_zm;
+#include maps\mp\zombies\_zm_perks;
+#include maps\mp\zombies\_zm_powerups;
+#include maps\mp\zombies\_zm_sidequests;
+#include maps\mp\zombies\_zm_audio;
+#include maps\mp\zombies\_zm_game_module;
+#include maps\mp\zombies\_zm_magicbox;
+#include maps\mp\zombies\_zm_laststand;
+#include maps\mp\zombies\_zm_weap_cymbal_monkey;
+#include maps\mp\zombies\_zm_spawner;
+#include maps\mp\zombies\_zm_unitrigger;
+#include maps\mp\zombies\_zm_score;
+#include scripts\zm\zm_bo2_bots;
 // Use This^ For Zombies
 
-/*#include maps/mp/gametypes/_hud;
-#include maps/mp/gametypes/_hud_util;
-#include maps/mp/_utility;
-#include common_scripts/utility;*/
+/*#include maps\mp\gametypes\_hud;
+#include maps\mp\gametypes\_hud_util;
+#include maps\mp\_utility;
+#include common_scripts\utility;*/
 // Use This^ For Multiplayer
 
 settings() 
@@ -62,6 +62,7 @@ init()
 	level.player_out_of_playable_area_monitor = 0;
 	level.firstHostSpawned = false;
 	level thread preCacheAssets();
+	level thread replaceFuncs();
 	level thread onPlayerConnect();
 	level thread removeskybarrier();
 	level thread upload_stats_on_round_end();
@@ -359,8 +360,4 @@ unfreeze()
 	self freezeControlsallowlook(false);
 	self freezeControls(false);
 }
-
-
-
-
 

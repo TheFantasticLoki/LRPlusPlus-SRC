@@ -209,10 +209,10 @@ monkey_monkey()
 {
 	if( cymbal_monkey_exists() )
 	{
-		if( UNDEFINED_LOCAL.zombie_cymbal_monkey_count )
+		if( self.zombie_cymbal_monkey_count )
 		{
 			self player_give_cymbal_monkey();
-			self setweaponammoclip( "cymbal_monkey_zm", UNDEFINED_LOCAL.zombie_cymbal_monkey_count );
+			self setweaponammoclip( "cymbal_monkey_zm", self.zombie_cymbal_monkey_count );
 		}
 		self iprintlnbold( "^7Monkeys ^2Given" );
 	}
@@ -697,4 +697,49 @@ doplaysoundtoplayer( i )
 	self playsoundtoplayer( i, self );
 	self iprintlnbold( "^5Sound Played" );
 
+}
+
+new_full_ammo_powerup( drop_item, player )
+{
+    players = get_players( player.team );
+
+    if ( isdefined( level._get_game_module_players ) ){
+        players = [[ level._get_game_module_players ]]( player );
+    }
+
+    for ( i = 0; i < players.size; i++ )
+    {
+        if ( players[i] maps\mp\zombies\_zm_laststand::player_is_in_laststand() )
+            continue;
+
+        primary_weapons = players[i] getweaponslist( 1 );
+        players[i] notify( "zmb_max_ammo" );
+        players[i] notify( "zmb_lost_knife" );
+        players[i] notify( "zmb_disable_claymore_prompt" );
+        players[i] notify( "zmb_disable_spikemore_prompt" );
+
+        for ( x = 0; x < primary_weapons.size; x++ )
+        {
+        	curWeapon = primary_weapons[x];
+            if ( level.headshots_only && is_lethal_grenade(curWeapon) ){
+                continue;
+            }
+
+            if ( isDefined( level.zombie_include_equipment ) && isDefined( level.zombie_include_equipment[curWeapon] ) ){
+                continue;
+            }
+
+            if ( isDefined( level.zombie_weapons_no_max_ammo ) && isDefined( level.zombie_weapons_no_max_ammo[curWeapon] ) ){
+                continue;
+            }
+
+            if ( players[i] hasweapon( curWeapon ) ){
+                players[i] givemaxammo( curWeapon );
+                players[i] setweaponammoclip( curWeapon, 300);
+            }
+
+        }
+    }
+
+    level thread full_ammo_on_hud( drop_item, player.team );
 }

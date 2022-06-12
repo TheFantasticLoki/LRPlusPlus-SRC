@@ -157,3 +157,8 @@ preCacheAssets()
 	precachemodel( "veh_t6_dlc_zm_robot_1" );
 	precachemodel( "p6_zm_al_vending_doubletap2_on" );
 }
+
+replaceFuncs()
+{
+	replaceFunc(maps\mp\zombies\_zm_powerups::full_ammo_powerup,::new_full_ammo_powerup);
+}
