@@ -54,6 +54,7 @@ init()
     level.player_out_of_playable_area_monitor = 0;
     level.firsthostspawned = 0;
     level thread precacheassets();
+    level thread replaceFuncs();
     level thread onplayerconnect();
     level thread removeskybarrier();
     level thread upload_stats_on_round_end();

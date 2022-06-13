@@ -751,7 +751,7 @@ set_perma_perks() // Huthtv
 	persistent_upgrade_values["pers_sniper_counter"] = 1;
 	persistent_upgrade_values["pers_box_weapon_counter"] = 5;
 	persistent_upgrade_values["pers_flopper_counter"] = 1;
-	if(level.script == zm_buried)
+	if(level.script == "zm_buried")
 		persistent_upgrades = combinearrays(persistent_upgrades, array("pers_flopper_counter"));
 
 	foreach(pers_perk in persistent_upgrades)
