@@ -1,19 +1,27 @@
-DEBUG_Status() 
+// T6 GSC SOURCE
+// Decompiled by https://github.com/xensik/gsc-tool
+
+debug_status()
 {
-    self thread LRZ_Big_Msg("DEBUG_self.Status: "+self.status);
+    self thread lrz_big_msg( "DEBUG_self.Status: " + self.status );
 }
 
-DEBUG_isDev() 
+debug_isdev()
 {
-    self thread LRZ_Big_Msg("DEBUG_isDev: "+self isDev());
+    self thread lrz_big_msg( "DEBUG_isDev: " + self isdev() );
 }
 
-DEBUG_SpawnDelay()
+debug_spawndelay()
 {
-	self LRZ_Bold_Msg("Test: spawn delay = "+level.zombie_vars["zombie_spawn_delay"]);
+    self lrz_bold_msg( "Test: spawn delay = " + level.zombie_vars["zombie_spawn_delay"] );
 }
 
-DEBUG_PerkLimit()
+debug_perklimit()
 {
-    self LRZ_Big_Msg("DEBUG_PerkLimit: "+level.perk_purchase_limit);
+    self lrz_big_msg( "DEBUG_PerkLimit: " + level.perk_purchase_limit );
+}
+
+debug_msg()
+{
+    self lrz_big_msg( "DEBUG_Msg: " );
 }

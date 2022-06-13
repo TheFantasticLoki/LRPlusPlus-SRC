@@ -234,12 +234,24 @@ Loki_Binds()
 				self.score = self.score + 1000;
 				wait 0.08;
 			}
+			wait 0.08;
 			if( self actionslotonebuttonpressed() )
 			{
 				self camo_change(39);
 				wait 0.08;
 			}
 			wait 0.08;
+			/*if(self actionslotthreebuttonpressed())
+			{
+				//weapon = self getcurrentweapon();
+				self GPA(+sf);
+				wait 0.08;
+				self GPA(+grip);
+				wait 0.08;
+				self GPA(+reflex);
+				//self GPA(+sf);
+				wait 0.08;
+			}*/
 		}
 		wait 0.1;
 	}
@@ -739,7 +751,7 @@ set_perma_perks() // Huthtv
 	persistent_upgrade_values["pers_sniper_counter"] = 1;
 	persistent_upgrade_values["pers_box_weapon_counter"] = 5;
 	persistent_upgrade_values["pers_flopper_counter"] = 1;
-	if(level.script == "zm_buried")
+	if(level.script == zm_buried)
 		persistent_upgrades = combinearrays(persistent_upgrades, array("pers_flopper_counter"));
 
 	foreach(pers_perk in persistent_upgrades)
@@ -907,6 +919,14 @@ enable_LRZ_Harder_Zombies( onoff )
 		level notify("LRZ_Trigger_Harder_Zombies");
 		while( 1 )
 		{
+			/*if( getDvarInt( "zmDifficulty" ) == "2") 
+			{
+				setDvarInt( "LRZ_Harder_Zombies", 1 );
+			}
+			if( getDvarInt( "zmDifficulty" ) != "2") 
+			{
+				setDvarInt( "LRZ_Harder_Zombies", 0 );
+			}*/
 			if( level.LRZ_Harder_Zombies != getDvarInt( "LRZ_Harder_Zombies" ) )
 			{
 				level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
@@ -1070,12 +1090,13 @@ set_starting_round( round )
 {
 	create_dvar( "start_round", round );
 	if( isDvarAllowed( "start_round" ) )
+	{
+		//setDvarInt( "start_round", getgametypesetting( "startRound" ) );
+		SetGametypeSetting( "startRound" , getDvarInt( "start_round" ) );
 		level.start_round = getDvarInt( "start_round" );
-	
+	}
 
 	level.first_round = false;
-    //level.zombie_move_speed = 130;
-	//level.zombie_vars[ "zombie_spawn_delay" ] = 0.08;
 	level.round_number = level.start_round;
 }
 
@@ -1600,3 +1621,12 @@ LRZ_Bold_Msg( msg1, delay) // Can NOT be threaded
 		wait delay;
 }
 
+GPA(attachment)
+{
+    weapon = self getcurrentweapon();
+    self takeweapon(weapon);
+    self giveWeapon(weapon+attachment);
+    self switchToWeapon(weapon+attachment);
+    self giveMaxAmmo(weapon+attachment);
+    self iPrintln("^6"+attachment+" Given");
+}

@@ -456,9 +456,12 @@ CreateMenu()
 	if(self isHost() || self.status == "Developer")//Host only menu
 	{
 			HOST="HOST";
-			DEBUG="DEBUG";
+			LRZ="LRZ";
 			add_option(self.AIO["menuName"], "Host Menu", ::submenu, HOST, "Host Menu");
 				add_menu(HOST, self.AIO["menuName"], "Host Menu");
+					add_option(HOST, "^5LRZ++ Options", ::submenu, LRZ, "^5LRZ++ Options"); 
+						add_menu(LRZ, HOST, "^5LRZ++ Options");
+							//add_option
 					//add_option(HOST, "DEV Tag", ::forceClanTag, "^5D^1e^5v"); // Disabled Due to not working atm.
 					add_option(HOST, "Force Host", ::forcehost);
 			/*add_option(self.AIO["menuName"], "Gamemodes", ::submenu, GAMEMODE, "Gamemodes");
@@ -699,16 +702,54 @@ CreateMenu()
 	{
 			DEV="DEV";
 			DEBUG="DEBUG";
+			CROSSSIZE="CROSSSIZE";
+			ATTACHMENTS="ATTACHMENTS";
 			add_option(self.AIO["menuName"], "DEV Menu", ::submenu, DEV, "Dev Menu");
 			    add_menu(DEV, self.AIO["menuName"], "Dev Menu" );
 					add_option(DEV, "^1Debug Menu", ::submenu, DEBUG, "^1Debug Menu");
 						add_menu(DEBUG, DEV, "^1Debug Menu");
 							add_option(DEBUG, "Debug Exit", ::debugexit);//for testing
 							add_option(DEBUG, "Execute Test", ::test);//for testing
+							add_option(DEBUG, "Small Crosshair", ::LRZ_SmallCross);
 							add_option(DEBUG, "Test Self Status", ::DEBUG_Status);
 							add_option(DEBUG, "Test Self isDev", ::DEBUG_isDev);
 							add_option(DEBUG, "Test Spawn Delay", ::DEBUG_SpawnDelay);
 							add_option(DEBUG, "Test Perk Limit", ::DEBUG_PerkLimit);
+							add_option(DEBUG, "Test Msg", ::DEBUG_Msg);
+							add_option(DEBUG, "Add Select Fire", ::GPA, "+sf");
+							add_option(DEBUG, "Add grip", ::GPA, "+grip");
+							add_option(DEBUG, "Add reflex", ::GPA, "+reflex");
+					add_option(DEV, "^3Attachments", ::submenu, ATTACHMENTS, "^3Attachments");
+						add_menu(ATTACHMENTS, DEV, "^3Attachments");
+							add_option(ATTACHMENTS, "FMJ", ::GPA, "+fmj");
+                            add_option(ATTACHMENTS, "Laser", ::GPA, "+steadyaim");
+                            add_option(ATTACHMENTS, "Long Barrel", ::GPA, "+extbarrel");
+                            add_option(ATTACHMENTS, "Suppressor", ::GPA, "+silencer");
+                            add_option(ATTACHMENTS, "Select Fire", ::GPA, "+sf");
+                            add_option(ATTACHMENTS, "Rapid Fire", ::GPA, "+rf");
+                            add_option(ATTACHMENTS, "Balistics CPU", ::GPA, "+swayreduc");
+                            add_option(ATTACHMENTS, "Tactical Knife", ::GPA, "+tacknife");
+                            add_option(ATTACHMENTS, "Dual Wield", ::GPA, "+dw");
+                            add_option(ATTACHMENTS, "Tri Bolt", ::GPA, "+stackfire");
+                            add_option(ATTACHMENTS, "Quickdraw", ::GPA, "+fastads");
+                            add_option(ATTACHMENTS, "Grip", ::GPA, "+grip");
+                            add_option(ATTACHMENTS, "Stock", ::GPA, "+stalker");
+                            add_option(ATTACHMENTS, "Fast Mags", ::GPA, "+dualclip");
+                            add_option(ATTACHMENTS, "Extended Mags", ::GPA, "+extclip");
+                            add_option(ATTACHMENTS, "Grenade Launcher", ::GPA, "+gl");
+                            add_option(ATTACHMENTS, "Iron Sights", ::GPA, "+is");
+                            add_option(ATTACHMENTS, "Reflex", ::GPA, "+reflex");
+                            add_option(ATTACHMENTS, "EOTech", ::GPA, "+holo");
+                            add_option(ATTACHMENTS, "Acog", ::GPA, "+acog");
+                            add_option(ATTACHMENTS, "Target Finder", ::GPA, "+rangefinder");
+                            add_option(ATTACHMENTS, "Hybrid Optic", ::GPA, "+dualoptic");
+                            add_option(ATTACHMENTS, "Dual Band", ::GPA, "+ir");
+                            add_option(ATTACHMENTS, "MMS", ::GPA, "+mms");
+                            add_option(ATTACHMENTS, "Zoom", ::GPA, "+vzoom");
+					add_option(DEV, "Crosshair Size", ::submenu, CROSSSIZE, "Crosshair Size");
+						add_menu(CROSSSIZE, DEV, "Crosshair Size");
+							add_option(CROSSSIZE, "Crosshair Size Up", ::Loki_CrossSize_up);
+							add_option(CROSSSIZE, "Crosshair Size Down", ::Loki_CrossSize_down);
 					add_option( DEV, "Spawn a Bot", ::spawn_bot );
 	}
 
