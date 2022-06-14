@@ -58,13 +58,13 @@ remove_perk_limit()
 
 Lokis_Blessings()
 {
-	self.Blessing1Triggered = 0;
-	self.Blessing2Triggered = 0;
+	self.Blessing1Triggered = "0";
+	self.Blessing2Triggered = "0";
 	for(;;)
 	{
 		level waittill("start_of_round");
 		level endon( "LRZ_Trigger_Disable" );
-		if( self.Blessing1Triggered == 0 )
+		while( self.Blessing1Triggered == "0" )
 		{
 			if( level.round_number > 14 && level.round_number < 25 )
 			{
@@ -74,20 +74,28 @@ Lokis_Blessings()
 					player.score = player.score + 5000;
 				}
 				wait 0.08;
-				self.Blessing1Triggered = 1;
-			}
-		}
-		if( level.round_number > 24 && self.Blessing2Triggered == 0 )
-		{
-			self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
-			foreach( player in level.players )
-			{
-				player.score = player.score + 10000;
-				player thread drinkallperks();
+				self.Blessing1Triggered = "1";
 			}
 			wait 0.08;
-			self.Blessing2Triggered = 1;
+			break;
 		}
+		while( self.Blessing2Triggered == "0" )
+		{
+			if( level.round_number > 24 )
+			{
+				self LRZ_Big_Msg("^3LZ++: ^7Good job on reaching round 25 have some blessings and Good Luck Challengers!");
+				foreach( player in level.players )
+				{
+					player.score = player.score + 10000;
+					player thread drinkallperks();
+				}
+				wait 0.08;
+				self.Blessing2Triggered = "1";
+			}
+			wait 0.08;
+			break;
+		}
+		wait 0.08;
 	}
 }
 
@@ -475,165 +483,278 @@ Progressive_Perks_Alerts()
 {
 	if( level.LRZ_Progressive_Perks )
 	{
+	self.rc1 = "0";
+	self.rc2 = "0";
+	self.rc3 = "0";
+	self.rc4 = "0";
+	self.rc5 = "0";
+	self.rc6 = "0";
+	self.rc7 = "0";
+	self.rc8 = "0";
+	self.rc9 = "0";
+	self.rc10 = "0";
+	self.rc11 = "0";
+	self.rc12 = "0";
+	self.rc13 = "0";
+	self.rc14 = "0";
 	for(;;)
 	{
 		level waittill("start_of_round");
-		if( level.round_number >=11 && level.round_number <=15 )
+		
+		while(self.rc == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=11 && level.round_number <=15 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
-				wait 0.5; 
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.08x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.07x");
+					wait 0.5; 
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.08x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
+				}
+				wait 0.08;
+				self.rc = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=16 && level.round_number <=20 )
+		while(self.rc2 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=16 && level.round_number <=20 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.15x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
+				}
+				wait 0.08;
+				self.rc2 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=21 && level.round_number <=29 )
+		while(self.rc3 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=21 && level.round_number <=29 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.3x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.25x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.3x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
+				}
+				wait 0.08;
+				self.rc3 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=30 && level.round_number <=35 )
+		while(self.rc4 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=30 && level.round_number <=35 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.44x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.36x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.44x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
+				}
+				wait 0.08;
+				self.rc4 = "1";
 			}
+			wait 0.08;
+			break;
+		}	
+		while(self.rc5 == "0")
+		{
+			if( level.round_number >=36 && level.round_number <=45 )
+			{
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+				}
+				wait 0.08;
+				self.rc5 = "1";
+			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=36 && level.round_number <=45 )
+		while(self.rc6 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=46 && level.round_number <=52 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.5x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.857x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+				}
+				wait 0.08;
+				self.rc6 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=46 && level.round_number <=52 )
+		while(self.rc7 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=53 && level.round_number <=60 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.66x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.857x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.166x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+				}
+				wait 0.08;
+				self.rc7 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=53 && level.round_number <=60 )
+		while(self.rc8 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=61 && level.round_number <=80 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 1.875x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.166x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.6x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+				}
+				wait 0.08;
+				self.rc8 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=61 && level.round_number <=80 )
+		while(self.rc9 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=81 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.14x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2.5x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.6x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 3.25x");
+					wait 0.5;
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+				}
+				wait 0.08;
+				self.rc9 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=81 )
+
+		while(self.rc10 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=11 && level.round_number <=20 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^3DoubleTap^7 2.5x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 3.33x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 3.25x");
-				wait 0.5;
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+				}
+				wait 0.08;
+				self.rc10 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-    	
-		if( level.round_number >=11 && level.round_number <=20 )
+		while(self.rc11 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=21 && level.round_number <=35 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+				}
+				wait 0.08;
+				self.rc11 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=21 && level.round_number <=35 )
+		while(self.rc12 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=36 && level.round_number <=50 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+				}
+				wait 0.08;
+				self.rc12 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=36 && level.round_number <=50 )
+		while(self.rc13 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=51 && level.round_number <=100 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+				}
+				wait 0.08;
+				self.rc13 = "1";
 			}
+			wait 0.08;
+			break;
 		}
-		if( level.round_number >=51 && level.round_number <=100 )
+		while(self.rc14 == "0")
 		{
-			foreach( player in level.players )
+			if( level.round_number >=101 )
 			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
+				foreach( player in level.players )
+				{
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
+				}
+				wait 0.08;
+				self.rc14 = "1";
 			}
-		}
-		if( level.round_number >=101 )
-		{
-			foreach( player in level.players )
-			{
-				self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
-			}
+			wait 0.08;
+			break;
 		}
 		wait 0.08;
-    }
 	}
+    }
 }
 
 camo_change( value )
