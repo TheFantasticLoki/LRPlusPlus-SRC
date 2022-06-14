@@ -162,5 +162,20 @@ precacheassets()
 
 replaceFuncs()
 {
-    replaceFunc(maps\mp\zombies\_zm_powerups::full_ammo_powerup,::new_full_ammo_powerup);
+    //replaceFunc(maps\mp\zombies\_zm_powerups::full_ammo_powerup,::new_full_ammo_powerup);
+}
+
+max_ammo_refill_clip()
+{
+    level endon("end_game");
+    self endon("disconnect");
+    for(;;) 
+    {
+        self waittill("zmb_max_ammo");
+        weaps = self getweaponslist(1);
+        foreach (weap in weaps) 
+        {
+            self setweaponammoclip(weap, weaponclipsize(weap));
+        }
+    }
 }
