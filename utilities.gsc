@@ -27,7 +27,7 @@ resetbooleans()
 
 test()
 {
-    self lrz_bold_msg( "Test: Zombie Move Speed = " + level.zombie_move_speed );
+    self lrz_bold_msg( "Test: " + self.origin );
 }
 
 debugexit()
@@ -84,6 +84,7 @@ precacheassets()
     precacheshader( "specialty_additionalprimaryweapon_zombies" );
     precacheshader( "specialty_ads_zombies" );
     precacheshader( "specialty_doubletap_zombies" );
+    PrecacheShader("specialty_deadshot_zombies");
     precacheshader( "specialty_juggernaut_zombies" );
     precacheshader( "specialty_marathon_zombies" );
     precacheshader( "specialty_quickrevive_zombies" );
@@ -158,6 +159,16 @@ precacheassets()
     precachemodel( "c_zom_mech_body" );
     precachemodel( "veh_t6_dlc_zm_robot_1" );
     precachemodel( "p6_zm_al_vending_doubletap2_on" );
+    PrecacheModel("collision_geo_cylinder_32x128_standard");
+	PrecacheModel("zombie_perk_bottle_marathon");
+	PrecacheModel("zombie_perk_bottle_whoswho");
+	PrecacheModel("zombie_vending_nuke_on_lo");
+	PrecacheModel("p6_anim_zm_buildable_pap");
+	PrecacheModel("p6_zm_al_vending_jugg_on");
+	PrecacheModel("p6_zm_al_vending_sleight_on");
+	PrecacheModel("p6_zm_al_vending_ads_on");
+	PrecacheModel("p6_zm_al_vending_nuke_on");
+	PrecacheModel("p6_zm_al_vending_three_gun_on");
 }
 
 replaceFuncs()
@@ -178,4 +189,18 @@ max_ammo_refill_clip()
             self setweaponammoclip(weap, weaponclipsize(weap));
         }
     }
+}
+
+spawnIfRoundOne() //spawn player
+{
+	wait 3;
+	if ( self.sessionstate == "spectator" && level.round_number == 1 )
+		self iprintln("Get ready to be spawned!");
+	wait 5;
+	if ( self.sessionstate == "spectator" && level.round_number == 1 )
+	{
+		self [[ level.spawnplayer ]]();
+		if ( level.script != "zm_tomb" || level.script != "zm_prison" || !is_classic() )
+			thread maps\mp\zombies\_zm::refresh_player_navcard_hud();
+	}
 }

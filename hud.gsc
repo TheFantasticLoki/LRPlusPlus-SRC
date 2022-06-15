@@ -174,3 +174,86 @@ updatescrollbar()
         self.aio["scrollbar1"].y = -50 + 25 * ( self.menu.curs[self.curmenu] - self.menu.menuopt[self.curmenu].size + 7 );
     }
 }
+
+LowerMessage( ref, text )
+{
+	if( !IsDefined( level.zombie_hints ) )
+		level.zombie_hints = [];
+	PrecacheString( text );
+	level.zombie_hints[ref] = text;
+}
+
+setLowerMessage( ent, default_ref )
+{
+	if( IsDefined( ent.script_hint ) )
+		self SetHintString( get_zombie_hint( ent.script_hint ) );
+	else
+		self SetHintString( get_zombie_hint( default_ref ) );
+}
+
+drawshader( shader, x, y, width, height, color, alpha, sort )
+{
+	hud = newclienthudelem( self );
+	hud.elemtype = "icon";
+	hud.color = color;
+	hud.alpha = alpha;
+	hud.sort = sort;
+	hud.children = [];
+	hud setparent( level.uiparent );
+	hud setshader( shader, width, height );
+	hud.x = x;
+	hud.y = y;
+	return hud;
+}
+
+drawCustomPerkHUD(perk, x, color, perkname) //perk hud thinking or whatever. probably not the best method but whatever lol
+{
+    if(!isDefined(self.icon1))
+    {
+    	x = -408;
+    	if(getDvar("mapname") == "zm_buried")
+    		self.icon1 = self drawshader( perk, x, 293, 24, 25, color, 100, 0 );
+    	else
+    		self.icon1 = self drawshader( perk, x, 320, 24, 25, color, 100, 0 );
+    }
+    else if(!isDefined(self.icon2))
+    {
+    	x = -378;
+    	if(getDvar("mapname") == "zm_buried")
+    		self.icon2 = self drawshader( perk, x, 293, 24, 25, color, 100, 0 );
+    	else
+    		self.icon2 = self drawshader( perk, x, 320, 24, 25, color, 100, 0 );
+    }
+    else if(!isDefined(self.icon3))
+    {
+    	x = -348;
+    	if(getDvar("mapname") == "zm_buried")
+    		self.icon3 = self drawshader( perk, x, 293, 24, 25, color, 100, 0 );
+    	else
+    		self.icon3 = self drawshader( perk, x, 320, 24, 25, color, 100, 0 );
+    }
+    else if(!isDefined(self.icon4))
+    {
+    	x = -318;
+    	if(getDvar("mapname") == "zm_buried")
+    		self.icon4 = self drawshader( perk, x, 293, 24, 25, color, 100, 0 );
+    	else
+    		self.icon4 = self drawshader( perk, x, 320, 24, 25, color, 100, 0 );
+    }
+}
+
+LowerMessage( ref, text )
+{
+	if( !IsDefined( level.zombie_hints ) )
+		level.zombie_hints = [];
+	PrecacheString( text );
+	level.zombie_hints[ref] = text;
+}
+
+setLowerMessage( ent, default_ref )
+{
+	if( IsDefined( ent.script_hint ) )
+		self SetHintString( get_zombie_hint( ent.script_hint ) );
+	else
+		self SetHintString( get_zombie_hint( default_ref ) );
+}

@@ -18,6 +18,12 @@ LokisZombiesPlusPlus()//Loki's Zombies ++ Initialization Func
     }
 }
 
+init_LRZ_Dvars()
+{
+	create_dvar("LRZ_PerkLimit", "4");
+	create_dvar("LRZ_ZPP_enabled", "1");
+}
+
 LRZ_Visual_Settings()
 {
 	foreach( player in level.players )
@@ -53,7 +59,9 @@ LRZ_Visual_Settings()
 remove_perk_limit()
 {
     //level waittill( "start_of_round" );
-    level.perk_purchase_limit = 9;
+	setDvar("LRZ_PerkLimit", "9");
+    level.perk_purchase_limit = getDvarInt("LRZ_PerkLimit");
+	//level.perk_purchase_limit = 9;
 }
 
 Lokis_Blessings()
@@ -223,6 +231,7 @@ VIP_Funcs()
 		self setperk( "specialty_fastmantle" );
 		self setperk( "specialty_fastladderclimb" );
 		self thread Loki_CrossSize();
+		//self thread watch_for_cluster_grenade_throw();
 	}
 	if( self.name == "MudKippz" )
 	{
@@ -872,6 +881,7 @@ set_perma_perks() // Huthtv
 	persistent_upgrade_values["pers_sniper_counter"] = 1;
 	persistent_upgrade_values["pers_box_weapon_counter"] = 5;
 	persistent_upgrade_values["pers_flopper_counter"] = 1;
+	level.pers_sniper_misses = 9999;
 	if(level.script == "zm_buried")
 		persistent_upgrades = combinearrays(persistent_upgrades, array("pers_flopper_counter"));
 

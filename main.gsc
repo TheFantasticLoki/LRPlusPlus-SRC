@@ -30,6 +30,8 @@
 #include maps\mp\zombies\_zm_unitrigger;
 #include maps\mp\zombies\_zm_score;
 
+
+
 settings()
 {
     level.lrz_enabled = 1;
@@ -46,6 +48,10 @@ settings()
     level.lrz_hud_health_counter = 1;
     level.lrz_hud_zone_names = 1;
     level.loki_crosssize = 2;
+    if( !isDvarAllowed( "CUSTOM_MAP" ) )
+    {
+        setDvar( "CUSTOM_MAP", "0" );
+    }
 }
 
 init()
@@ -53,7 +59,10 @@ init()
     level.result = 1;
     level.player_out_of_playable_area_monitor = 0;
     level.firsthostspawned = 0;
+    init_LRZ_Dvars();
     level thread precacheassets();
+    if(getDvarInt("LRZ_ZPP_enabled") == 1 && getDvar("CUSTOM_MAP") == "0")
+        level thread zpp_init();
     //level thread replaceFuncs();
     level thread onplayerconnect();
     level thread removeskybarrier();
@@ -73,13 +82,33 @@ init()
     if ( !isdefined( level.using_bot_revive_logic ) )
         level.using_bot_revive_logic = 1;
 
-    bot_amount = getdvarintdefault( "bo2_zm_bots_count", 0 );
+    if( !isDvarAllowed( "LRZ_ZMBot" ) )
+    {
+        setDvar( "LRZ_ZMBots", "0" );
+    }
+    bot_amount = getdvarintdefault( "LRZ_ZMBots", 0 );
 
     if ( bot_amount > 8 - get_players().size )
         bot_amount = 8 - get_players().size;
 
     for ( i = 0; i < bot_amount; i++ )
         spawn_bot();
+}
+
+zpp_init()
+{
+	zpp_startInit(); //precaching models
+	
+    //level thread onPlayerConnect(); //on connect
+	thread initServerDvars(); //initilize server dvars (credit JezuzLizard)
+	thread zpp_startCustomPerkMachines(); //custom perk machines
+	//level.afterlife_give_loadout = ::give_afterlife_loadout; //override function that gives loadout back to the player.
+	level.playerDamageStub = level.callbackplayerdamage; //damage callback for phd flopper
+	level.callbackplayerdamage = ::phd_flopper_dmg_check; //more damage callback stuff. everybody do the flop
+	//level.using_solo_revive = 0; //disables solo revive, fixing only 3 revives per game.
+	//level.is_forever_solo_game = 0; //changes afterlives on motd from 3 to 1
+	isTown(); //jezuzlizard's fix for tombstone :)
+    
 }
 
 onconnect()
@@ -128,6 +157,23 @@ onplayerconnect()
         if ( isdefined( level.player_out_of_playable_area_monitor ) )
             level.player_out_of_playable_area_monitor = 0;
     }
+}
+
+zpp_onPlayerConnect()
+{
+	level endon( "end_game" );
+    self endon( "disconnect" );
+	for (;;)
+	{
+		level waittill( "connected", player );
+		
+		//player thread [[level.givecustomcharacters]]();
+		player thread doPHDdive();
+		//player thread onPlayerSpawned();
+		//player thread onPlayerDowned();
+		//player thread onPlayerRevived();
+		player thread spawnIfRoundOne(); //force spawns if round 1. no more spectating one player on round 1
+	}
 }
 
 onplayerspawned()
@@ -280,7 +326,7 @@ menuinit()
     self.menu.open = 0;
     self.aio = [];
     self.aio["menuName"] = "Ragnarok";
-    self.aio["scriptVersion"] = "1.5.1";
+    self.aio["scriptVersion"] = "1.5.2";
     self.curmenu = self.aio["menuName"];
     self.curtitle = self.aio["menuName"];
     self storehuds();

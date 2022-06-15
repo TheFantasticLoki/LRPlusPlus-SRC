@@ -670,6 +670,46 @@ giveperk( model, perk )
 
 }
 
+zpp_GivePerk( model, perk, perkname )
+{
+	self DisableOffhandWeapons();
+	self DisableWeaponCycling();
+	weaponA = self getCurrentWeapon();
+	weaponB = model;
+	self GiveWeapon( weaponB );
+	self SwitchToWeapon( weaponB );
+	self waittill( "weapon_change_complete" );
+	self EnableOffhandWeapons();
+	self EnableWeaponCycling();
+	self TakeWeapon( weaponB );
+	self SwitchToWeapon( weaponA );
+	self setperk( perk );
+	self maps\mp\zombies\_zm_audio::playerexert( "burp" );
+	self setblur( 4, 0.1 );
+	wait 0.1;
+	self setblur( 0, 0.1 );
+	if(perk == "PHD_FLOPPER")
+	{
+		self.hasPHD = true;
+		self thread drawCustomPerkHUD("specialty_doubletap_zombies", 0, (1, 0.25, 1));
+	}
+	else if(perk == "specialty_additionalprimaryweapon")
+	{
+		self.hasMuleKick = true;
+		self thread drawCustomPerkHUD("specialty_fastreload_zombies", 0, (0, 0.7, 0));
+	}
+	else if(perk == "specialty_longersprint")
+	{
+		self.hasStaminUp = true;
+		self thread drawCustomPerkHUD("specialty_juggernaut_zombies", 0, (1, 1, 0));
+	}
+	else if(perk == "specialty_deadshot")
+	{
+		self.hasDeadshot = true;
+		self thread drawCustomPerkHUD("specialty_quickrevive_zombies", 0, (0.125, 0.125, 0.125));
+	}
+}
+
 getzombz()
 {
 	return getaispeciesarray( "axis", "all" );
