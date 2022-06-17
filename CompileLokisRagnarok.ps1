@@ -6,11 +6,13 @@ $lrzpath = "$projectpath\ZM"
 $lrz_main = "$lrzpath\src\main.gsc"
 $lrz_versionp1 = Select-String '(.\..\..)'-Path "$lrz_main"
 $lrz_version = $lrz_versionp1.Matches.value
+$lrz_versioncheck = Get-Content ./logs/lrz-version.log
 
 $lrmppath = "$projectpath\MP"
 $lrmp_main = "$lrmppath\src\main.gsc"
 $lrmp_versionp1 = Select-String '(.\..\..)'-Path "$lrmp_main"
 $lrmp_version = $lrmp_versionp1.Matches.value
+$lrmp_versioncheck = Get-Content ./logs/lrmp-version.log
 
 Write-Output "-----------------=========================================================---------------------"
 New-Item -ItemType Directory -Path ZM\src-compiled -ErrorAction SilentlyContinue
@@ -51,28 +53,29 @@ try
         Copy-Item -Path ".\ZM\src\*.gsc" -Destination ".\ZM\src-compiled" -Force > $null
         Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrzpath)\src-compiled`"" -Wait -NoNewWindow 
         Write-Output "Compiled Source Code Please Check for Errors"
-        if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc") 
+        if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc") 
         {
             Write-Output "Removing old $($scriptname)V$($lrz_version).gsc"
-            if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc.bak")
+            if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc.bak")
             {
-                Remove-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc.bak"
+                Remove-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc.bak"
             }
-            Rename-Item -Path "$env:LOCALAPPDATA\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc" -NewName "$($scriptname)V$($lrz_version).gsc.bak" -Force
+            Rename-Item -Path "$env:LOCALAPPDATA\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc" -NewName "$($scriptname)V$($lrz_versioncheck).gsc.bak" -Force
         }
         Copy-Item -Path ".\ZM\lrz-compiled.gsc" -Destination "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc" -Force 
         Write-Output "File moved in Plutonium ZM folder"
-        if (Test-Path -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc") 
+        if (Test-Path -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc") 
         {
-            Write-Output "Removing old $($scriptname)V$($lrz_version).gsc"
-            if (Test-Path -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc.bak")
+            Write-Output "Removing old $($scriptname)V$($lrz_versioncheck).gsc"
+            if (Test-Path -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc.bak")
             {
-                Remove-Item -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc.bak"
+                Remove-Item -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc.bak"
             }
-            Rename-Item -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc" -NewName "$($scriptname)V$($lrz_version).gsc.bak" -Force
+            Rename-Item -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc" -NewName "$($scriptname)V$($lrz_versioncheck).gsc.bak" -Force
         }
         Copy-Item -Path ".\ZM\lrz-compiled.gsc" "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc" -Force 
         Write-Output "File moved in Repo folder"
+        $lrz_version > .\logs\lrz-version.log
 
         if (Select-String -NotMatch "ERROR" -InputObject "$($lrzpath)\lrz-compile.log")
         {
@@ -84,7 +87,7 @@ try
             $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
             $balloon.BalloonTipText = 'File compiled as intended'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$currentPathLocation Compiled!" 
+            $balloon.BalloonTipTitle = "$scriptname ZM Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }
@@ -98,7 +101,7 @@ try
             $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Warning 
             $balloon.BalloonTipText = 'There is an error in the source code'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$currentPathLocation not Compiled!" 
+            $balloon.BalloonTipTitle = "$scriptname ZM not Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }
@@ -131,28 +134,29 @@ try
         Copy-Item -Path .\MP\src\*.gsc -Destination .\MP\src-compiled -Force > $null
         Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrmppath)\src-compiled`"" -Wait -NoNewWindow 
         Write-Output "Compiled Source Code Please Check for Errors"
-        if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_version).gsc") 
+        if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V*.gsc") 
         {
-            Write-Output "Removing old $($scriptname)V$($lrmp_version).gsc"
-            if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_version).gsc.bak")
+            Write-Output "Removing old $($scriptname)V$($lrmp_versioncheck).gsc"
+            if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc.bak")
             {
-                Remove-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_version).gsc.bak"
+                Remove-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc.bak"
             }
-            Rename-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_version).gsc" -NewName "$($scriptname)V$($lrmp_version).gsc.bak" -Force
+            Rename-Item -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc" -NewName "$($scriptname)V$($lrmp_versioncheck).gsc.bak" -Force
         }
         Copy-Item -Path ".\MP\lrmp-compiled.gsc" "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\mp\$($scriptname)V$($lrmp_version).gsc" -Force 
         Write-Output "File moved in Plutonium MP folder"
-        if (Test-Path -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_version).gsc") 
+        if (Test-Path -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc") 
         {
-            Write-Output "Removing old $($scriptname)V$($lrmp_version).gsc"
-            if (Test-Path -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_version).gsc.bak")
+            Write-Output "Removing old $($scriptname)V$($lrmp_versioncheck).gsc"
+            if (Test-Path -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc.bak")
             {
-                Remove-Item -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_version).gsc.bak"
+                Remove-Item -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc.bak"
             }
-            Rename-Item -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_version).gsc" -NewName "$($scriptname)V$($lrmp_version).gsc.bak" -Force
+            Rename-Item -Path "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_versioncheck).gsc" -NewName "$($scriptname)V$($lrmp_versioncheck).gsc.bak" -Force
         }
         Copy-Item -Path ".\MP\lrmp-compiled.gsc" -Destination "$($repopath)\scripts\mp\$($scriptname)V$($lrmp_version).gsc" -Force 
         Write-Output "File moved in Repo folder"
+        $lrmp_version > .\logs\lrmp-version.log
 
         if (Select-String -NotMatch "ERROR" -InputObject "$($lrmppath)\lrmp-compile.log")
         {
@@ -164,7 +168,7 @@ try
             $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
             $balloon.BalloonTipText = 'File compiled as intended'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$currentPathLocation Compiled!" 
+            $balloon.BalloonTipTitle = "$scriptname MP Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }
@@ -178,7 +182,7 @@ try
             $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Warning 
             $balloon.BalloonTipText = 'There is an error in the source code'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$currentPathLocation not Compiled!" 
+            $balloon.BalloonTipTitle = "$scriptname MP not Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }

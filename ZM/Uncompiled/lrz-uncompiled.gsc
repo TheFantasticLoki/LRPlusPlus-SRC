@@ -4268,31 +4268,31 @@ Progressive_Perks()
 			}
 			if( level.round_number >=11 && level.round_number <=15 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.6");
+				setDvar("perk_weapSpreadMultiplier", "0.55");
 			}
 			if( level.round_number >=16 && level.round_number <=20 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.55");
+				setDvar("perk_weapSpreadMultiplier", "0.475");
 			}
 			if( level.round_number >=21 && level.round_number <=29 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.5");
+				setDvar("perk_weapSpreadMultiplier", "0.40");
 			}
 			if( level.round_number >=30 && level.round_number <=35 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.45");
+				setDvar("perk_weapSpreadMultiplier", "0.35");
 			}
 			if( level.round_number >=36 && level.round_number <=45 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.4");
+				setDvar("perk_weapSpreadMultiplier", "0.325");
 			}
 			if( level.round_number >=46 && level.round_number <=52 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.35");
+				setDvar("perk_weapSpreadMultiplier", "0.3");
 			}
 			if( level.round_number >=53 && level.round_number <=60 )
 			{
-				setDvar("perk_weapSpreadMultiplier", "0.3");
+				setDvar("perk_weapSpreadMultiplier", "0.275");
 			}
 			if( level.round_number >=61 && level.round_number <=80 )
 			{
@@ -4403,7 +4403,7 @@ Progressive_Perks_Alerts()
 					wait 0.5; 
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.11x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.08x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
 				}
@@ -4423,7 +4423,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.25x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.18x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.36x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
 				}
@@ -4443,7 +4443,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.33x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.3x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
 				}
@@ -4463,7 +4463,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.43x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.44x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.85x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
 				}
@@ -4483,7 +4483,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.54x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.625x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
 				}
@@ -4503,7 +4503,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 1.66x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 1.857x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.16x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
 				}
@@ -4523,7 +4523,7 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^2SpeedCola^7 2x");
 					wait 0.5;
-					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.166x");
+					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^1Deadshot (HipFire Reduction)^7 2.36x");
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
 				}
