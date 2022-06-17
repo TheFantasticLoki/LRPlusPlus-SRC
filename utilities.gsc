@@ -204,3 +204,10 @@ spawnIfRoundOne() //spawn player
 			thread maps\mp\zombies\_zm::refresh_player_navcard_hud();
 	}
 }
+
+resetCmap() //reset custom map dvar to ensure proper initialisation of zpp perks
+{
+    level waittill("end_game");
+    self endon("disconnect");
+    setdvar("CUSTOM_MAP", "0");
+}

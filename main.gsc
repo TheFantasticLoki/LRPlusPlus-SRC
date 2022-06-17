@@ -57,7 +57,7 @@ settings()
 init()
 {
     level.result = 1;
-    level.player_out_of_playable_area_monitor = 0;
+    //level.player_out_of_playable_area_monitor = 0;
     level.firsthostspawned = 0;
     init_LRZ_Dvars();
     level thread precacheassets();
@@ -118,6 +118,7 @@ onconnect()
         level waittill( "connected", player );
         player thread max_ammo_refill_clip();
         player thread connected();
+        wait 0.08;
     }
 }
 
@@ -156,6 +157,7 @@ onplayerconnect()
 
         if ( isdefined( level.player_out_of_playable_area_monitor ) )
             level.player_out_of_playable_area_monitor = 0;
+        wait 0.08;
     }
 }
 
@@ -169,10 +171,11 @@ zpp_onPlayerConnect()
 		
 		//player thread [[level.givecustomcharacters]]();
 		player thread doPHDdive();
-		//player thread onPlayerSpawned();
-		//player thread onPlayerDowned();
-		//player thread onPlayerRevived();
+		player thread onPlayerSpawned();
+		player thread onPlayerDowned();
+		player thread onPlayerRevived();
 		player thread spawnIfRoundOne(); //force spawns if round 1. no more spectating one player on round 1
+        wait 0.08;
 	}
 }
 
@@ -192,6 +195,7 @@ onplayerspawned()
     self.aio["scrollbar"].archived = 0;
     self.aio["title"].archived = 0;
     self.aio["status"].archived = 0;
+    //level.player_out_of_playable_area_monitor = 0;
 
     for (;;)
     {
@@ -224,6 +228,7 @@ onplayerspawned()
 
             isfirstspawn = 1;
         }
+        wait 0.08;
     }
 }
 
