@@ -129,7 +129,7 @@ LRMP_onconnect()
 		level waittill( "connected", player );
 		player thread LRMP_connected();
 		player thread LRMP_Diamond_GameTypes();
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -150,17 +150,17 @@ LRMP_connected()
 			if( !self.init )
 			{
 				self.init = 1;
-				wait 0.08;
+				wait 0.05;
 				self iPrintLn("^1Loki's Ragnarok MP ^8V" + self.AIO["scriptVersion"] + " ^7Loaded. ^1Enjoy!");
-				wait 0.08;
+				wait 0.05;
 			}
 
 			if( !level.init )
 			{
 				level.init = 1;
-				wait 0.08;
+				wait 0.05;
 			}
-			wait 0.08;
+			wait 0.05;
 		}
 	}
 }

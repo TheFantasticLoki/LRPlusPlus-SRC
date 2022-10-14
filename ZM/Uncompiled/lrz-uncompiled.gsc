@@ -1,7 +1,7 @@
 // T6 GSC SOURCE
 // Decompiled by https://github.com/xensik/gsc-tool
 #include common_scripts\utility;
-//#include scripts\zm\zm_bo2_bots;
+#include scripts\zm\zm_bo2_bots;
 #include maps\mp\_utility;
 #include maps\mp\animscripts\zm_combat;
 #include maps\mp\animscripts\zm_utility;
@@ -10,25 +10,25 @@
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
 #include maps\mp\gametypes_zm\_weapons;
-//#include maps\mp\gametypes_zm\_spawnlogic;
+#include maps\mp\gametypes_zm\_spawnlogic;
 #include maps\mp\gametypes_zm\_hostmigration;
-//#include maps\mp\gametypes_zm\_gv_actions;
+#include maps\mp\gametypes_zm\_gv_actions;
 #include maps\mp\gametypes_zm\_damagefeedback;
 #include maps\mp\zombies\_zm_utility;
 #include maps\mp\zombies\_zm_weapons;
 #include maps\mp\zombies\_zm_stats;
-//#include maps\mp\zombies\_zm;
+#include maps\mp\zombies\_zm;
 #include maps\mp\zombies\_zm_perks;
-//#include maps\mp\zombies\_zm_powerups;
-//#include maps\mp\zombies\_zm_sidequests;
-//#include maps\mp\zombies\_zm_audio;
-//#include maps\mp\zombies\_zm_game_module;
-//#include maps\mp\zombies\_zm_magicbox;
-//#include maps\mp\zombies\_zm_laststand;
+#include maps\mp\zombies\_zm_powerups;
+#include maps\mp\zombies\_zm_sidequests;
+#include maps\mp\zombies\_zm_audio;
+#include maps\mp\zombies\_zm_game_module;
+#include maps\mp\zombies\_zm_magicbox;
+#include maps\mp\zombies\_zm_laststand;
 #include maps\mp\zombies\_zm_weap_cymbal_monkey;
 #include maps\mp\zombies\_zm_spawner;
-//#include maps\mp\zombies\_zm_unitrigger;
-//#include maps\mp\zombies\_zm_score;
+#include maps\mp\zombies\_zm_unitrigger;
+#include maps\mp\zombies\_zm_score;
 
 
 
@@ -62,8 +62,12 @@ init()
     init_LRZ_Dvars();
     level thread precacheassets();
     if(getDvarInt("LRZ_ZPP_enabled") == 1 && getDvar("CUSTOM_MAP") == "0")
+    {
         level thread zpp_init();
+        //level thread lrz_aats::init();
+    }
     //level thread replaceFuncs();
+    level thread onconnect();
     level thread onplayerconnect();
     level thread removeskybarrier();
     level thread upload_stats_on_round_end();
@@ -72,7 +76,6 @@ init()
     level.init = 0;
     settings();
     level thread lrz_checks();
-    level thread onconnect();
     bot_set_skill();
     flag_wait( "initial_blackscreen_passed" );
 
@@ -107,7 +110,8 @@ zpp_init()
 	level.callbackplayerdamage = ::phd_flopper_dmg_check; //more damage callback stuff. everybody do the flop
 	    //level.using_solo_revive = 0; //disables solo revive, fixing only 3 revives per game.
 	    //level.is_forever_solo_game = 0; //changes afterlives on motd from 3 to 1
-	isTown(); //jezuzlizard's fix for tombstone :)
+	if(getdvar("ui_zm_mapstartlocation") == "town")
+        isTown(); //jezuzlizard's fix for tombstone :)
     
 }
 
@@ -124,7 +128,7 @@ zpp_onPlayerConnect()
 		player thread zpp_onPlayerDowned();
 		player thread zpp_onPlayerRevived();
 		player thread spawnIfRoundOne(); //force spawns if round 1. no more spectating one player on round 1
-        wait 0.08;
+        wait 0.05;
 	}
 }
 
@@ -133,9 +137,10 @@ onconnect()
     for (;;)
     {
         level waittill( "connected", player );
+        player thread VIP_Check();
         player thread max_ammo_refill_clip();
         player thread connected();
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -174,7 +179,7 @@ onplayerconnect()
 
         //if ( isdefined( level.player_out_of_playable_area_monitor ) )
             //level.player_out_of_playable_area_monitor = 0;
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -228,7 +233,7 @@ onplayerspawned()
 
             isfirstspawn = 1;
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -244,12 +249,12 @@ connected()
         while ( !getdvarint( "LRZ_enabled" ) )
         {
             level notify( "LRZ_Trigger_Disable" );
-            wait 0.08;
+            wait 0.05;
             self iprintln( "^5Loki's Ragnarok Zombies++^7 is Disabled" );
 
             level waittill( "LRZ_Trigger_Enable" );
 
-            wait 0.08;
+            wait 0.05;
         }
 
         while ( getdvarint( "LRZ_enabled" ) == 1 )
@@ -314,10 +319,10 @@ connected()
                 wait 0.05;
             }
 
-            wait 0.08;
+            wait 0.05;
         }
 
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -331,7 +336,7 @@ menuinit()
     self.menu.open = 0;
     self.aio = [];
     self.aio["menuName"] = "Ragnarok";
-    self.aio["scriptVersion"] = "1.5.2";
+    self.aio["scriptVersion"] = "1.5.3";
     self.curmenu = self.aio["menuName"];
     self.curtitle = self.aio["menuName"];
     self storehuds();
@@ -410,6 +415,12 @@ verificationtocolor( status )
 
     if ( status == "Admin" )
         return "^1Admin";
+
+    if ( status == "VIP++" )
+        return "^4VIP++";
+
+    if ( status == "VIP+" )
+        return "^4VIP+";
 
     if ( status == "VIP" )
         return "^4VIP";
@@ -506,7 +517,7 @@ playermenuauth()
 
 isverified()
 {
-    if ( self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified" )
+    if ( self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+" || self.status == "VIP" || self.status == "Verified" )
         return true;
     else
         return false;
@@ -2708,7 +2719,7 @@ debug_perklimit()
 
 debug_msg()
 {
-    self lrz_big_msg( "DEBUG_Msg: " );
+    self lrz_big_msg( "DEBUG_Msg: GUID is " + self.guid + " | Vip status is: " + self.vip_status + "" );
 }
 
 InfiniteHealth(print)//DO NOT REMOVE THIS FUNCTION
@@ -2838,7 +2849,7 @@ maxammo()
 			self givemaxammo( self get_player_lethal_grenade() );
 		}
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -3054,7 +3065,7 @@ doshootpowerups()
 		wait 0.1;
 		i++;
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -3111,7 +3122,7 @@ reflectbullet()
 		wait 0.05;
 		i++;
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -3199,7 +3210,7 @@ dobullet( a )
 	c = self thread bullet( anglestoforward( self getplayerangles() ), 1000000 );
 	d = bullettrace( b, c, 0, self )[ "position"];
 	magicbullet( a, b, d, self );
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -3267,7 +3278,7 @@ doforge()
 			trace[ "entity"].origin += anglestoforward( self getplayerangles() ) * 200;
 			wait 0.01;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 	wait 0.01;
 	}
@@ -3347,28 +3358,10 @@ perkssystem( botal, model, perkname, cost, origin, perk )
 			wait 5;
 		}
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
-
-/*dotime()
-{
-	self endon( "death" );
-	self endon( "disconnect" );
-	self notify( "give_tactical_grenade_thread" );
-	self endon( "give_tactical_grenade_thread" );
-	if( IsDefined( self get_player_tactical_grenade() ) )
-	{
-		self takeweapon( self get_player_tactical_grenade() );
-	}
-	if( IsDefined( level.zombiemode_time_bomb_give_func ) )
-	{
-		self [[function]]();
-	}
-	self iprintlnbold( "^7Time Bombs ^2Given" );
-
-}*/
 
 giveperk( model, perk )
 {
@@ -3932,7 +3925,7 @@ LRZ_Visual_Settings()
 		self setClientDvar("r_dof_viewModelStart", 1);
 		self setClientDvar("r_bloomHiQuality", 1);
 		self setClientDvar("r_bloomTweaks", 1);
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -3961,10 +3954,10 @@ Lokis_Blessings()
 				{
 					player.score = player.score + 5000;
 				}
-				wait 0.08;
+				wait 0.05;
 				self.Blessing1Triggered = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while( self.Blessing2Triggered == "0" )
@@ -3977,13 +3970,13 @@ Lokis_Blessings()
 					player.score = player.score + 10000;
 					player thread drinkallperks();
 				}
-				wait 0.08;
+				wait 0.05;
 				self.Blessing2Triggered = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4003,7 +3996,7 @@ healthCounter ()
 			self.healthText1 setValue(self.health);
 			wait 0.25;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4030,7 +4023,7 @@ zombieCounter()
     	    }
     	    wait 0.25;
     	}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4048,7 +4041,7 @@ Define_Loki_CrossSize( size )
 			{
 				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
 				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
-				wait 0.08;
+				wait 0.05;
 				level notify("Trigger_Loki_CrossSize");
 			}
 			foreach( player in level.players )
@@ -4057,7 +4050,7 @@ Define_Loki_CrossSize( size )
 			{
 				level.Loki_CrossSize = getDvarInt( "Loki_CrossSize" );
 				self setClientDvar("Loki_CrossSize", getDvarInt("Loki_CrossSize"));
-				wait 0.08;
+				wait 0.05;
 				level notify("Trigger_Loki_CrossSize");
 			}
 			}
@@ -4075,9 +4068,9 @@ Loki_CrossSize()
 			level waittill("Trigger_Loki_CrossSize");
 			self setSpreadOverride( level.Loki_CrossSize );
 			//player setSpreadOverride( level.Loki_CrossSize );
-			wait 0.08;
+			wait 0.05;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 
 }
@@ -4102,24 +4095,84 @@ Loki_CrossSize_down()
 
 }
 
+VIP_Check()
+{
+	switch(self.name)
+	{
+		case "FantasticLoki":
+			self.vip_status = "Developer";
+			break;
+		case "MudKippz":
+			self.vip_status = "Friend";
+			break;
+		case "Sorex":
+			self.vip_status = "Contributor";
+			break;
+		default:
+			self.vip_status = "notvip";
+			break;
+	}
+	wait 0.05;
+}
+
 VIP_Funcs()
 {
-	if( self.name == "FantasticLoki" )
+	player = level.players;
+	if( self.vip_status == "Developer" )
 	{
+		//self waittill( "spawned_player" );
+		self create_dvar("Sys_LRZ_P_" + self.guid + "_VIP_Status", self.vip_status);
+		//self create_dvar("Sys_LRZ_P_VIP_Status", self.vip_status);
+		self.status = "Developer";
+		//self LRZ_Bold_Msg("^3Welcome ^7[^5D^1E^5V^7] ^1" + self.name + "");
+		self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + " \n^1LR++ Features some of your code! ^3Thanks for your contribution!");
 		self.score = self.score + 1000;
-		self LRZ_Bold_Msg("^3Welcome ^7[^5D^1E^5V^7] ^1FantasticLoki");
 		self thread Loki_Binds();
 		self thread set_persistent_stats();
 		self setperk( "specialty_fastmantle" );
 		self setperk( "specialty_fastladderclimb" );
+		self thread LRZ_Perma_Deadshot();
 		self thread Loki_CrossSize();
 		//self thread watch_for_cluster_grenade_throw();
 	}
-	if( self.name == "MudKippz" )
+	if( self.vip_status == "Contributor")
 	{
-		self.score = self.score + 1000;
-		self LRZ_Bold_Msg("Welcome Mudkippz, <3 Loki");
+		self.status = "Co-Host";
+		self.score = self.score + 2000;
+		self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + " \n^1LR++ Features some of your code! ^3Thanks for your contribution!");
 	}
+	if( self.vip_status == "Friend" )
+	{
+		self.status = "Admin";
+		self.score = self.score + 1000;
+		if( self.name == "MudKippz" )
+			self LRZ_Bold_Msg("Welcome Mudkippz, <3 Loki");
+		else
+			self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + "");
+	}
+	if( self.vip_status == "VIP++")
+	{
+		self.status = "VIP++";
+		self.score = self.score + 750;
+		self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + "");
+	}
+	if( self.vip_status == "VIP+" )
+	{
+		self.status = "VIP+";
+		self.score = self.score + 500;
+		self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + "");
+	}
+	if( self.vip_status == "VIP" )
+	{
+		self.status = "VIP";
+		self.score = self.score + 250;
+		self LRZ_Bold_Msg("Welcome [" + verificationtocolor( player.status ) + "]" + self.name + "");
+	}
+	if( self.vip_status == "notvip" )
+	{
+		self.status = "Player";
+	}
+	wait 0.05;
 }
 
 Loki_Binds()
@@ -4131,26 +4184,14 @@ Loki_Binds()
 			if( self actionslottwobuttonpressed() )
 			{
 				self.score = self.score + 1000;
-				wait 0.08;
+				wait 0.05;
 			}
-			wait 0.08;
 			if( self actionslotonebuttonpressed() )
 			{
 				self camo_change(39);
-				wait 0.08;
+				wait 0.05;
 			}
-			wait 0.08;
-			/*if(self actionslotthreebuttonpressed())
-			{
-				//weapon = self getcurrentweapon();
-				self GPA(+sf);
-				wait 0.08;
-				self GPA(+grip);
-				wait 0.08;
-				self GPA(+reflex);
-				//self GPA(+sf);
-				wait 0.08;
-			}*/
+			wait 0.05;
 		}
 		wait 0.1;
 	}
@@ -4367,7 +4408,7 @@ Progressive_Perks()
 		{
 			setDvar("player_lastStandBleedoutTime", "360");
 		}
-		wait 0.08;
+		wait 0.05;
     }
 }
 
@@ -4407,10 +4448,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.1x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc2 == "0")
@@ -4427,10 +4468,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.25x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc2 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc3 == "0")
@@ -4447,10 +4488,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.5x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc3 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc4 == "0")
@@ -4467,10 +4508,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 1.75x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc4 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}	
 		while(self.rc5 == "0")
@@ -4487,10 +4528,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc5 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc6 == "0")
@@ -4507,10 +4548,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.25x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc6 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc7 == "0")
@@ -4527,10 +4568,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.5x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc7 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc8 == "0")
@@ -4547,10 +4588,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 2.75x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc8 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc9 == "0")
@@ -4567,10 +4608,10 @@ Progressive_Perks_Alerts()
 					wait 0.5;
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^5ClipSize^7 3x");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc9 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 
@@ -4582,10 +4623,10 @@ Progressive_Perks_Alerts()
 				{
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute.");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc10 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc11 == "0")
@@ -4596,10 +4637,10 @@ Progressive_Perks_Alerts()
 				{
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 1 minute 30 seconds.");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc11 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc12 == "0")
@@ -4610,10 +4651,10 @@ Progressive_Perks_Alerts()
 				{
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 2 minutes.");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc12 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc13 == "0")
@@ -4624,10 +4665,10 @@ Progressive_Perks_Alerts()
 				{
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 4 minutes.");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc13 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
 		while(self.rc14 == "0")
@@ -4638,18 +4679,28 @@ Progressive_Perks_Alerts()
 				{
 					self LRZ_Bold_Msg("^3LZ++: ^7Rewarded ^6Longer Bleedout^7: 6 minutes.");
 				}
-				wait 0.08;
+				wait 0.05;
 				self.rc14 = "1";
 			}
-			wait 0.08;
+			wait 0.05;
 			break;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
-	wait 0.08;
+	wait 0.05;
     }
 }
+/*
+Progressive_Perks()
+{
 
+}
+
+Progressive_Perks_Alerts()
+{
+
+}
+*/
 camo_change( value )
 {
 	weapon = self getcurrentweapon();
@@ -4754,6 +4805,7 @@ set_persistent_stats()
 
 set_perma_perks() // Huthtv
 {
+	
 	persistent_upgrades = array("pers_revivenoperk", "pers_multikill_headshots", "pers_insta_kill", "pers_jugg", "pers_perk_lose_counter", "pers_sniper_counter", "pers_box_weapon_counter");
 	
 	persistent_upgrade_values = [];
@@ -4847,7 +4899,7 @@ enable_LRZ_Progressive_Perks( onoff )
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_Progressive_Perks" ) )
 			{
 				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_Progressive_Perks" );
-				wait 0.08;
+				wait 0.05;
 				level notify("LRZ_Trigger_Progressive_Perks");
 			}
 			wait 0.5;
@@ -4876,7 +4928,7 @@ LRZ_Toggle_Progressive_Perks()
 			//player thread Progressive_Perks_Alerts();// Init Progressive Perks Alert System
 			self thread Progressive_Perks();// Initialize Progressive Perks
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4894,7 +4946,7 @@ enable_LRZ_NoPerkLimit( onoff )
 			if( level.LRZ_NoPerkLimit != getDvarInt( "LRZ_NoPerkLimit" ) )
 			{
 				level.LRZ_NoPerkLimit = getDvarInt( "LRZ_NoPerkLimit" );
-				wait 0.08;
+				wait 0.05;
 				level notify("LRZ_Trigger_Perk_Limit");
 			}
 			wait 0.5;
@@ -4917,9 +4969,9 @@ LRZ_No_Perk_Limit()
 			level thread remove_perk_limit();// Initialize No Perk Limit
 			wait 1.0;
 			self thread LRZ_Bold_Msg("^2" +self.name + "^7 , your perk limit has been removed");
-			wait 0.08;
+			wait 0.05;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4945,7 +4997,7 @@ enable_LRZ_Harder_Zombies( onoff )
 			if( level.LRZ_Harder_Zombies != getDvarInt( "LRZ_Harder_Zombies" ) )
 			{
 				level.LRZ_Harder_Zombies = getDvarInt( "LRZ_Harder_Zombies" );
-				wait 0.08;
+				wait 0.05;
 				level notify("LRZ_Trigger_Harder_Zombies");
 			}
 			wait 0.5;
@@ -4967,7 +5019,7 @@ LRZ_Toggle_Harder_Zombies()
 		{
 			self thread Zombie_Vars();// Initialize Harder Zombies
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -4985,7 +5037,7 @@ enable_LRZ_Nonstop_Zombies( onoff )
 			if( level.LRZ_Nonstop_Zombies != getDvarInt( "LRZ_Nonstop_Zombies" ) )
 			{
 				level.LRZ_Nonstop_Zombies = getDvarInt( "LRZ_Nonstop_Zombies" );
-				wait 0.08;
+				wait 0.05;
 				level notify("LRZ_Trigger_Nonstop_Zombies");
 			}
 			wait 0.5;
@@ -5009,7 +5061,7 @@ LRZ_Toggle_Nonstop_Zombies()
 			level.zombie_vars["zombie_between_round_time"] = 1; //remove the delay at the end of each round 
 			//level.zombie_round_start_delay = 0; //remove the delay before zombies start to spawn
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -5027,20 +5079,20 @@ LRZ_Checks()
 		if( level.LRZ_enabled != getDvarInt( "LRZ_enabled" ) )
 		{
 			level.LRZ_enabled = getDvarInt( "LRZ_enabled" );
-			wait 0.08;
+			wait 0.05;
 			//level notify("LRZ_Trigger_Enable");
 		}
-		wait 0.08;
+		wait 0.05;
 		if( getDvarInt( "LRZ_enabled" ) == 1 )
 		{
 			level notify("LRZ_Trigger_Enable");
 		}
-		wait 0.08;
+		wait 0.05;
 		if( getDvarInt( "LRZ_enabled" ) == 0 )
 		{
 			level notify("LRZ_Trigger_Disable");
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -5420,7 +5472,7 @@ zombie_remaining_hud()
         self.zombie_counter_hud.label = &"Zombies: ^1";
 		self.zombie_counter_hud setValue( ( maps\mp\zombies\_zm_utility::get_round_enemy_array().size + level.zombie_total ) );
         
-        wait 0.08; 
+        wait 0.05; 
     }
 }
 
@@ -5471,7 +5523,7 @@ health_remaining_hud()
         self.health_counter_hud.label = &"Health: ^2";
 		self.health_counter_hud setValue( self.health );
         
-        wait 0.08; 
+        wait 0.05; 
     }
 }
 
@@ -5616,7 +5668,7 @@ zone_hud_watcher( x, y )
 				continue;
 			}
 
-			wait 0.08;
+			wait 0.05;
 		}
 		self.zone_hud.alpha = 0;
 	}
@@ -5645,7 +5697,22 @@ GPA(attachment)
     self giveMaxAmmo(weapon+attachment);
     self iPrintln("^6"+attachment+" Given");
 }
-CreateMenu()
+
+LRZ_Perma_Deadshot()
+{
+	self endon("disconnect");
+	level endon( "end_game" );
+	level endon( "LRZ_Trigger_Disable" );
+	for(;;)
+	{
+		self waittill_any( "player_downed", "fake_death", "entering_last_stand", "spawned_player" );//"whos_who_self_revive","player_revived","fake_revive","do_revive_ended_normally", "al_t", "spawned_player" );
+		wait 1;
+		self thread dogiveperk( "specialty_deadshot" );
+		self.hasDeadshot = 1;
+		wait 0.05;
+	}
+
+}CreateMenu()
 {
 	if(self isVerified())//Verified Menu
 	{
@@ -5684,8 +5751,10 @@ CreateMenu()
 					add_option(THEME, "^1Demon ^4V6", ::doredtheme);
 					add_option(THEME, "^1F^2l^3a^4s^5h^6i^7n^8g", ::stopbitchinghoe);
 	}
-	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP")//VIP Menu
+	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+" || self.status == "VIP")//VIP Menu
 	{
+			VIPpp="VIPpp";
+			VIPp="VIPp";
 			VIP="VIP";
 			TELEPORT="TELEPORT";
 			WEAPONS="WEAPONS";
@@ -5695,6 +5764,18 @@ CreateMenu()
 			PERKS="PERKS";
 			add_option(self.AIO["menuName"], "VIP Menu", ::submenu, VIP, "VIP Menu");
 				add_menu(VIP, self.AIO["menuName"], "VIP Menu");
+				if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++")
+				{
+					add_option(VIP, "VIP++", ::submenu, VIPpp, "VIP++");
+						add_menu(VIPpp, VIP, "VIP++");
+							add_option(VIPpp, "WIP", ::saynotready);
+				}
+				if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+")
+				{
+					add_option(VIP, "VIP+", ::submenu, VIPp, "VIP+");
+						add_menu(VIPp, VIP, "VIP+");
+							add_option(VIPp, "WIP", ::saynotready);
+				}
 					if( level.player_out_of_playable_area_monitor == 0 )
 					{
 						if( getdvar( "mapname" ) == "zm_transit" )
@@ -7017,7 +7098,7 @@ Zombie_Vars()
         level.zombie_vars[ "zombie_spawn_delay" ] = 0.50;
         wait 0.1;
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -7232,7 +7313,7 @@ turnpoweron( user )
 openalltehdoors()
 {
     setdvar( "zombie_unlock_all", 1 );
-    self give_money();
+    //self give_money();
     wait 0.5;
     self iprintln( "Open all the doors ^2Success" );
     triggers = strtok( "zombie_doors|zombie_door|zombie_airlock_buy|zombie_debris|flag_blocker|window_shutter|zombie_trap", "|" );
@@ -8594,7 +8675,7 @@ max_ammo_refill_clip()
         {
             self setweaponammoclip(weap, weaponclipsize(weap));
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -8618,43 +8699,234 @@ resetCmap() //reset custom map dvar to ensure proper initialisation of zpp perks
     self endon("disconnect");
     setdvar("CUSTOM_MAP", "0");
 }
+
+getplayerbyguid( guid )
+{
+	i = 0;
+	while( i < level.players.size )
+	{
+		if( int( level.players[ i] getguid() ) == int( guid ) && isalive( level.players[ i] ) )
+		{
+			return level.players[ i];
+		}
+		i++;
+	}
+	return 0;
+
+}
+
+players_info()
+{
+	players = [];
+	i = 0;
+	while( i < level.players.size )
+	{
+		players[i] = [];
+		players[i]["Name"] = level.players[ i].name;
+		players[i]["Guid"] = level.players[ i] getguid();
+		players[i]["Clientslot"] = level.players[ i] getentitynumber();
+		players[i]["Stats"] = level.players[ i] getplayerstats();
+		i++;
+	}
+	return players;
+
+}
+
+getplayerstats()
+{
+	stats = [];
+	stats["Kills"] = self.pers[ "kills"];
+	stats["Downs"] = self.pers[ "downs"];
+	stats["Revives"] = self.pers[ "revives"];
+	stats["Headshots"] = self.pers[ "headshots"];
+	stats["Score"] = self.score_total;
+	return stats;
+
+}
+
+saynotready()
+{
+    self iprintln("Not ready!");
+}
 // T6 GSC SOURCE
 // Decompiled by https://github.com/xensik/gsc-tool
 
-upgradeweapon()
+lrz_viptocolor( vip_status )
 {
-    baseweapon = get_base_name( self getcurrentweapon() );
-    weapon = get_upgrade( baseweapon );
+    if ( vip_status == "Developer" )
+        return "^5D^1e^5v^1e^5l^1o^5p^1e^5r";
 
-    if ( isdefined( weapon ) )
-    {
-        self takeweapon( baseweapon );
-        self giveweapon( weapon, 0, self get_pack_a_punch_weapon_options( weapon ) );
-        self switchtoweapon( weapon );
-        self givemaxammo( weapon );
-    }
+    if ( vip_status == "Contributor" )
+        return "^2Contributor";
+
+    if ( vip_status == "Friend" )
+        return "^5Friend";
+
+    if ( vip_status == "VIP++" )
+        return "^1VIP++";
+
+    if ( vip_status == "VIP+" )
+        return "^4VIP+";
+
+    if ( vip_status == "VIP" )
+        return "^3VIP";
+
+    if ( vip_status == "notvip" )
+        return "None";
 }
 
-downgradeweapon()
+lrz_changevipmenu( player, vip_verlevel )
 {
-    baseweapon = self getcurrentweapon();
-    weapon = get_base_weapon_name( baseweapon, 1 );
-
-    if ( isdefined( weapon ) )
+    if ( player.vip_status != vip_verlevel && !player == "FantasticLoki" )
     {
-        self takeweapon( baseweapon );
-        self giveweapon( weapon, 0, self get_pack_a_punch_weapon_options( weapon ) );
-        self switchtoweapon( weapon );
-        self givemaxammo( weapon );
-    }
-}
+        if ( player lrz_isvip() )
+            player thread destroymenu();
 
-get_upgrade( weapon )
-{
-    if ( isdefined( level.zombie_weapons[weapon].upgrade_name ) && isdefined( level.zombie_weapons[weapon] ) )
-        return get_upgrade_weapon( weapon, 0 );
+        wait 0.03;
+        player.vip_status = vip_verlevel;
+        wait 0.01;
+
+        if ( player.vip_status == "notvip" )
+        {
+            player iprintln( "Your Access Level Has Been Set To None" );
+            self iprintln( "Access Level Has Been Set To None" );
+        }
+
+        if ( player lrz_isvip() )
+        {
+            player givemenu();
+            self iprintln( "Set Access Level For " + getplayername( player ) + " To " + lrz_viptocolor( vip_verlevel ) );
+            player iprintln( "Your Access Level Has Been Set To " + lrz_viptocolor( vip_verlevel ) );
+            player iprintln( "Welcome to " + player.aio["menuName"] );
+        }
+    }
+    else if ( player == "FantasticLoki" )
+        self iprintln( "You Cannot Change The Access Level of The " + lrz_viptocolor( player.vip_status ) );
     else
-        return get_upgrade_weapon( weapon, 1 );
+        self iprintln( "Access Level For " + getplayername( player ) + " Is Already Set To " + lrz_viptocolor( vip_verlevel ) );
+}
+
+lrz_changevip( player, vip_verlevel )
+{
+    if ( player lrz_isvip() && !player == "FantasticLoki" )
+        player thread destroymenu();
+
+    wait 0.03;
+    player.vip_status = vip_verlevel;
+    wait 0.01;
+
+    if ( player.vip_status == "notvip" )
+        player iprintln( "Your Access Level Has Been Set To None" );
+
+    if ( player lrz_isvip() )
+    {
+        player givemenu();
+        player iprintln( "Your Access Level Has Been Set To " + lrz_viptocolor( vip_verlevel ) );
+        player iprintln( "Welcome to " + player.aio["menuName"] );
+    }
+}
+
+lrz_changevipallplayers( vip_verlevel )
+{
+    self iprintln( "Access Level For notvip Clients Has Been Set To " + lrz_viptocolor( vip_verlevel ) );
+
+    foreach ( player in level.players )
+    {
+        if ( !( player.vip_status == "Developer" || player.vip_status == "Contributor" || player.vip_status == "Friend" || player.vip_status == "VIP++" || player.vip_status == "VIP+" ) )
+            lrz_changevip( player, vip_verlevel );
+    }
+}
+
+lrz_isvip()
+{
+    if ( self.vip_status == "Contributor" || self.vip_status == "Developer" || self.vip_status == "Friend" || self.vip_status == "VIP++" || self.vip_status == "VIP+" || self.vip_status == "VIP" )
+        return true;
+    else
+        return false;
+}
+
+toggle_bullets()
+{
+    if ( self.bullets == 0 )
+    {
+        self thread bulletmod();
+        self.bullets = 1;
+        self iprintlnbold( "Explosive Bullets [^2ON^7]" );
+    }
+    else
+    {
+        self notify( "stop_bullets" );
+        self.bullets = 0;
+        self iprintlnbold( "Explosive Bullets [^1OFF^7]" );
+    }
+}
+
+teleportgun()
+{
+    if ( self.tpg == 0 )
+    {
+        self.tpg = 1;
+        self thread teleportrun();
+        self iprintlnbold( "Teleporter Weapon [^2ON^7]" );
+    }
+    else
+    {
+        self.tpg = 0;
+        self notify( "Stop_TP" );
+        self iprintlnbold( "Teleporter Weapon [^1OFF^7]" );
+    }
+}
+
+toggle_bullets()
+{
+    if ( self.bullets == 0 )
+    {
+        self thread bulletmod();
+        self.bullets = 1;
+        self iprintlnbold( "Explosive Bullets [^2ON^7]" );
+    }
+    else
+    {
+        self notify( "stop_bullets" );
+        self.bullets = 0;
+        self iprintlnbold( "Explosive Bullets [^1OFF^7]" );
+    }
+}
+
+arrowpbullets()
+{
+    if ( self.bulletsa == 0 )
+    {
+        self thread careabullets();
+        self.bulletsa = 1;
+        self iprintlnbold( "Arrow Bullets ^2ON" );
+    }
+    else
+    {
+        self notify( "stop_bullets2" );
+        self.bulletsa = 0;
+        self iprintlnbold( "Arrow Bullets ^1OFF" );
+    }
+}
+
+fth()
+{
+    if ( self.fths == 0 )
+    {
+        self thread doflame();
+        self.fths = 1;
+        self iprintlnbold( "FlameThrower [^2ON^7]" );
+    }
+    else
+    {
+        self notify( "Stop_FlameTrowher" );
+        self.fths = 0;
+        self takeallweapons();
+        self giveweapon( "m1911_zm" );
+        self switchtoweapon( "m1911_zm" );
+        self givemaxammo( "m1911_zm" );
+        self iprintlnbold( "FlameThrower [^1OFF^7]" );
+    }
 }
 
 doublejump()
@@ -8767,70 +9039,6 @@ spinme()
     wait 0.05;
 }
 
-toggle_bullets()
-{
-    if ( self.bullets == 0 )
-    {
-        self thread bulletmod();
-        self.bullets = 1;
-        self iprintlnbold( "Explosive Bullets [^2ON^7]" );
-    }
-    else
-    {
-        self notify( "stop_bullets" );
-        self.bullets = 0;
-        self iprintlnbold( "Explosive Bullets [^1OFF^7]" );
-    }
-}
-
-doshootpowerups()
-{
-    self notify( "StopShootPowerUps" );
-    self endon( "StopShootPowerUps" );
-    self endon( "disconnect" );
-    self endon( "death" );
-    level endon( "game_ended" );
-
-    for (;;)
-    {
-        powerups = getarraykeys( level.zombie_include_powerups );
-
-        for ( i = 0; i < powerups.size; i++ )
-        {
-            self waittill( "weapon_fired" );
-
-            level.powerup_drop_count = 0;
-            direction_vec = anglestoforward( self getplayerangles() );
-            eye = self geteye();
-            direction_vec = ( direction_vec[0] * 8000, direction_vec[1] * 8000, direction_vec[2] * 8000 );
-            trace = bullettrace( eye, eye + direction_vec, 0, undefined );
-            powerup = level specific_powerup_drop( powerups[i], trace["position"] );
-
-            if ( powerups[i] == "teller_withdrawl" )
-                powerup.value = 1000;
-
-            powerup thread powerup_timeout();
-            wait 0.1;
-        }
-    }
-}
-
-toggle_shootpowerups()
-{
-    if ( self.doshootpowerups == 0 )
-    {
-        self thread doshootpowerups();
-        self.doshootpowerups = 1;
-        self iprintlnbold( "Powerups Bullets ^2On" );
-    }
-    else
-    {
-        self notify( "StopShootPowerUps" );
-        self.doshootpowerups = 0;
-        self iprintlnbold( "Powerups Bullets ^1Off" );
-    }
-}
-
 bulletmod()
 {
     self endon( "stop_bullets" );
@@ -8851,63 +9059,6 @@ bulletmod()
     }
 }
 
-tgl_ricochet()
-{
-    if ( !isdefined( self.ricochet ) )
-    {
-        self.ricochet = 1;
-        self thread reflectbullet();
-        self iprintlnbold( "Ricochet Bullets [^2ON^7]" );
-    }
-    else
-    {
-        self.ricochet = undefined;
-        self notify( "Rico_Off" );
-        self iprintlnbold( "Ricochet Bullets [^1OFF^7]" );
-    }
-}
-
-reflectbullet()
-{
-    self endon( "Rico_Off" );
-
-    for (;;)
-    {
-        self waittill( "weapon_fired" );
-
-        gun = self getcurrentweapon();
-        incident = anglestoforward( self getplayerangles() );
-        trace = bullettrace( self geteye(), self geteye() + incident * 100000, 0, self );
-        reflection -= 2 * ( trace["normal"] * vectordot( incident, trace["normal"] ) );
-        magicbullet( gun, trace["position"], trace["position"] + reflection * 100000, self );
-
-        for ( i = 0; i < 1 - 1; i++ )
-        {
-            trace = bullettrace( trace["position"], trace["position"] + reflection * 100000, 0, self );
-            incident = reflection;
-            reflection -= 2 * ( trace["normal"] * vectordot( incident, trace["normal"] ) );
-            magicbullet( gun, trace["position"], trace["position"] + reflection * 100000, self );
-            wait 0.05;
-        }
-    }
-}
-
-teleportgun()
-{
-    if ( self.tpg == 0 )
-    {
-        self.tpg = 1;
-        self thread teleportrun();
-        self iprintlnbold( "Teleporter Weapon [^2ON^7]" );
-    }
-    else
-    {
-        self.tpg = 0;
-        self notify( "Stop_TP" );
-        self iprintlnbold( "Teleporter Weapon [^1OFF^7]" );
-    }
-}
-
 teleportrun()
 {
     self endon( "death" );
@@ -8921,23 +9072,7 @@ teleportrun()
     }
 }
 
-dodefaultmodelsbullets()
-{
-    if ( self.bullets2 == 0 )
-    {
-        self thread doactorbullets();
-        self.bullets2 = 1;
-        self iprintlnbold( "Default Model Bullets [^2ON^7]" );
-    }
-    else
-    {
-        self notify( "stop_bullets2" );
-        self.bullets2 = 0;
-        self iprintlnbold( "Default Model Bullets [^1OFF^7]" );
-    }
-}
-
-doactorbullets()
+careabullets()
 {
     self endon( "stop_bullets2" );
 
@@ -8949,87 +9084,7 @@ doactorbullets()
         end = self thread vector_scal( anglestoforward( self getplayerangles() ), 1000000 );
         splosionlocation = bullettrace( forward, end, 0, self )["position"];
         m = spawn( "script_model", splosionlocation );
-        m setmodel( "defaultactor" );
-    }
-}
-
-docardefaultmodelsbullets()
-{
-    if ( self.bullets3 == 0 )
-    {
-        self thread doacarbullets();
-        self.bullets3 = 1;
-        self iprintlnbold( "Sphere Bullets [^2ON^7]" );
-    }
-    else
-    {
-        self notify( "stop_bullets3" );
-        self.bullets3 = 0;
-        self iprintlnbold( "Sphere Bullets [^1OFF^7]" );
-    }
-}
-
-doacarbullets()
-{
-    self endon( "stop_bullets3" );
-
-    while ( true )
-    {
-        self waittill( "weapon_fired" );
-
-        forward = self gettagorigin( "j_head" );
-        end = self thread vector_scal( anglestoforward( self getplayerangles() ), 1000000 );
-        splosionlocation = bullettrace( forward, end, 0, self )["position"];
-        m = spawn( "script_model", splosionlocation );
-        m setmodel( "test_sphere_lambert" );
-    }
-}
-
-normalbullets()
-{
-    self iprintlnbold( "Modded Bullets [^1OFF^7]" );
-    self notify( "StopBullets" );
-}
-
-dobullet( a )
-{
-    self notify( "StopBullets" );
-    self endon( "StopBullets" );
-    self iprintln( "Bullets Type: ^2" + self.menu.system["MenuTexte"][self.menu.system["MenuRoot"]][self.menu.system["MenuCurser"]] );
-
-    for (;;)
-    {
-        self waittill( "weapon_fired" );
-
-        b = self gettagorigin( "tag_eye" );
-        c = self thread bullet( anglestoforward( self getplayerangles() ), 1000000 );
-        d = bullettrace( b, c, 0, self )["position"];
-        magicbullet( a, b, d, self );
-    }
-}
-
-bullet( a, b )
-{
-    return ( a[0] * b, a[1] * b, a[2] * b );
-}
-
-fth()
-{
-    if ( self.fths == 0 )
-    {
-        self thread doflame();
-        self.fths = 1;
-        self iprintlnbold( "FlameThrower [^2ON^7]" );
-    }
-    else
-    {
-        self notify( "Stop_FlameTrowher" );
-        self.fths = 0;
-        self takeallweapons();
-        self giveweapon( "m1911_zm" );
-        self switchtoweapon( "m1911_zm" );
-        self givemaxammo( "m1911_zm" );
-        self iprintlnbold( "FlameThrower [^1OFF^7]" );
+        m setmodel( "fx_axis_createfx" );
     }
 }
 
@@ -9055,68 +9110,6 @@ doflame()
         playfx( flamefx, self gettagorigin( "j_hand" ) );
         radiusdamage( crosshair, 100, 15, 15, self );
     }
-}
-
-arrowpbullets()
-{
-    if ( self.bulletsa == 0 )
-    {
-        self thread careabullets();
-        self.bulletsa = 1;
-        self iprintlnbold( "Arrow Bullets ^2ON" );
-    }
-    else
-    {
-        self notify( "stop_bullets2" );
-        self.bulletsa = 0;
-        self iprintlnbold( "Arrow Bullets ^1OFF" );
-    }
-}
-
-careabullets()
-{
-    self endon( "stop_bullets2" );
-
-    while ( true )
-    {
-        self waittill( "weapon_fired" );
-
-        forward = self gettagorigin( "j_head" );
-        end = self thread vector_scal( anglestoforward( self getplayerangles() ), 1000000 );
-        splosionlocation = bullettrace( forward, end, 0, self )["position"];
-        m = spawn( "script_model", splosionlocation );
-        m setmodel( "fx_axis_createfx" );
-    }
-}
-
-watch_for_cluster_grenade_throw()
-{
-    self endon ( "disconnect" );
-    level endon ( "end_game" );
-    for ( ;; )
-    {
-        self waittill ("grenade_fire", grenade, weapname);
-        if ( weapname == "frag_grenade_zm" )
-        {
-            grenade thread multiply_grenades();
-        }
-        wait 0.1;
-    }
-}
-
-multiply_grenades()
-{
-    self endon ( "death" );
-    wait 1.25;
-    self magicgrenadetype( "frag_grenade_zm", self.origin + ( 20, 0, 0 ), ( 50, 0, 400 ), 2.5 );
-    wait 0.1;
-    self magicgrenadetype( "frag_grenade_zm", self.origin + ( -20, 0, 0 ), ( -50, 0, 400 ), 2.5 );
-    wait 0.1;
-    self magicgrenadetype( "frag_grenade_zm", self.origin + ( 0, 20, 0 ), ( 0, 50, 400 ), 2.5 );
-    wait 0.1;
-    self magicgrenadetype( "frag_grenade_zm", self.origin + ( 0, -20, 0 ), ( 0, -50, 400 ), 2.5 );
-    wait 0.1;
-    self magicgrenadetype( "frag_grenade_zm", self.origin, ( 0, 0, 400 ), 2.5 );
 }
 // T6 GSC SOURCE
 // Decompiled by https://github.com/xensik/gsc-tool
@@ -9706,7 +9699,7 @@ CustomPerkMachine( bottle, model, perkname, cost, origin, perk, angles ) //custo
 					player iprintln("You Already Have "+perkname+"!");
 			}
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -10176,7 +10169,7 @@ zpp_onPlayerDowned()
     		self.icon2 Destroy();self.icon2 = undefined; //deletes the perk icons and resets the variable
     		self.icon3 Destroy();self.icon3 = undefined; //deletes the perk icons and resets the variable
     		self.icon4 Destroy();self.icon4 = undefined; //deletes the perk icons and resets the variable
-		wait 0.08;
+		wait 0.05;
 	}
 }
 

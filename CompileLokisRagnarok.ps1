@@ -1,3 +1,11 @@
+<#
+
+    GSC AutoCompiler using Xensik Compiler.
+    Recode by: The Fantastic Loki | Original Script by: DoktorSas
+
+#>
+
+# Define Variables | Edit paths for your needs
 $projectpath = "C:\Users\astey\Documents\Black Ops 2 - GSC Studio\Loki's Ragnarok"
 Set-Location -Path "$projectpath"
 $repopath = "C:\Users\astey\Documents\GitHub\LokisRagnarok"
@@ -15,6 +23,7 @@ $lrmp_version = $lrmp_versionp1.Matches.value
 $lrmp_versioncheck = Get-Content ./logs/lrmp-version.log
 
 Write-Output "-----------------=========================================================---------------------"
+# Create Default Folder Structure
 New-Item -ItemType Directory -Path ZM\src-compiled -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path ZM\src -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path ZM\Uncompiled -ErrorAction SilentlyContinue
@@ -28,18 +37,29 @@ try
     if(Test-Path -Path .\ZM\src\main.gsc)
     {
         Write-Output "Loading LRZ main script file and all other files"
+                #  Copy and trunicate all files into 1 file for compile
         Rename-Item -Path "$($lrzpath)\src\main.gsc" -NewName "$($lrzpath)\src\1-main.gsc" -Force
         cmd /c "copy /B /Y ZM\src\*.gsc ZM\lrz-uncompiled.gsc"
         Rename-Item -Path "$($lrzpath)\src\1-main.gsc" -NewName "$($lrzpath)\src\main.gsc" -Force
+        
         Write-Output "Main files Loaded"
         Write-Output "*.gsc files loaded"
+        
         Copy-Item .\ZM\lrz-uncompiled.gsc "$($lrzpath)\Uncompiled\lrz-uncompiled.gsc" -Force
+                # Delete old compile log file to reset output for error check later
         if(Test-Path -Path $lrzpath\lrz-compile.log)
         {
             cmd /c "del ZM\lrz-compile.log"
         }
-        Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrzpath)\lrz-uncompiled.gsc`"" -Wait -NoNewWindow -RedirectStandardError "$($lrzpath)\lrz-compile.log"
-        if (Select-String -NotMatch "ERROR" -InputObject "$($lrzpath)\lrz-compile.log")
+        
+                # Start Main Compile Phase
+        Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrzpath)\lrz-uncompiled.gsc`"" -Wait -NoNewWindow -RedirectStandardError "$($lrzpath)\lrz-compile.log" 
+        if (Select-String -Pattern "ERROR" -Path "$($lrzpath)\lrz-compile.log")
+        {
+            $lrzcompilemainerror = Get-Content -Path "$($lrzpath)\lrz-compile.log"
+            Write-Output $lrzcompilemainerror
+        }
+        else
         {
             if (Test-Path -Path .\ZM\lrz-compiled.gsc)
             {
@@ -49,10 +69,18 @@ try
             Rename-Item -Path "$($lrzpath)\lrz-uncompiled.gsc" -NewName "$($lrzpath)\lrz-compiled.gsc" -Force
         }
         Write-Output "Main Compile phase ended"
+        
+        
         Write-Output "Compiling copy of src folder"
+                # Make copy of all gsc files in src folder to be compiled seperately for easier debugging and error checking.
         Copy-Item -Path ".\ZM\src\*.gsc" -Destination ".\ZM\src-compiled" -Force > $null
+
+                # Start Idividual File Compile Phase
         Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrzpath)\src-compiled`"" -Wait -NoNewWindow 
+        
         Write-Output "Compiled Source Code Please Check for Errors"
+        
+        
         if (Test-Path -Path "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc") 
         {
             Write-Output "Removing old $($scriptname)V$($lrz_version).gsc"
@@ -64,6 +92,8 @@ try
         }
         Copy-Item -Path ".\ZM\lrz-compiled.gsc" -Destination "$($env:LOCALAPPDATA)\Plutonium\storage\t6\scripts\zm\$($scriptname)V$($lrz_version).gsc" -Force 
         Write-Output "File moved in Plutonium ZM folder"
+        
+        
         if (Test-Path -Path "$($repopath)\scripts\zm\$($scriptname)V$($lrz_versioncheck).gsc") 
         {
             Write-Output "Removing old $($scriptname)V$($lrz_versioncheck).gsc"
@@ -75,23 +105,11 @@ try
         }
         Copy-Item -Path ".\ZM\lrz-compiled.gsc" "$($repopath)\scripts\zm\$($scriptname)V$($lrz_version).gsc" -Force 
         Write-Output "File moved in Repo folder"
+        
         $lrz_version > .\logs\lrz-version.log
 
-        if (Select-String -NotMatch "ERROR" -InputObject "$($lrzpath)\lrz-compile.log")
-        {
-            Write-Output "File compiled as intended"
-            Add-Type -AssemblyName System.Windows.Forms 
-            $global:balloon = New-Object System.Windows.Forms.NotifyIcon
-            $path = (Get-Process -id $pid).Path
-            $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) 
-            $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
-            $balloon.BalloonTipText = 'File compiled as intended'
-            $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$scriptname ZM Compiled!" 
-            $balloon.Visible = $true 
-            $balloon.ShowBalloonTip(5000)
-        }
-        if (Select-String "ERROR" -InputObject "$($lrzpath)\lrz-compile.log")
+
+        if (Select-String -Pattern "ERROR" -Path "$($lrzpath)\lrz-compile.log")
         {
             Write-Output "There is an error in the source code"
             Add-Type -AssemblyName System.Windows.Forms 
@@ -102,6 +120,20 @@ try
             $balloon.BalloonTipText = 'There is an error in the source code'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
             $balloon.BalloonTipTitle = "$scriptname ZM not Compiled!" 
+            $balloon.Visible = $true 
+            $balloon.ShowBalloonTip(5000)
+        }
+        else #(Select-String -Pattern "ERROR" -Path "$($lrzpath)\lrz-compile.log")
+        {
+            Write-Output "File compiled as intended"
+            Add-Type -AssemblyName System.Windows.Forms 
+            $global:balloon = New-Object System.Windows.Forms.NotifyIcon
+            $path = (Get-Process -id $pid).Path
+            $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) 
+            $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
+            $balloon.BalloonTipText = 'File compiled as intended'
+            $currentPathLocation = Split-Path -Path $pwd -Leaf
+            $balloon.BalloonTipTitle = "$scriptname ZM Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }
@@ -120,7 +152,7 @@ try
             cmd /c "del MP\lrmp-compile.log"
         }
         Start-Process .\compiler\gsc-tool.exe -ArgumentList "comp t6 `"$($lrmppath)\lrmp-uncompiled.gsc`"" -Wait -NoNewWindow -RedirectStandardError "$($lrmppath)\lrmp-compile.log"
-        if (Select-String -NotMatch "ERROR" -InputObject "$($lrmppath)\lrmp-compile.log")
+        if (Select-String -Pattern "ERROR" -Path "$($lrmppath)\lrmp-compile.log")
         {
             if (Test-Path -Path .\MP\lrmp-compiled.gsc)
             {
@@ -158,21 +190,8 @@ try
         Write-Output "File moved in Repo folder"
         $lrmp_version > .\logs\lrmp-version.log
 
-        if (Select-String -NotMatch "ERROR" -InputObject "$($lrmppath)\lrmp-compile.log")
-        {
-            Write-Output "File compiled as intended"
-            Add-Type -AssemblyName System.Windows.Forms 
-            $global:balloon = New-Object System.Windows.Forms.NotifyIcon
-            $path = (Get-Process -id $pid).Path
-            $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) 
-            $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
-            $balloon.BalloonTipText = 'File compiled as intended'
-            $currentPathLocation = Split-Path -Path $pwd -Leaf
-            $balloon.BalloonTipTitle = "$scriptname MP Compiled!" 
-            $balloon.Visible = $true 
-            $balloon.ShowBalloonTip(5000)
-        }
-        if (Select-String "ERROR" -InputObject "$($lrmppath)\lrmp-compile.log")
+
+        if (Select-String -Pattern "ERROR" -Path "$($lrmppath)\lrmp-compile.log")
         {
             Write-Output "There is an error in the source code"
             Add-Type -AssemblyName System.Windows.Forms 
@@ -183,6 +202,20 @@ try
             $balloon.BalloonTipText = 'There is an error in the source code'
             $currentPathLocation = Split-Path -Path $pwd -Leaf
             $balloon.BalloonTipTitle = "$scriptname MP not Compiled!" 
+            $balloon.Visible = $true 
+            $balloon.ShowBalloonTip(5000)
+        }
+        else #(Select-String -Pattern "ERROR" -Path "$($lrmppath)\lrmp-compile.log")
+        {
+            Write-Output "File compiled as intended"
+            Add-Type -AssemblyName System.Windows.Forms 
+            $global:balloon = New-Object System.Windows.Forms.NotifyIcon
+            $path = (Get-Process -id $pid).Path
+            $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($path) 
+            $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]::Info 
+            $balloon.BalloonTipText = 'File compiled as intended'
+            $currentPathLocation = Split-Path -Path $pwd -Leaf
+            $balloon.BalloonTipTitle = "$scriptname MP Compiled!" 
             $balloon.Visible = $true 
             $balloon.ShowBalloonTip(5000)
         }

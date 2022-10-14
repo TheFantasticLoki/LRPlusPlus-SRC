@@ -46,7 +46,7 @@ turnpoweron( user )
 openalltehdoors()
 {
     setdvar( "zombie_unlock_all", 1 );
-    self give_money();
+    //self give_money();
     wait 0.5;
     self iprintln( "Open all the doors ^2Success" );
     triggers = strtok( "zombie_doors|zombie_door|zombie_airlock_buy|zombie_debris|flag_blocker|window_shutter|zombie_trap", "|" );

@@ -32,6 +32,7 @@ LRMP_VIP_Funcs()
 		//self setperk( "specialty_fastmantle" );
 		//self setperk( "specialty_fastladderclimb" );
         self thread VIP_ammo();
+        //self thread setvipperks();
 	}
 	if( getPlayerName(self) == "MudKippz" )
 	{
@@ -68,9 +69,9 @@ LRMP_Diamond_GameTypes()
             foreach( player in level.players)
             {
                 self waittill( "spawned_player" );
-                wait 0.08;
+                wait 0.05;
                 self camo_change(16);
-                wait 0.08;
+                wait 0.05;
                 if(getDvar("ui_gametype") == "oic")
                 {
                     weapon = self getcurrentweapon();
@@ -79,7 +80,7 @@ LRMP_Diamond_GameTypes()
                     level notify("DGT_OIC_Finished");
                 }
             }
-            wait 0.08;
+            wait 0.05;
         }
     }
 }

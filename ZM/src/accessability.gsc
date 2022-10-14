@@ -15,6 +15,12 @@ verificationtocolor( status )
     if ( status == "Admin" )
         return "^1Admin";
 
+    if ( status == "VIP++" )
+        return "^4VIP++";
+
+    if ( status == "VIP+" )
+        return "^4VIP+";
+
     if ( status == "VIP" )
         return "^4VIP";
 
@@ -110,7 +116,7 @@ playermenuauth()
 
 isverified()
 {
-    if ( self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP" || self.status == "Verified" )
+    if ( self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+" || self.status == "VIP" || self.status == "Verified" )
         return true;
     else
         return false;

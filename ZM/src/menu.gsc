@@ -37,8 +37,10 @@ CreateMenu()
 					add_option(THEME, "^1Demon ^4V6", ::doredtheme);
 					add_option(THEME, "^1F^2l^3a^4s^5h^6i^7n^8g", ::stopbitchinghoe);
 	}
-	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP")//VIP Menu
+	if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+" || self.status == "VIP")//VIP Menu
 	{
+			VIPpp="VIPpp";
+			VIPp="VIPp";
 			VIP="VIP";
 			TELEPORT="TELEPORT";
 			WEAPONS="WEAPONS";
@@ -48,6 +50,18 @@ CreateMenu()
 			PERKS="PERKS";
 			add_option(self.AIO["menuName"], "VIP Menu", ::submenu, VIP, "VIP Menu");
 				add_menu(VIP, self.AIO["menuName"], "VIP Menu");
+				if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++")
+				{
+					add_option(VIP, "VIP++", ::submenu, VIPpp, "VIP++");
+						add_menu(VIPpp, VIP, "VIP++");
+							add_option(VIPpp, "WIP", ::saynotready);
+				}
+				if(self.status == "Host" || self.status == "Developer" || self.status == "Co-Host" || self.status == "Admin" || self.status == "VIP++" || self.status == "VIP+")
+				{
+					add_option(VIP, "VIP+", ::submenu, VIPp, "VIP+");
+						add_menu(VIPp, VIP, "VIP+");
+							add_option(VIPp, "WIP", ::saynotready);
+				}
 					if( level.player_out_of_playable_area_monitor == 0 )
 					{
 						if( getdvar( "mapname" ) == "zm_transit" )

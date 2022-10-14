@@ -23,5 +23,5 @@ debug_perklimit()
 
 debug_msg()
 {
-    self lrz_big_msg( "DEBUG_Msg: " );
+    self lrz_big_msg( "DEBUG_Msg: GUID is " + self.guid + " | Vip status is: " + self.vip_status + "" );
 }

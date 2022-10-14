@@ -381,7 +381,7 @@ CustomPerkMachine( bottle, model, perkname, cost, origin, perk, angles ) //custo
 					player iprintln("You Already Have "+perkname+"!");
 			}
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 }
 
@@ -851,7 +851,7 @@ zpp_onPlayerDowned()
     		self.icon2 Destroy();self.icon2 = undefined; //deletes the perk icons and resets the variable
     		self.icon3 Destroy();self.icon3 = undefined; //deletes the perk icons and resets the variable
     		self.icon4 Destroy();self.icon4 = undefined; //deletes the perk icons and resets the variable
-		wait 0.08;
+		wait 0.05;
 	}
 }
 

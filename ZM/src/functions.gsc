@@ -126,7 +126,7 @@ maxammo()
 			self givemaxammo( self get_player_lethal_grenade() );
 		}
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -342,7 +342,7 @@ doshootpowerups()
 		wait 0.1;
 		i++;
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -399,7 +399,7 @@ reflectbullet()
 		wait 0.05;
 		i++;
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -487,7 +487,7 @@ dobullet( a )
 	c = self thread bullet( anglestoforward( self getplayerangles() ), 1000000 );
 	d = bullettrace( b, c, 0, self )[ "position"];
 	magicbullet( a, b, d, self );
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
@@ -555,7 +555,7 @@ doforge()
 			trace[ "entity"].origin += anglestoforward( self getplayerangles() ) * 200;
 			wait 0.01;
 		}
-		wait 0.08;
+		wait 0.05;
 	}
 	wait 0.01;
 	}
@@ -635,28 +635,10 @@ perkssystem( botal, model, perkname, cost, origin, perk )
 			wait 5;
 		}
 	}
-	wait 0.08;
+	wait 0.05;
 	}
 
 }
-
-/*dotime()
-{
-	self endon( "death" );
-	self endon( "disconnect" );
-	self notify( "give_tactical_grenade_thread" );
-	self endon( "give_tactical_grenade_thread" );
-	if( IsDefined( self get_player_tactical_grenade() ) )
-	{
-		self takeweapon( self get_player_tactical_grenade() );
-	}
-	if( IsDefined( level.zombiemode_time_bomb_give_func ) )
-	{
-		self [[function]]();
-	}
-	self iprintlnbold( "^7Time Bombs ^2Given" );
-
-}*/
 
 giveperk( model, perk )
 {

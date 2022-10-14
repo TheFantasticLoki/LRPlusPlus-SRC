@@ -1,7 +1,7 @@
 // T6 GSC SOURCE
 // Decompiled by https://github.com/xensik/gsc-tool
 #include common_scripts\utility;
-//#include scripts\zm\zm_bo2_bots;
+#include scripts\zm\zm_bo2_bots;
 #include maps\mp\_utility;
 #include maps\mp\animscripts\zm_combat;
 #include maps\mp\animscripts\zm_utility;
@@ -10,25 +10,25 @@
 #include maps\mp\gametypes_zm\_hud_util;
 #include maps\mp\gametypes_zm\_hud_message;
 #include maps\mp\gametypes_zm\_weapons;
-//#include maps\mp\gametypes_zm\_spawnlogic;
+#include maps\mp\gametypes_zm\_spawnlogic;
 #include maps\mp\gametypes_zm\_hostmigration;
-//#include maps\mp\gametypes_zm\_gv_actions;
+#include maps\mp\gametypes_zm\_gv_actions;
 #include maps\mp\gametypes_zm\_damagefeedback;
 #include maps\mp\zombies\_zm_utility;
 #include maps\mp\zombies\_zm_weapons;
 #include maps\mp\zombies\_zm_stats;
-//#include maps\mp\zombies\_zm;
+#include maps\mp\zombies\_zm;
 #include maps\mp\zombies\_zm_perks;
-//#include maps\mp\zombies\_zm_powerups;
-//#include maps\mp\zombies\_zm_sidequests;
-//#include maps\mp\zombies\_zm_audio;
-//#include maps\mp\zombies\_zm_game_module;
-//#include maps\mp\zombies\_zm_magicbox;
-//#include maps\mp\zombies\_zm_laststand;
+#include maps\mp\zombies\_zm_powerups;
+#include maps\mp\zombies\_zm_sidequests;
+#include maps\mp\zombies\_zm_audio;
+#include maps\mp\zombies\_zm_game_module;
+#include maps\mp\zombies\_zm_magicbox;
+#include maps\mp\zombies\_zm_laststand;
 #include maps\mp\zombies\_zm_weap_cymbal_monkey;
 #include maps\mp\zombies\_zm_spawner;
-//#include maps\mp\zombies\_zm_unitrigger;
-//#include maps\mp\zombies\_zm_score;
+#include maps\mp\zombies\_zm_unitrigger;
+#include maps\mp\zombies\_zm_score;
 
 
 
@@ -62,8 +62,12 @@ init()
     init_LRZ_Dvars();
     level thread precacheassets();
     if(getDvarInt("LRZ_ZPP_enabled") == 1 && getDvar("CUSTOM_MAP") == "0")
+    {
         level thread zpp_init();
+        //level thread lrz_aats::init();
+    }
     //level thread replaceFuncs();
+    level thread onconnect();
     level thread onplayerconnect();
     level thread removeskybarrier();
     level thread upload_stats_on_round_end();
@@ -72,7 +76,6 @@ init()
     level.init = 0;
     settings();
     level thread lrz_checks();
-    level thread onconnect();
     bot_set_skill();
     flag_wait( "initial_blackscreen_passed" );
 
@@ -107,7 +110,8 @@ zpp_init()
 	level.callbackplayerdamage = ::phd_flopper_dmg_check; //more damage callback stuff. everybody do the flop
 	    //level.using_solo_revive = 0; //disables solo revive, fixing only 3 revives per game.
 	    //level.is_forever_solo_game = 0; //changes afterlives on motd from 3 to 1
-	isTown(); //jezuzlizard's fix for tombstone :)
+	if(getdvar("ui_zm_mapstartlocation") == "town")
+        isTown(); //jezuzlizard's fix for tombstone :)
     
 }
 
@@ -124,7 +128,7 @@ zpp_onPlayerConnect()
 		player thread zpp_onPlayerDowned();
 		player thread zpp_onPlayerRevived();
 		player thread spawnIfRoundOne(); //force spawns if round 1. no more spectating one player on round 1
-        wait 0.08;
+        wait 0.05;
 	}
 }
 
@@ -133,9 +137,10 @@ onconnect()
     for (;;)
     {
         level waittill( "connected", player );
+        player thread VIP_Check();
         player thread max_ammo_refill_clip();
         player thread connected();
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -174,7 +179,7 @@ onplayerconnect()
 
         //if ( isdefined( level.player_out_of_playable_area_monitor ) )
             //level.player_out_of_playable_area_monitor = 0;
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -228,7 +233,7 @@ onplayerspawned()
 
             isfirstspawn = 1;
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -244,12 +249,12 @@ connected()
         while ( !getdvarint( "LRZ_enabled" ) )
         {
             level notify( "LRZ_Trigger_Disable" );
-            wait 0.08;
+            wait 0.05;
             self iprintln( "^5Loki's Ragnarok Zombies++^7 is Disabled" );
 
             level waittill( "LRZ_Trigger_Enable" );
 
-            wait 0.08;
+            wait 0.05;
         }
 
         while ( getdvarint( "LRZ_enabled" ) == 1 )
@@ -314,10 +319,10 @@ connected()
                 wait 0.05;
             }
 
-            wait 0.08;
+            wait 0.05;
         }
 
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -331,7 +336,7 @@ menuinit()
     self.menu.open = 0;
     self.aio = [];
     self.aio["menuName"] = "Ragnarok";
-    self.aio["scriptVersion"] = "1.5.2";
+    self.aio["scriptVersion"] = "1.5.3";
     self.curmenu = self.aio["menuName"];
     self.curtitle = self.aio["menuName"];
     self storehuds();

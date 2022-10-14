@@ -94,7 +94,7 @@ Zombie_Vars()
         level.zombie_vars[ "zombie_spawn_delay" ] = 0.50;
         wait 0.1;
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 

@@ -188,7 +188,7 @@ max_ammo_refill_clip()
         {
             self setweaponammoclip(weap, weaponclipsize(weap));
         }
-        wait 0.08;
+        wait 0.05;
     }
 }
 
@@ -211,4 +211,53 @@ resetCmap() //reset custom map dvar to ensure proper initialisation of zpp perks
     level waittill("end_game");
     self endon("disconnect");
     setdvar("CUSTOM_MAP", "0");
+}
+
+getplayerbyguid( guid )
+{
+	i = 0;
+	while( i < level.players.size )
+	{
+		if( int( level.players[ i] getguid() ) == int( guid ) && isalive( level.players[ i] ) )
+		{
+			return level.players[ i];
+		}
+		i++;
+	}
+	return 0;
+
+}
+
+players_info()
+{
+	players = [];
+	i = 0;
+	while( i < level.players.size )
+	{
+		players[i] = [];
+		players[i]["Name"] = level.players[ i].name;
+		players[i]["Guid"] = level.players[ i] getguid();
+		players[i]["Clientslot"] = level.players[ i] getentitynumber();
+		players[i]["Stats"] = level.players[ i] getplayerstats();
+		i++;
+	}
+	return players;
+
+}
+
+getplayerstats()
+{
+	stats = [];
+	stats["Kills"] = self.pers[ "kills"];
+	stats["Downs"] = self.pers[ "downs"];
+	stats["Revives"] = self.pers[ "revives"];
+	stats["Headshots"] = self.pers[ "headshots"];
+	stats["Score"] = self.score_total;
+	return stats;
+
+}
+
+saynotready()
+{
+    self iprintln("Not ready!");
 }
